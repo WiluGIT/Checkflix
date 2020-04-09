@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Checkflix.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="User")]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase

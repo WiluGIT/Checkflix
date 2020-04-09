@@ -11,6 +11,8 @@ using Checkflix.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using IdentityServer4.Services;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Checkflix
 {
@@ -30,14 +32,22 @@ namespace Checkflix
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
+            services.AddTransient<IProfileService, ProfileService>();
+
+            // Role Claims
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             services.AddAuthentication()
                 .AddIdentityServerJwt();
+
+
             services.AddControllersWithViews();
             services.AddRazorPages();
             // In production, the Angular files will be served from this directory
@@ -48,7 +58,7 @@ namespace Checkflix
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -74,6 +84,10 @@ namespace Checkflix
             app.UseAuthentication();
             app.UseIdentityServer();
             app.UseAuthorization();
+
+            DataSeeder.SeedRoles(roleManager);
+            DataSeeder.SeedAdmin(userManager);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
