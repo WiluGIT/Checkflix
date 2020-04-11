@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 /* Provide sufficient contrast against white background */
 a {
   color: #0366d6;
@@ -14,3 +14,28 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+/* Angular material ovverides  */
+.mat-tab-body-wrapper {
+  margin-top: 30px
+}
+
+.mat-card {
+  background: #f9f9f9;
+  color: rgba(99, 7, 169, 0.87);
+}
+/deep/ .mat-tab-label, .mat-tab-link {
+  font-family: "Lato", "Helvetica Neue", sans-serif !important;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Bootstrap ovverides */
+
+
+
