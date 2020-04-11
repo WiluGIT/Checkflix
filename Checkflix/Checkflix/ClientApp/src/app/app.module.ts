@@ -12,11 +12,11 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
-import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminComponent } from './admin/admin.component';
+import { AuthorizeAdminGuard } from '../api-authorization/authorize.admin-guard';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +35,7 @@ import { AdminComponent } from './admin/admin.component';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
-      { path: 'admin', component: AdminComponent, canActivate: [AuthorizeGuard] },
+      { path: 'admin', component: AdminComponent, canActivate: [AuthorizeAdminGuard] },
     ], { anchorScrolling: 'enabled'}),
     BrowserAnimationsModule,
     MatTabsModule,
