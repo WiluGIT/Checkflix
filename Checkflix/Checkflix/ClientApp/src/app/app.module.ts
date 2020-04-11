@@ -13,6 +13,7 @@ import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminComponent } from './admin/admin.component';
@@ -39,7 +40,8 @@ import { AuthorizeAdminGuard } from '../api-authorization/authorize.admin-guard'
     ], { anchorScrolling: 'enabled'}),
     BrowserAnimationsModule,
     MatTabsModule,
-    MatCardModule
+    MatCardModule,
+    MatButtonModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true }

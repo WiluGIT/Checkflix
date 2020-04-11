@@ -30,7 +30,7 @@ export enum AuthenticationResultStatus {
 }
 
 export interface IUser {
-  role: any;
+  role?: string;
   name?: string;
 }
 
