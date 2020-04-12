@@ -14,6 +14,8 @@ using Microsoft.Extensions.Hosting;
 using IdentityServer4.Services;
 using System.IdentityModel.Tokens.Jwt;
 using Checkflix.Data.Persistance;
+using AutoMapper;
+using System.Reflection;
 
 namespace Checkflix
 {
@@ -50,6 +52,8 @@ namespace Checkflix
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
+            // Automapper
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddControllersWithViews();
             services.AddRazorPages();

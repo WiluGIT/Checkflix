@@ -15,10 +15,15 @@ namespace Checkflix.Data.Persistance
         {
             _context = context;
         }
-
-        public async Task<ActionResult<IEnumerable<Production>>> GetAllProductions()
+        // Productions
+        public async Task<IEnumerable<Production>> GetAllProductions()
         {
             return await _context.Productions.ToListAsync();
+        }
+
+        public void AddProduction(Production production)
+        {
+             _context.Productions.Add(production);
         }
 
         public async Task<bool> SaveAll()

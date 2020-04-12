@@ -7,7 +7,8 @@ namespace Checkflix.Data.Persistance
 {
     public interface ICheckflixRepository
     {
-        Task<ActionResult<IEnumerable<Production>>> GetAllProductions();
+        void AddProduction(Production production);
+        Task<IEnumerable<Production>> GetAllProductions();
         Task<bool> SaveAll();
     }
 }

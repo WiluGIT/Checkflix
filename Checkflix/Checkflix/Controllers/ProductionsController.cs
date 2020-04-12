@@ -9,6 +9,8 @@ using Checkflix.Data;
 using Checkflix.Models;
 using Checkflix.Data.Persistance;
 using Microsoft.Extensions.Logging;
+using Checkflix.ViewModels;
+using AutoMapper;
 
 namespace Checkflix.Controllers
 {
@@ -19,21 +21,25 @@ namespace Checkflix.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICheckflixRepository _repository;
         private readonly ILogger<ProductionsController> _logger;
+        private readonly IMapper _mapper;
 
-        public ProductionsController(ApplicationDbContext context, ICheckflixRepository repository, ILogger<ProductionsController> logger)
+        public ProductionsController(ApplicationDbContext context, ICheckflixRepository repository, ILogger<ProductionsController> logger, IMapper mapper)
         {
             _context = context;
             _repository = repository;
             _logger = logger;
+            _mapper = mapper; 
+
         }
 
         // GET: api/Productions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Production>>> GetProductions()
+        public async Task<ActionResult<IEnumerable<ProductionViewModel>>> GetProductions()
         {
             try
             {
-                return await _repository.GetAllProductions();
+                var products = await _repository.GetAllProductions();
+                return Ok(_mapper.Map<IEnumerable<Production>, IEnumerable<ProductionViewModel>>(products));
             }
             catch(Exception ex)
             {
@@ -54,7 +60,7 @@ namespace Checkflix.Controllers
                 return NotFound();
             }
 
-            return production;
+            return Ok(_mapper.Map<Production,ProductionViewModel>(production));
         }
 
         // PUT: api/Productions/5
@@ -93,10 +99,13 @@ namespace Checkflix.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Production>> PostProduction(Production production)
+        public async Task<ActionResult<ProductionViewModel>> PostProduction(ProductionViewModel production)
         {
-            _context.Productions.Add(production);
-            await _context.SaveChangesAsync();
+            var mapPorduction = _mapper.Map<ProductionViewModel, Production>(production);
+            _repository.AddProduction(mapPorduction);
+            //_context.Productions.Add(mapPorduction);
+            //await _context.SaveChangesAsync();
+            await _repository.SaveAll();
 
             return CreatedAtAction("GetProduction", new { id = production.ProductionId }, production);
         }
