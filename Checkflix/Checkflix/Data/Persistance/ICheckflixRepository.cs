@@ -9,6 +9,10 @@ namespace Checkflix.Data.Persistance
     {
         void AddProduction(Production production);
         Task<IEnumerable<Production>> GetAllProductions();
+        Task<Production> GetProduction(int id);
+        bool ProductionsExists(int id);
+        void RemoveProduction(Production production);
         Task<bool> SaveAll();
+        void UpdateProduction(Production production);
     }
 }

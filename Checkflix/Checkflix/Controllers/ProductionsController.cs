@@ -18,14 +18,12 @@ namespace Checkflix.Controllers
     [ApiController]
     public class ProductionsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly ICheckflixRepository _repository;
         private readonly ILogger<ProductionsController> _logger;
         private readonly IMapper _mapper;
 
-        public ProductionsController(ApplicationDbContext context, ICheckflixRepository repository, ILogger<ProductionsController> logger, IMapper mapper)
+        public ProductionsController(ICheckflixRepository repository, ILogger<ProductionsController> logger, IMapper mapper)
         {
-            _context = context;
             _repository = repository;
             _logger = logger;
             _mapper = mapper; 
@@ -53,32 +51,36 @@ namespace Checkflix.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Production>> GetProduction(int id)
         {
-            var production = await _context.Productions.FindAsync(id);
-
+            var production = await _repository.GetProduction(id);
+  
             if (production == null)
             {
-                return NotFound();
+                return NotFound("Production with specified id does not exist");
             }
 
-            return Ok(_mapper.Map<Production,ProductionViewModel>(production));
+            return Ok(_mapper.Map<Production, ProductionViewModel>(production));
         }
 
         // PUT: api/Productions/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduction(int id, Production production)
+        public async Task<IActionResult> PutProduction(int id, [FromBody]ProductionViewModel production)
         {
             if (id != production.ProductionId)
             {
                 return BadRequest();
             }
+            var mapPorduction = _mapper.Map<ProductionViewModel, Production>(production);
 
-            _context.Entry(production).State = EntityState.Modified;
+            _repository.UpdateProduction(mapPorduction);
+            //_context.Entry(mapPorduction).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                if (await _repository.SaveAll())
+                    return Ok(_mapper.Map<Production, ProductionViewModel>(mapPorduction));
+                //await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -99,36 +101,38 @@ namespace Checkflix.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<ProductionViewModel>> PostProduction(ProductionViewModel production)
+        public async Task<ActionResult<ProductionViewModel>> PostProduction([FromBody]ProductionViewModel production)
         {
             var mapPorduction = _mapper.Map<ProductionViewModel, Production>(production);
-            _repository.AddProduction(mapPorduction);
-            //_context.Productions.Add(mapPorduction);
-            //await _context.SaveChangesAsync();
-            await _repository.SaveAll();
 
-            return CreatedAtAction("GetProduction", new { id = production.ProductionId }, production);
+            _repository.AddProduction(mapPorduction);
+
+            if(await _repository.SaveAll())
+                return CreatedAtAction("GetProduction", new { id = mapPorduction.ProductionId }, _mapper.Map<Production, ProductionViewModel>(mapPorduction));
+           
+            return BadRequest("Failed to add production");
         }
 
         // DELETE: api/Productions/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Production>> DeleteProduction(int id)
         {
-            var production = await _context.Productions.FindAsync(id);
+            var production = await _repository.GetProduction(id);
             if (production == null)
             {
                 return NotFound();
             }
 
-            _context.Productions.Remove(production);
-            await _context.SaveChangesAsync();
+            _repository.RemoveProduction(production);
+            if (await _repository.SaveAll())
+                return Ok();
 
             return production;
         }
 
         private bool ProductionExists(int id)
         {
-            return _context.Productions.Any(e => e.ProductionId == id);
+            return _repository.ProductionsExists(id);
         }
     }
 }

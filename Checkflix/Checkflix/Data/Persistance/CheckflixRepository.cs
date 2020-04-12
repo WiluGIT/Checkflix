@@ -21,10 +21,31 @@ namespace Checkflix.Data.Persistance
             return await _context.Productions.ToListAsync();
         }
 
+        public async Task<Production> GetProduction(int id)
+        {
+            return await _context.Productions.FindAsync(id);
+        }
+
         public void AddProduction(Production production)
         {
              _context.Productions.Add(production);
         }
+
+        public void RemoveProduction(Production production)
+        {
+            _context.Productions.Remove(production);
+        }
+
+        public void UpdateProduction(Production production)
+        {
+            _context.Entry(production).State = EntityState.Modified;
+        }
+
+        public bool ProductionsExists(int id)
+        {
+            return _context.Productions.Any(e => e.ProductionId == id);
+        }
+
 
         public async Task<bool> SaveAll()
         {
