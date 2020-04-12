@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using IdentityServer4.Services;
 using System.IdentityModel.Tokens.Jwt;
+using Checkflix.Data.Persistance;
 
 namespace Checkflix
 {
@@ -41,6 +42,8 @@ namespace Checkflix
 
             services.AddTransient<IProfileService, ProfileService>();
 
+            // Repository
+            services.AddScoped<ICheckflixRepository,CheckflixRepository>();
             // Role Claims
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
