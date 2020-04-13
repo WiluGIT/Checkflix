@@ -12,7 +12,7 @@ import { ProductionService } from '../../services/production.service';
 export class ProductionFormComponent implements OnInit {
   productionForm: FormGroup;
   production: IProductionViewModel;
-
+  imbdFetchClicked: boolean = false;
 
   constructor(private fb: FormBuilder, private productionService: ProductionService) { }
 
@@ -82,5 +82,46 @@ export class ProductionFormComponent implements OnInit {
 
   }
 
+  fetchImbd() {
+    const imbdId = this.productionForm.value.imbdId;
+    if (imbdId) {
+      const url = "https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/" + imbdId;
+      fetch(url, {
+        "method": "GET",
+        "headers": {
+          "x-rapidapi-host": "imdb-internet-movie-database-unofficial.p.rapidapi.com",
+          "x-rapidapi-key": "8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120"
+        }
+      })
+        .then(response => {
+          return response.json()
+        })
+        .then((data) => {
+          console.log(data);
+          this.productionForm.controls.title.setValue(data.title);
+          this.productionForm.controls.releaseDate.setValue(data.year);
+          this.productionForm.controls.imbdRating.setValue(data.rating);
+          this.productionForm.controls.poster.setValue(data.poster);
+          this.productionForm.controls.synopsis.setValue(data.plot);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+    else {
+      this.imbdFetchClicked = true;
+      //zmiana field na zly stan w celu wyswietlenia wiadomosci
+      this.productionForm.controls.imbdId.invalid;
+    }
+    
+
+  }
+
+  getErrorMessage() {
+    if (this.imbdFetchClicked) 
+      return "Wprowadź Imbd id, aby pobrać dane";
+      
+
+  }
 
 }

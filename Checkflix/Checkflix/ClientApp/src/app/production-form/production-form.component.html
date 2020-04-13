@@ -4,6 +4,9 @@
       <div class="text-left">
         <a [routerLink]="['/admin']" class="btn btn-secondary btn-sm">Powrót do panelu</a>
       </div>
+      <div class="text-right">
+        <button (click)="fetchImbd()">Pobierz z imbd</button>
+      </div>
       <div class="text-center">
         <span class="text-center">Stwórz produkcje</span>
       </div>
@@ -45,6 +48,7 @@
         <mat-label>Wprowadź Imbd id</mat-label>
         <input matInput placeholder="np. tt4574334" formControlName="imbdId">
         <mat-error *ngIf="imbdId.invalid">Imbd id musi być podane</mat-error>
+        <mat-error *ngIf="imbdFetchClicked==true">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź ocenę Imbd </mat-label>
