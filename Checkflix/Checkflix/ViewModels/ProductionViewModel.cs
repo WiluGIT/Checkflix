@@ -23,7 +23,7 @@ namespace Checkflix.ViewModels
         [Required]
         public DateTime ReleaseDate { get; set; }
         [Required]
-        public int ImbdId { get; set; }
+        public string ImbdId { get; set; }
         [Required]
         public float ImbdRating { get; set; }
     }

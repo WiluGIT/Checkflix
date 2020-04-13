@@ -14,7 +14,7 @@ namespace Checkflix.Models
         public string Synopsis { get; set; }
         public ProductionType Type { get; set; }
         public DateTime ReleaseDate { get; set; }
-        public int ImbdId { get; set; }
+        public string ImbdId { get; set; }
         public float ImbdRating { get; set; }
 
 
@@ -32,7 +32,7 @@ namespace Checkflix.Models
 
     public enum ProductionType
     {
-        Movie,
+        Movie=0,
         Series
     }
 }
