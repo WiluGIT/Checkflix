@@ -13,6 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using IdentityServer4.Services;
 using System.IdentityModel.Tokens.Jwt;
+using Checkflix.Data.Persistance;
+using AutoMapper;
+using System.Reflection;
 
 namespace Checkflix
 {
@@ -41,14 +44,19 @@ namespace Checkflix
 
             services.AddTransient<IProfileService, ProfileService>();
 
+            // Repository
+            services.AddScoped<ICheckflixRepository,CheckflixRepository>();
             // Role Claims
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
-
+            // Automapper
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+         
             services.AddControllersWithViews();
+
             services.AddRazorPages();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
