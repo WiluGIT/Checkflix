@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
+import { ProductionService } from '../../services/production.service';
+
 
 @Component({
   selector: 'app-production-form',
@@ -8,8 +11,10 @@ import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms'
 })
 export class ProductionFormComponent implements OnInit {
   productionForm: FormGroup;
+  production: IProductionViewModel;
 
-  constructor(private fb:FormBuilder) { }
+
+  constructor(private fb: FormBuilder, private productionService: ProductionService) { }
 
   ngOnInit() {
     this.productionForm = this.fb.group({
@@ -25,7 +30,7 @@ export class ProductionFormComponent implements OnInit {
       type: ['', [
         Validators.required
       ]],
-      releaseDate: [{value: '', disabled:true}, [
+      releaseDate: [new Date(), [
         Validators.required
       ]],
       imbdId: ['', [
@@ -40,6 +45,10 @@ export class ProductionFormComponent implements OnInit {
 
     });
     this.productionForm.valueChanges.subscribe(console.log)
+
+    // services
+    this.productionService.getProductions().subscribe(productionList => this.productionList = productionList);
+    
   }
   get title() {
     return this.productionForm.get('title');
@@ -64,8 +73,13 @@ export class ProductionFormComponent implements OnInit {
   }
 
   submitForm() {
-    const formValue = this.productionForm.value;
-    console.log(formValue);
+    this.production = this.productionForm.value;
+    this.production.imbdRating = parseInt(this.productionForm.value.imbdRating);
+    this.production.type = parseInt(this.productionForm.value.type);
+
+
+    this.productionService.createProduction(this.production).subscribe(res => console.log(res));
+
   }
 
 
