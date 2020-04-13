@@ -18,6 +18,14 @@ import { MatCardModule } from '@angular/material/card';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminComponent } from './admin/admin.component';
 import { AuthorizeAdminGuard } from '../api-authorization/authorize.admin-guard';
+import { ProductionFormComponent } from './production-form/production-form.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material';
+import { MatSelectModule, MatSelect } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MatRippleModule, MAT_DATE_LOCALE } from '@angular/material/core';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +33,8 @@ import { AuthorizeAdminGuard } from '../api-authorization/authorize.admin-guard'
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    AdminComponent
+    AdminComponent,
+    ProductionFormComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -37,14 +46,24 @@ import { AuthorizeAdminGuard } from '../api-authorization/authorize.admin-guard'
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
       { path: 'admin', component: AdminComponent, canActivate: [AuthorizeAdminGuard] },
+      { path: 'production-form', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
     ], { anchorScrolling: 'enabled'}),
     BrowserAnimationsModule,
     MatTabsModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatFormFieldModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+    { provide: MAT_DATE_LOCALE, useValue: 'pl-Pl' }
   ],
   bootstrap: [AppComponent]
 })

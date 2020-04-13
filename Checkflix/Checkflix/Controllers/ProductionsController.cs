@@ -125,7 +125,7 @@ namespace Checkflix.Controllers
 
             _repository.RemoveProduction(production);
             if (await _repository.SaveAll())
-                return Ok();
+                return Ok("Production deleted ");
 
             return production;
         }
