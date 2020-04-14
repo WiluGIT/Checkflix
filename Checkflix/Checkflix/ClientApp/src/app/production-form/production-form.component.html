@@ -18,14 +18,15 @@
       Value: {{productionForm.value | json}}
       <hr />
       <mat-form-field appearance="fill">
+        <mat-label>Wprowadź Imbd id</mat-label>
+        <input matInput placeholder="np. tt4574334" formControlName="imbdId">
+        <mat-error *ngIf="imbdId.invalid">Imbd id musi być podane</mat-error>
+        <mat-error *ngIf="imbdFetchClicked">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
         <mat-label>Wprowadź tytuł</mat-label>
         <input matInput placeholder="Tytuł" formControlName="title">
         <mat-error *ngIf="title.invalid">Tytuł musi być podany</mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Wprowadź link do plakatu</mat-label>
-        <input matInput placeholder="https://static.posters.cz/image/750/plakaty/stranger-things-summer-of-85-i76122.jpg" formControlName="poster">
-        <mat-error *ngIf="poster.invalid">Link do plakatu musi być podany</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź opis fabuły</mat-label>
@@ -35,23 +36,21 @@
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź typ</mat-label>
         <mat-select formControlName="type">
-          <mat-option value="0">Film</mat-option>
-          <mat-option value="1">Serial</mat-option>
+          <mat-option *ngFor="let type of typeSelect" [value]="type.id">{{type.value}}</mat-option>
         </mat-select>
         <mat-error *ngIf="type.invalid">Typ musi być podany</mat-error>
       </mat-form-field>
-
       <mat-form-field>
         <mat-label>Wprowadź datę premiery</mat-label>
         <input formControlName="releaseDate" matInput [matDatepicker]="picker">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker disabled="false"></mat-datepicker>
+        <mat-error *ngIf="releaseDate.invalid">Data musi być podana</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
-        <mat-label>Wprowadź Imbd id</mat-label>
-        <input matInput placeholder="np. tt4574334" formControlName="imbdId">
-        <mat-error *ngIf="imbdId.invalid">Imbd id musi być podane</mat-error>
-        <mat-error *ngIf="imbdFetchClicked==true">{{getErrorMessage()}}</mat-error>
+        <mat-label>Wprowadź link do plakatu</mat-label>
+        <input matInput placeholder="https://static.posters.cz/image/750/plakaty/stranger-things-summer-of-85-i76122.jpg" formControlName="poster">
+        <mat-error *ngIf="poster.invalid">Link do plakatu musi być podany</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź ocenę Imbd </mat-label>
@@ -66,6 +65,5 @@
       </div>
     </form>
 
-    
   </div>
 </div>

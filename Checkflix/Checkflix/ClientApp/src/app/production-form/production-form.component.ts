@@ -13,8 +13,20 @@ export class ProductionFormComponent implements OnInit {
   productionForm: FormGroup;
   production: IProductionViewModel;
   imbdFetchClicked: boolean = false;
+  typeSelect: any = [
+    {
+      id: 0,
+      value: "Film"
+    },
+    {
+      id: 1,
+      value: "Serial"
+    }
+  ];
 
-  constructor(private fb: FormBuilder, private productionService: ProductionService) { }
+  constructor(private fb: FormBuilder, private productionService: ProductionService) {
+
+  }
 
   ngOnInit() {
     this.productionForm = this.fb.group({
@@ -74,7 +86,7 @@ export class ProductionFormComponent implements OnInit {
     this.production = this.productionForm.value;
     this.production.imbdRating = parseFloat(this.productionForm.value.imbdRating);
     this.production.type = parseInt(this.productionForm.value.type);
-
+    this.production.releaseDate = new Date(this.productionForm.value.releaseDate);
 
     this.productionService.createProduction(this.production).subscribe(res => console.log(res));
 
@@ -98,6 +110,8 @@ export class ProductionFormComponent implements OnInit {
             this.productionForm.controls.title.setValue(movieArray.title);
             this.productionForm.controls.synopsis.setValue(movieArray.overview);
             this.productionForm.controls.type.setValue(0);
+            //this.productionForm.controls.type.setValue(this.typeSelect[0].id);
+
             this.productionForm.controls.releaseDate.setValue(new Date(movieArray.release_date));
           }
           else if (data.tv_results.length > 0) {
@@ -139,7 +153,7 @@ export class ProductionFormComponent implements OnInit {
     else {
       this.imbdFetchClicked = true;
       //zmiana field na zly stan w celu wyswietlenia wiadomosci
-      this.productionForm.controls.imbdId.invalid;
+      this.productionForm.controls.imbdId.touched;
     }
     
 
@@ -151,5 +165,7 @@ export class ProductionFormComponent implements OnInit {
       
 
   }
+
+
 
 }
