@@ -122,7 +122,7 @@ export class ProductionFormComponent implements OnInit {
             this.productionForm.controls.releaseDate.setValue(new Date(seriesArray.first_air_date));
           }
 
-
+          // if this api response is null create another api call to omdbapi
           const rapidApiUrl = "https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/" + imbdId;
           fetch(rapidApiUrl, {
             "method": "GET",

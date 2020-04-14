@@ -35,6 +35,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   font-weight: 500;
 }
 
+.mat-form-field-wrapper {
+  position: relative;
+  margin: 1em !important;
+}
+
 /* Bootstrap ovverides */
 
 .card {
