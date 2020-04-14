@@ -152,8 +152,7 @@ export class ProductionFormComponent implements OnInit {
     }
     else {
       this.imbdFetchClicked = true;
-      //zmiana field na zly stan w celu wyswietlenia wiadomosci
-      this.productionForm.controls.imbdId.touched;
+      this.productionForm.controls.imbdId.markAsTouched();
     }
     
 

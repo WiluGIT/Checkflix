@@ -20,8 +20,9 @@
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź Imbd id</mat-label>
         <input matInput placeholder="np. tt4574334" formControlName="imbdId">
-        <mat-error *ngIf="imbdId.invalid">Imbd id musi być podane</mat-error>
         <mat-error *ngIf="imbdFetchClicked">{{getErrorMessage()}}</mat-error>
+        <mat-error *ngIf="imbdId.invalid">Imbd id musi być podane</mat-error>
+
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź tytuł</mat-label>
