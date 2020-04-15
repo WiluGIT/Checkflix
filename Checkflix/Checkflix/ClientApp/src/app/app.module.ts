@@ -51,6 +51,7 @@ import { MatIconModule } from '@angular/material/icon';
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
       { path: 'admin', component: AdminComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production-form', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
+      { path: 'production-form/:id', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
     ], { anchorScrolling: 'enabled'}),
     BrowserAnimationsModule,
     MatTabsModule,

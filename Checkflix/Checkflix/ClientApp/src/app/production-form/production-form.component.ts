@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
 import { ProductionService } from '../../services/production.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -12,6 +13,7 @@ import { ProductionService } from '../../services/production.service';
 export class ProductionFormComponent implements OnInit {
   productionForm: FormGroup;
   production: IProductionViewModel;
+  productionId: number;
   imbdFetchClicked: boolean = false;
   typeSelect: any = [
     {
@@ -24,8 +26,11 @@ export class ProductionFormComponent implements OnInit {
     }
   ];
 
-  constructor(private fb: FormBuilder, private productionService: ProductionService) {
-
+  constructor(private fb: FormBuilder, private productionService: ProductionService, private route: ActivatedRoute) {
+    route.params.subscribe(p => {
+      //+before p converts id to a number
+      this.productionId = +p['id'] || null;
+    });
   }
 
   ngOnInit() {
@@ -56,10 +61,26 @@ export class ProductionFormComponent implements OnInit {
       ]]
 
     });
-    //this.productionForm.valueChanges.subscribe(console.log)
 
+    // if its update populate form and 
+    if (this.productionId) {
+      this.productionService.getProduction(this.productionId)
+        .subscribe(production => {
+          //populate production
+          this.production = production;
+          //populate form 
+          this.productionForm.controls.title.setValue(production.title);
+          this.productionForm.controls.poster.setValue(production.poster);
+          this.productionForm.controls.synopsis.setValue(production.synopsis);
+          this.productionForm.controls.type.setValue(production.type);
+          this.productionForm.controls.releaseDate.setValue(production.releaseDate);
+          this.productionForm.controls.imbdId.setValue(production.imbdId);
+          this.productionForm.controls.imbdRating.setValue(production.imbdRating);
+        });
+    }
     
   }
+
   get title() {
     return this.productionForm.get('title');
   }
@@ -88,8 +109,17 @@ export class ProductionFormComponent implements OnInit {
     this.production.type = parseInt(this.productionForm.value.type);
     this.production.releaseDate = new Date(this.productionForm.value.releaseDate);
 
-    this.productionService.createProduction(this.production).subscribe(res => console.log(res));
+    if (this.productionId) {
+      this.production.productionId = this.productionId;
+      this.productionService.updateProduction(this.productionId, this.production).subscribe(res => console.log(res));
 
+    } else {
+      this.productionService.createProduction(this.production).subscribe(res => console.log(res));
+    }    
+
+  }
+  deleteProduction(productionId) {
+    console.log(productionId)
   }
 
   fetchImbd() {
