@@ -11,7 +11,7 @@
       </div>
 
       <div class="text-center">
-        <span class="text-center">Stwórz produkcje</span>
+        <span class="text-center">{{actionText}} produkcje</span>
       </div>
     </div>
     <form [formGroup]="productionForm" (ngSubmit)="submitForm()">
@@ -61,7 +61,7 @@
         <mat-error *ngIf="imbdRating.errors?.required">Ocena imbd musi być podana</mat-error>
       </mat-form-field>
       <div class="text-center">
-        <button type="submit" [disabled]="productionForm.invalid" class="btn btn-outline-primary">Stwórz</button>
+        <button type="submit" [disabled]="productionForm.invalid" class="btn btn-outline-primary">{{actionText}}</button>
 
       </div>
     </form>

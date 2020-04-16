@@ -15,6 +15,8 @@ export class ProductionFormComponent implements OnInit {
   production: IProductionViewModel;
   productionId: number;
   imbdFetchClicked: boolean = false;
+
+  actionText: string;
   typeSelect: any = [
     {
       id: 0,
@@ -31,6 +33,8 @@ export class ProductionFormComponent implements OnInit {
       //+before p converts id to a number
       this.productionId = +p['id'] || null;
     });
+
+    this.actionText = "Stwórz";
   }
 
   ngOnInit() {
@@ -64,6 +68,7 @@ export class ProductionFormComponent implements OnInit {
 
     // if its update populate form and 
     if (this.productionId) {
+      this.actionText = "Aktualizuj";
       this.productionService.getProduction(this.productionId)
         .subscribe(production => {
           //populate production
