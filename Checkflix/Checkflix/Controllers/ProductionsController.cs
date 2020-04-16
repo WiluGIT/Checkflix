@@ -127,7 +127,7 @@ namespace Checkflix.Controllers
             _repository.RemoveProduction(production);
             if (await _repository.SaveAll())
                 // return here deleted product to filter it out in front-end
-                return Ok("Production deleted ");
+                return Ok(_mapper.Map<Production, ProductionViewModel>(production));
 
             return production;
         }

@@ -118,9 +118,7 @@ export class ProductionFormComponent implements OnInit {
     }    
 
   }
-  deleteProduction(productionId) {
-    console.log(productionId)
-  }
+
 
   fetchImbd() {
     const imbdId = this.productionForm.value.imbdId;

@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Observable, of } from 'rxjs';
 import { ProductionService } from '../../services/production.service';
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
+import { Router } from '@angular/router';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -35,9 +36,10 @@ export class AdminComponent implements OnInit {
   isShowed: boolean = false;
   moreThan5result: boolean = false;
   productionList: Array<IProductionViewModel>;
+  deletedProduction: IProductionViewModel;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  constructor(private authService: AuthorizeService, private productionService: ProductionService) {
+  constructor(private authService: AuthorizeService, private productionService: ProductionService, private router: Router) {
     this.dataSource = new MatTableDataSource(this.productionList);
   }
 
@@ -70,8 +72,27 @@ export class AdminComponent implements OnInit {
 
   }
 
-  EditProduction(elem) {
-    console.log(elem)
+  deleteProduction(productionId) {
+    console.log(this.productionList);
+ 
+    this.productionService
+      .deleteProduction(productionId)
+      .subscribe(deleted => {
+        console.log(deleted)
+      },
+        err => {
+          if (err.status == 404) {
+          //implement component with not found 404 error
+          this.router.navigate(['/admin']);
+          }
+      });
+
+    var filteredList: IProductionViewModel[] = this.productionList.filter(production => production.productionId !== productionId);
+    this.productionList = filteredList;
+    this.dataSource = new MatTableDataSource(this.dataSource.filteredData);
+    const data = this.dataSource.filteredData.filter(production => production.productionId !== productionId).slice(0, 5);
+    this.dataSource.data = data; 
+    
   }
 
 }

@@ -44,7 +44,7 @@
             <a [routerLink]="'/production-form/'+row.productionId" mat-icon-button matTooltip="Kliknij, aby edytować" class="iconbutton" color="primary">
               <mat-icon aria-label="Edytuj">edit</mat-icon>
             </a>
-            <button (click)="deleteProduction()" mat-icon-button matTooltip="Click to Delete" class="iconbutton" color="warn">
+            <button (click)="deleteProduction(row.productionId)" mat-icon-button matTooltip="Click to Delete" class="iconbutton" color="warn">
               <mat-icon aria-label="Usuń">delete</mat-icon>
             </button>
           </td>
