@@ -11,6 +11,7 @@ using Checkflix.Data.Persistance;
 using Microsoft.Extensions.Logging;
 using Checkflix.ViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Checkflix.Controllers
 {
@@ -125,7 +126,8 @@ namespace Checkflix.Controllers
 
             _repository.RemoveProduction(production);
             if (await _repository.SaveAll())
-                return Ok("Production deleted ");
+                // return here deleted product to filter it out in front-end
+                return Ok(_mapper.Map<Production, ProductionViewModel>(production));
 
             return production;
         }

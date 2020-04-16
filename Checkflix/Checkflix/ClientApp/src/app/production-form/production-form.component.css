@@ -10,3 +10,13 @@
   position: relative;
   text-align: center;
 }
+.text-right {
+  text-align: right !important;
+  display: inline;
+  float: right;
+}
+.text-left {
+  text-align: left !important;
+  display: inline;
+  /* float: left; */
+}
