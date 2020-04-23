@@ -14,6 +14,9 @@ namespace Checkflix.Mapping
         {
             CreateMap<Production, ProductionViewModel>()
                 .ReverseMap();
+            CreateMap<Category, CategoryViewModel>()
+                .ReverseMap();
+
         }
     }
 }

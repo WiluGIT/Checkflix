@@ -9,7 +9,11 @@ namespace Checkflix.Models
     public class Category
     {
         public int CategoryId { get; set; }
+
+        public int GenreApiId { get; set; }
         public string CategoryName { get; set; }
+
+        
 
         public ICollection<ApplicationUserCategory> ApplicationUserCategories { get; set; }
         public ICollection<ProductionCategory> ProductionCategories { get; set; }

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IProductionViewModel } from '../app/ClientViewModels/IProductionViewModel';
 import { map } from 'rxjs/operators';
+import { ICategoryViewModel } from '../app/ClientViewModels/ICategoryViewModel';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,10 @@ export class ProductionService {
 
   deleteProduction(id: number) {
     return this.http.delete('/api/productions/' + id).pipe(map((production: IProductionViewModel) => production));
+  }
+
+  updateCategories(categories: ICategoryViewModel[]) {
+    return this.http.post('/api/categories', categories).pipe(map((production: IProductionViewModel) => production));
 
   }
 }

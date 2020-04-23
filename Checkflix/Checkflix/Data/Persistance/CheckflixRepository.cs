@@ -15,6 +15,8 @@ namespace Checkflix.Data.Persistance
         {
             _context = context;
         }
+
+        #region Productions
         // Productions
         public async Task<IEnumerable<Production>> GetAllProductions()
         {
@@ -46,6 +48,21 @@ namespace Checkflix.Data.Persistance
             return _context.Productions.Any(e => e.ProductionId == id);
         }
 
+        #endregion
+
+        #region Categories
+        public async Task<IEnumerable<Category>> GetAllCategories()
+        {
+            return await _context.Categories.ToListAsync();
+        }
+        public void UpdateCategories(IEnumerable<Category> categories)
+        {
+            foreach(var c in categories)
+            {
+                _context.Categories.Add(c);
+            }
+        }
+        #endregion
 
         public async Task<bool> SaveAll()
         {

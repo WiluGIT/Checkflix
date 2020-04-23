@@ -29,6 +29,7 @@ namespace Checkflix.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            // seed 
             // n-n table configurations
 
             // AplicationUserCategories

@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Observable, of } from 'rxjs';
 import { ProductionService } from '../../services/production.service';
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
+import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,8 +20,8 @@ export class AdminComponent implements OnInit {
   isShowed: boolean = false;
   moreThan5result: boolean = false;
   productionList: Array<IProductionViewModel>;
+  categoriesList: Array<ICategoryViewModel>= [];
   deletedProduction: IProductionViewModel;
-
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   constructor(private authService: AuthorizeService, private productionService: ProductionService, private router: Router) {
     this.dataSource = new MatTableDataSource(this.productionList);
@@ -76,6 +77,33 @@ export class AdminComponent implements OnInit {
     const data = this.dataSource.filteredData.filter(production => production.productionId !== productionId).slice(0, 5);
     this.dataSource.data = data; 
     
+  }
+
+  updateCategories() {
+    const categoriesUrl = "https://api.themoviedb.org/3/genre/movie/list?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl-PL";
+    fetch(categoriesUrl)
+      .then(response => {
+        return response.json()
+      })
+      .then((data) => {
+        this.categoriesList = []
+        let categoryElement: ICategoryViewModel;
+        data.genres.map(el => {
+          categoryElement = {
+            categoryId: 0,
+            categoryName: el.name,
+            genreApiId: el.id
+          };
+          this.categoriesList.push(categoryElement)
+        })
+        this.productionService
+          .updateCategories(this.categoriesList)
+          .subscribe(res => console.log("Added",res));
+
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
 }
