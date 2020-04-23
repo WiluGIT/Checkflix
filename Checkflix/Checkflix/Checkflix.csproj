@@ -34,6 +34,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20200423194014_Seed.cs" />
+    <Compile Remove="Data\Migrations\20200423194014_Seed.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="ClientApp\src\services\" />
   </ItemGroup>
 

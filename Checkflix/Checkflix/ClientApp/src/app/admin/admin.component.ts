@@ -98,7 +98,11 @@ export class AdminComponent implements OnInit {
         })
         this.productionService
           .updateCategories(this.categoriesList)
-          .subscribe(res => console.log("Added",res));
+          .subscribe(res => {
+            console.log("Added", res)
+          },
+            (err) => { console.log("Category list is up to date") }
+          );
 
       })
       .catch(err => {
