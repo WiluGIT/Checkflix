@@ -20,12 +20,23 @@ namespace Checkflix.Data.Persistance
         // Productions
         public async Task<IEnumerable<Production>> GetAllProductions()
         {
-            return await _context.Productions.ToListAsync();
+            return await _context.Productions
+                .Include(m=> m.VodProductions)
+                .ThenInclude(m=>m.Vod)
+                .Include(m=>m.ProductionCategories)
+                .ThenInclude(m=>m.Category)
+                .ToListAsync();
         }
 
         public async Task<Production> GetProduction(int id)
         {
-            return await _context.Productions.FindAsync(id);
+            return await _context.Productions
+                .Where(m=>m.ProductionId.Equals(id))
+                .Include(m => m.VodProductions)
+                .ThenInclude(m => m.Vod)
+                .Include(m => m.ProductionCategories)
+                .ThenInclude(m => m.Category)
+                .FirstOrDefaultAsync();
         }
 
         public void AddProduction(Production production)
@@ -55,6 +66,10 @@ namespace Checkflix.Data.Persistance
         {
             return await _context.Categories.ToListAsync();
         }
+        public async Task<Category> GetCategory(int id)
+        {
+            return await _context.Categories.FindAsync(id);
+        }
         public void UpdateCategories(IEnumerable<Category> categories)
         {
             foreach(var c in categories)
@@ -64,6 +79,26 @@ namespace Checkflix.Data.Persistance
         }
         #endregion
 
+        #region
+        public async Task<Vod> GetVod(int id)
+        {
+            return await _context.Vods.FindAsync(id);
+        }
+        #endregion
+
+        #region VodProduction
+        public void AddVodProduction(VodProduction vodProduction)
+        {
+            _context.VodProductions.Add(vodProduction);
+        }
+        #endregion
+
+        #region ProductionCategory
+        public void AddProductionCategory(ProductionCategory productionCategory)
+        {
+            _context.ProductionCategories.Add(productionCategory);
+        }
+        #endregion
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;

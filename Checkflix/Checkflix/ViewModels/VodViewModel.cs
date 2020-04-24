@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Checkflix.ViewModels
 {
-    public class CategoryViewModel
+    public class VodViewModel
     {
-        public int CategoryId { get; set; }
-        public int GenreApiId { get; set; }
-        public string CategoryName { get; set; }
+        public int VodId { get; set; }
+        public string PlatformName { get; set; }
+
     }
 }

@@ -106,7 +106,29 @@ namespace Checkflix.Controllers
         {
             var mapPorduction = _mapper.Map<ProductionViewModel, Production>(production);
 
-            _repository.AddProduction(mapPorduction);
+            // adding item to shared table ex. VodProduction add also to production table and vod table if not exist
+            foreach(var v in production.Vods)
+            {
+                var currentVod = await _repository.GetVod(v.VodId);
+                var vodProduction = new VodProduction
+                {
+                    Production = mapPorduction,
+                    Vod = currentVod
+                };
+                _repository.AddVodProduction(vodProduction); // first loop add production and vod, another only vods
+            }
+
+            foreach(var c in production.Categories)
+            {
+                var currentCategory = await _repository.GetCategory(c.CategoryId);
+                var productionCategory = new ProductionCategory
+                {
+                    Category = currentCategory,
+                    Production = mapPorduction,    
+                };
+                _repository.AddProductionCategory(productionCategory);
+            }
+                    
 
             if(await _repository.SaveAll())
                 return CreatedAtAction("GetProduction", new { id = mapPorduction.ProductionId }, _mapper.Map<Production, ProductionViewModel>(mapPorduction));
