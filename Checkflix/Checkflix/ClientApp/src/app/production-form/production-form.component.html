@@ -61,16 +61,30 @@
         <mat-error *ngIf="imbdRating.errors?.required">Ocena imbd musi być podana</mat-error>
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Wybierz platformę VOD</mat-label>
-        <mat-select formControlName="toppings" multiple>
+        <mat-label>Wybierz kategorie</mat-label>
+        <mat-select formControlName="categories" multiple>
           <mat-select-trigger>
-            {{productionForm.controls.toppings.value ? productionForm.controls.toppings.value[0] : ''}}
-            <span *ngIf="productionForm.controls.toppings.value?.length > 1" class="example-additional-selection">
-              (+{{productionForm.controls.toppings.value.length - 1}} {{productionForm.controls.toppings.value?.length === 2 ? 'other' : 'others'}})
+            {{this.productionForm.controls.categories.value ? this.productionForm.controls['categories'].value[0]?.categoryName: ''}}
+            <span *ngIf="productionForm.controls.categories.value?.length > 1" class="example-additional-selection">
+              (+{{productionForm.controls.categories.value.length - 1}} {{productionForm.controls.categories.value?.length === 2 ? 'inny' : 'inne'}})
             </span>
           </mat-select-trigger>
-          <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+          <mat-option *ngFor="let category of categoryList" [value]="category">{{category.categoryName}}</mat-option>
         </mat-select>
+        <mat-error *ngIf="productionForm.controls.categories.errors?.required">Kategoria musi być podana</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Wybierz platformę VOD</mat-label>
+        <mat-select formControlName="vods" multiple>
+          <mat-select-trigger>
+            {{this.productionForm.controls.vods.value ? this.productionForm.controls['vods'].value[0]?.platformName: ''}}
+            <span *ngIf="productionForm.controls.vods.value?.length > 1" class="example-additional-selection">
+              (+{{productionForm.controls.vods.value.length - 1}} {{productionForm.controls.vods.value?.length === 2 ? 'inny' : 'inne'}})
+            </span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let vod of vodList" [value]="vod">{{vod.platformName}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="productionForm.controls.vods.errors?.required">Platforma VOD musi być podana</mat-error>
       </mat-form-field>
       <div class="text-center">
         <button type="submit" [disabled]="productionForm.invalid" class="btn btn-outline-primary">{{actionText}}</button>
