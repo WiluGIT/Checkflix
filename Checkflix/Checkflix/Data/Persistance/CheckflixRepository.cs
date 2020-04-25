@@ -51,7 +51,7 @@ namespace Checkflix.Data.Persistance
 
         public void UpdateProduction(Production production)
         {
-            _context.Entry(production).State = EntityState.Modified;
+            _context.Productions.Update(production);
         }
 
         public bool ProductionsExists(int id)
@@ -95,12 +95,36 @@ namespace Checkflix.Data.Persistance
         {
             _context.VodProductions.Add(vodProduction);
         }
+
+        public async Task<VodProduction> GetVodProduction(int vodId, int productionId)
+        {
+            return await _context.VodProductions.Where(m => m.VodId.Equals(vodId) && m.ProductionId.Equals(productionId)).FirstOrDefaultAsync();
+        }
+
+        public async void UpdateVodProduction(VodProduction vodProduction)
+        {
+            var production2update = await _context.VodProductions.Where(m => m.ProductionId.Equals(vodProduction.ProductionId) && m.VodId.Equals(vodProduction.VodId)).FirstOrDefaultAsync();
+
+           
+            _context.Entry(production2update).CurrentValues.SetValues(production2update);
+            //_context.VodProductions.Update(vodProduction);
+        }
         #endregion
 
         #region ProductionCategory
         public void AddProductionCategory(ProductionCategory productionCategory)
         {
             _context.ProductionCategories.Add(productionCategory);
+        }
+
+        public async Task<ProductionCategory> GetProductionCategory(int categoryId, int productionId)
+        {
+            return await _context.ProductionCategories.Where(m => m.CategoryId.Equals(categoryId) && m.ProductionId.Equals(productionId)).FirstOrDefaultAsync();
+        }
+
+        public void UpdateProductionCategory(ProductionCategory productionCategory)
+        {
+            _context.ProductionCategories.Update(productionCategory);
         }
         #endregion
         public async Task<bool> SaveAll()
