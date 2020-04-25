@@ -27,7 +27,9 @@ namespace Checkflix.ViewModels
         [Required]
         public float ImbdRating { get; set; }
 
+        [Required]
         public ICollection<VodViewModel> Vods { get; set; }
+        [Required]
         public ICollection<CategoryViewModel> Categories { get; set; }
     }
 }

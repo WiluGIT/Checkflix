@@ -60,6 +60,18 @@
         <mat-error *ngIf="imbdRating.errors?.max && imbdRating.touched"> Ocena imbd musi być mniejsza niż {{imbdRating.errors.max.actual}}</mat-error>
         <mat-error *ngIf="imbdRating.errors?.required">Ocena imbd musi być podana</mat-error>
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>Wybierz platformę VOD</mat-label>
+        <mat-select formControlName="toppings" multiple>
+          <mat-select-trigger>
+            {{productionForm.controls.toppings.value ? productionForm.controls.toppings.value[0] : ''}}
+            <span *ngIf="productionForm.controls.toppings.value?.length > 1" class="example-additional-selection">
+              (+{{productionForm.controls.toppings.value.length - 1}} {{productionForm.controls.toppings.value?.length === 2 ? 'other' : 'others'}})
+            </span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+        </mat-select>
+      </mat-form-field>
       <div class="text-center">
         <button type="submit" [disabled]="productionForm.invalid" class="btn btn-outline-primary">{{actionText}}</button>
 
@@ -68,3 +80,4 @@
 
   </div>
 </div>
+<button (click)="essa()">gowno</button>

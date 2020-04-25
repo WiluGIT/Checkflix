@@ -27,6 +27,7 @@ export class ProductionFormComponent implements OnInit {
       value: "Serial"
     }
   ];
+  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
   constructor(private fb: FormBuilder, private productionService: ProductionService, private route: ActivatedRoute) {
     route.params.subscribe(p => {
@@ -62,10 +63,15 @@ export class ProductionFormComponent implements OnInit {
         Validators.min(0),
         Validators.max(10),
         Validators.minLength(1)
+      ]],
+      toppings: [[], [
+        Validators.required
       ]]
 
     });
+    // populate vods and categories to select boxes
 
+    
     // if its update populate form and 
     if (this.productionId) {
       this.actionText = "Aktualizuj";
@@ -120,7 +126,11 @@ export class ProductionFormComponent implements OnInit {
 
     } else {
       this.productionService.createProduction(this.production).subscribe(res => console.log(res));
-    }    
+    }
+
+  }
+  essa() {
+    console.log(this.productionForm.controls.toppings.value)
 
   }
 

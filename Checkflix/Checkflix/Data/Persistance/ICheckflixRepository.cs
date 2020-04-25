@@ -12,6 +12,7 @@ namespace Checkflix.Data.Persistance
         void AddVodProduction(VodProduction vodProduction);
         Task<IEnumerable<Category>> GetAllCategories();
         Task<IEnumerable<Production>> GetAllProductions();
+        Task<IEnumerable<Vod>> GetAllVods();
         Task<Category> GetCategory(int id);
         Task<Production> GetProduction(int id);
         Task<Vod> GetVod(int id);

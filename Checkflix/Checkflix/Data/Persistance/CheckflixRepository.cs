@@ -79,10 +79,14 @@ namespace Checkflix.Data.Persistance
         }
         #endregion
 
-        #region
+        #region Vods
         public async Task<Vod> GetVod(int id)
         {
             return await _context.Vods.FindAsync(id);
+        }
+        public async Task<IEnumerable<Vod>> GetAllVods()
+        {
+            return await _context.Vods.ToListAsync();
         }
         #endregion
 
