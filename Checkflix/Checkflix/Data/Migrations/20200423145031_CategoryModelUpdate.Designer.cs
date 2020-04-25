@@ -4,14 +4,16 @@ using Checkflix.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Checkflix.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200423145031_CategoryModelUpdate")]
+    partial class CategoryModelUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,122 +162,6 @@ namespace Checkflix.Data.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            CategoryId = 1,
-                            CategoryName = "Akcja",
-                            GenreApiId = 28
-                        },
-                        new
-                        {
-                            CategoryId = 2,
-                            CategoryName = "Thriller",
-                            GenreApiId = 53
-                        },
-                        new
-                        {
-                            CategoryId = 3,
-                            CategoryName = "film TV",
-                            GenreApiId = 10770
-                        },
-                        new
-                        {
-                            CategoryId = 4,
-                            CategoryName = "Sci-Fi",
-                            GenreApiId = 878
-                        },
-                        new
-                        {
-                            CategoryId = 5,
-                            CategoryName = "Romans",
-                            GenreApiId = 10749
-                        },
-                        new
-                        {
-                            CategoryId = 6,
-                            CategoryName = "Tajemnica",
-                            GenreApiId = 9648
-                        },
-                        new
-                        {
-                            CategoryId = 7,
-                            CategoryName = "Muzyczny",
-                            GenreApiId = 10402
-                        },
-                        new
-                        {
-                            CategoryId = 8,
-                            CategoryName = "Horror",
-                            GenreApiId = 27
-                        },
-                        new
-                        {
-                            CategoryId = 9,
-                            CategoryName = "Wojenny",
-                            GenreApiId = 10752
-                        },
-                        new
-                        {
-                            CategoryId = 10,
-                            CategoryName = "Historyczny",
-                            GenreApiId = 36
-                        },
-                        new
-                        {
-                            CategoryId = 11,
-                            CategoryName = "Familijny",
-                            GenreApiId = 10751
-                        },
-                        new
-                        {
-                            CategoryId = 12,
-                            CategoryName = "Dramat",
-                            GenreApiId = 18
-                        },
-                        new
-                        {
-                            CategoryId = 13,
-                            CategoryName = "Dokumentalny",
-                            GenreApiId = 99
-                        },
-                        new
-                        {
-                            CategoryId = 14,
-                            CategoryName = "Kryminał",
-                            GenreApiId = 80
-                        },
-                        new
-                        {
-                            CategoryId = 15,
-                            CategoryName = "Komedia",
-                            GenreApiId = 35
-                        },
-                        new
-                        {
-                            CategoryId = 16,
-                            CategoryName = "Animacja",
-                            GenreApiId = 16
-                        },
-                        new
-                        {
-                            CategoryId = 17,
-                            CategoryName = "Przygodowy",
-                            GenreApiId = 12
-                        },
-                        new
-                        {
-                            CategoryId = 18,
-                            CategoryName = "Fantasy",
-                            GenreApiId = 14
-                        },
-                        new
-                        {
-                            CategoryId = 19,
-                            CategoryName = "Western",
-                            GenreApiId = 37
-                        });
                 });
 
             modelBuilder.Entity("Checkflix.Models.Production", b =>
@@ -339,18 +225,6 @@ namespace Checkflix.Data.Migrations
                     b.HasKey("VodId");
 
                     b.ToTable("Vods");
-
-                    b.HasData(
-                        new
-                        {
-                            VodId = 1,
-                            PlatformName = "Netflix"
-                        },
-                        new
-                        {
-                            VodId = 2,
-                            PlatformName = "HBO GO"
-                        });
                 });
 
             modelBuilder.Entity("Checkflix.Models.VodProduction", b =>

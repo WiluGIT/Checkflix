@@ -3,6 +3,8 @@ import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms'
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
 import { ProductionService } from '../../services/production.service';
 import { ActivatedRoute } from '@angular/router';
+import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
+import { IVodViewModel } from '../ClientViewModels/IVodViewModel';
 
 
 @Component({
@@ -13,8 +15,12 @@ import { ActivatedRoute } from '@angular/router';
 export class ProductionFormComponent implements OnInit {
   productionForm: FormGroup;
   production: IProductionViewModel;
+  categoryList: ICategoryViewModel[];
+  vodList: IVodViewModel[];
   productionId: number;
   imbdFetchClicked: boolean = false;
+
+  actionText: string;
   typeSelect: any = [
     {
       id: 0,
@@ -25,12 +31,15 @@ export class ProductionFormComponent implements OnInit {
       value: "Serial"
     }
   ];
+  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
   constructor(private fb: FormBuilder, private productionService: ProductionService, private route: ActivatedRoute) {
     route.params.subscribe(p => {
       //+before p converts id to a number
       this.productionId = +p['id'] || null;
     });
+
+    this.actionText = "Stwórz";
   }
 
   ngOnInit() {
@@ -58,12 +67,27 @@ export class ProductionFormComponent implements OnInit {
         Validators.min(0),
         Validators.max(10),
         Validators.minLength(1)
+      ]],
+      categories: [[], [
+        Validators.required
+      ]],
+      vods: [[], [
+        Validators.required
       ]]
-
     });
+    // populate vods and categories to select boxes
+    this.productionService
+      .getVods()
+      .subscribe(vods => this.vodList = vods);
 
+    this.productionService
+      .getCategories()
+      .subscribe(categories => this.categoryList = categories);
+
+    
     // if its update populate form and 
     if (this.productionId) {
+      this.actionText = "Aktualizuj";
       this.productionService.getProduction(this.productionId)
         .subscribe(production => {
           //populate production
@@ -115,7 +139,14 @@ export class ProductionFormComponent implements OnInit {
 
     } else {
       this.productionService.createProduction(this.production).subscribe(res => console.log(res));
-    }    
+    }
+
+  }
+  essa() {
+
+    console.log(this.productionForm.controls.categories.value)
+    console.log(this.productionForm.controls.vods.value)
+    console.log(this.productionForm.controls.vods.errors)
 
   }
 

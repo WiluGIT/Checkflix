@@ -13,7 +13,21 @@ namespace Checkflix.Mapping
         public MappingProfile()
         {
             CreateMap<Production, ProductionViewModel>()
+                .ForMember(dto => dto.Vods, opt => opt.MapFrom(x => x.VodProductions.Select(y => y.Vod).ToList()))
+                .ForMember(dto => dto.Categories, opt => opt.MapFrom(x => x.ProductionCategories.Select(y => y.Category).ToList()))
                 .ReverseMap();
+
+            CreateMap<Category, CategoryViewModel>()
+                .ReverseMap();
+            CreateMap<Vod, VodViewModel>()
+                .ReverseMap();
+
+            //CreateMap<VodProduction, VodViewModel>()
+            //    .ReverseMap();
+
+            //CreateMap<ProductionCategory, CategoryViewModel>()
+            //    .ReverseMap();
+
         }
     }
 }

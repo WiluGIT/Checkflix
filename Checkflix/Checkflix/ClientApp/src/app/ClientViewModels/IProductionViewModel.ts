@@ -1,3 +1,6 @@
+import { IVodViewModel } from "./IVodViewModel";
+import { ICategoryViewModel } from "./ICategoryViewModel";
+
 export interface IProductionViewModel {
   productionId: number;
   title: string;
@@ -7,4 +10,6 @@ export interface IProductionViewModel {
   releaseDate: Date;
   imbdId: string;
   imbdRating: number;
+  vods: IVodViewModel[];
+  categories: ICategoryViewModel[];
 }

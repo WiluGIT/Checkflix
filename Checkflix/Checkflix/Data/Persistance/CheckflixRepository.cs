@@ -15,15 +15,28 @@ namespace Checkflix.Data.Persistance
         {
             _context = context;
         }
+
+        #region Productions
         // Productions
         public async Task<IEnumerable<Production>> GetAllProductions()
         {
-            return await _context.Productions.ToListAsync();
+            return await _context.Productions
+                .Include(m=> m.VodProductions)
+                .ThenInclude(m=>m.Vod)
+                .Include(m=>m.ProductionCategories)
+                .ThenInclude(m=>m.Category)
+                .ToListAsync();
         }
 
         public async Task<Production> GetProduction(int id)
         {
-            return await _context.Productions.FindAsync(id);
+            return await _context.Productions
+                .Where(m=>m.ProductionId.Equals(id))
+                .Include(m => m.VodProductions)
+                .ThenInclude(m => m.Vod)
+                .Include(m => m.ProductionCategories)
+                .ThenInclude(m => m.Category)
+                .FirstOrDefaultAsync();
         }
 
         public void AddProduction(Production production)
@@ -38,7 +51,7 @@ namespace Checkflix.Data.Persistance
 
         public void UpdateProduction(Production production)
         {
-            _context.Entry(production).State = EntityState.Modified;
+            _context.Productions.Update(production);
         }
 
         public bool ProductionsExists(int id)
@@ -46,7 +59,74 @@ namespace Checkflix.Data.Persistance
             return _context.Productions.Any(e => e.ProductionId == id);
         }
 
+        #endregion
 
+        #region Categories
+        public async Task<IEnumerable<Category>> GetAllCategories()
+        {
+            return await _context.Categories.ToListAsync();
+        }
+        public async Task<Category> GetCategory(int id)
+        {
+            return await _context.Categories.FindAsync(id);
+        }
+        public void UpdateCategories(IEnumerable<Category> categories)
+        {
+            foreach(var c in categories)
+            {
+                _context.Categories.Add(c);
+            }
+        }
+        #endregion
+
+        #region Vods
+        public async Task<Vod> GetVod(int id)
+        {
+            return await _context.Vods.FindAsync(id);
+        }
+        public async Task<IEnumerable<Vod>> GetAllVods()
+        {
+            return await _context.Vods.ToListAsync();
+        }
+        #endregion
+
+        #region VodProduction
+        public void AddVodProduction(VodProduction vodProduction)
+        {
+            _context.VodProductions.Add(vodProduction);
+        }
+
+        public async Task<VodProduction> GetVodProduction(int vodId, int productionId)
+        {
+            return await _context.VodProductions.Where(m => m.VodId.Equals(vodId) && m.ProductionId.Equals(productionId)).FirstOrDefaultAsync();
+        }
+
+        public async void UpdateVodProduction(VodProduction vodProduction)
+        {
+            var production2update = await _context.VodProductions.Where(m => m.ProductionId.Equals(vodProduction.ProductionId) && m.VodId.Equals(vodProduction.VodId)).FirstOrDefaultAsync();
+
+           
+            _context.Entry(production2update).CurrentValues.SetValues(production2update);
+            //_context.VodProductions.Update(vodProduction);
+        }
+        #endregion
+
+        #region ProductionCategory
+        public void AddProductionCategory(ProductionCategory productionCategory)
+        {
+            _context.ProductionCategories.Add(productionCategory);
+        }
+
+        public async Task<ProductionCategory> GetProductionCategory(int categoryId, int productionId)
+        {
+            return await _context.ProductionCategories.Where(m => m.CategoryId.Equals(categoryId) && m.ProductionId.Equals(productionId)).FirstOrDefaultAsync();
+        }
+
+        public void UpdateProductionCategory(ProductionCategory productionCategory)
+        {
+            _context.ProductionCategories.Update(productionCategory);
+        }
+        #endregion
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;

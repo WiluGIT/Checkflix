@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using Checkflix.ViewModels;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.VisualBasic;
+using System.Collections.ObjectModel;
 
 namespace Checkflix.Controllers
 {
@@ -73,15 +75,70 @@ namespace Checkflix.Controllers
                 return BadRequest();
             }
             var mapPorduction = _mapper.Map<ProductionViewModel, Production>(production);
+            var production2update = await _repository.GetProduction(mapPorduction.ProductionId);
+            production2update.ImbdId = mapPorduction.ImbdId;
+            production2update.ImbdRating = mapPorduction.ImbdRating;
+            production2update.Poster = mapPorduction.Poster;
+            production2update.ProductionId = mapPorduction.ProductionId;
+            production2update.ReleaseDate = mapPorduction.ReleaseDate;
+            production2update.Synopsis = mapPorduction.Synopsis;
+            production2update.Title = mapPorduction.Title;
+            production2update.Type = mapPorduction.Type;
+            
+            ICollection<VodProduction> vodProductionList = new Collection<VodProduction>();
+            ICollection<ProductionCategory> productionCategoriesList = new Collection<ProductionCategory>();
 
-            _repository.UpdateProduction(mapPorduction);
-            //_context.Entry(mapPorduction).State = EntityState.Modified;
+            foreach (var v in production.Vods)
+            {
+                var currentVod = await _repository.GetVod(v.VodId);
+                var vodProduction = new VodProduction
+                {
+                    Production = production2update,
+                    Vod = currentVod
+                };
+                vodProductionList.Add(vodProduction);
+            }
+
+            foreach (var c in production.Categories)
+            {
+                var currentCategory = await _repository.GetCategory(c.CategoryId);
+                var prodCategory = new ProductionCategory
+                {
+                    Category = currentCategory,
+                    Production = production2update,
+                };
+                productionCategoriesList.Add(prodCategory);
+            }
+
+            production2update.VodProductions
+                .Except(vodProductionList)
+                .ToList()
+                .ForEach(x => production2update.VodProductions.Remove(x));
+
+            vodProductionList
+                .Except(production2update.VodProductions)
+                .ToList()
+                .ForEach(x => production2update.VodProductions.Add(x));
+
+            production2update.ProductionCategories
+                .Except(productionCategoriesList)
+                .ToList()
+                .ForEach(x => production2update.ProductionCategories.Remove(x));
+
+            productionCategoriesList
+                .Except(production2update.ProductionCategories)
+                .ToList()
+                .ForEach(x => production2update.ProductionCategories.Add(x));
+
+ 
+            _repository.UpdateProduction(production2update);
+     
 
             try
             {
                 if (await _repository.SaveAll())
-                    return Ok(_mapper.Map<Production, ProductionViewModel>(mapPorduction));
-                //await _context.SaveChangesAsync();
+                    return Ok(_mapper.Map<Production, ProductionViewModel>(production2update));
+                
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -106,7 +163,29 @@ namespace Checkflix.Controllers
         {
             var mapPorduction = _mapper.Map<ProductionViewModel, Production>(production);
 
-            _repository.AddProduction(mapPorduction);
+            // adding item to shared table ex. VodProduction add also to production table and vod table if not exist
+            foreach(var v in production.Vods)
+            {
+                var currentVod = await _repository.GetVod(v.VodId);
+                var vodProduction = new VodProduction
+                {
+                    Production = mapPorduction,
+                    Vod = currentVod
+                };
+                _repository.AddVodProduction(vodProduction); // first loop add production and vod, another only vods
+            }
+
+            foreach(var c in production.Categories)
+            {
+                var currentCategory = await _repository.GetCategory(c.CategoryId);
+                var productionCategory = new ProductionCategory
+                {
+                    Category = currentCategory,
+                    Production = mapPorduction,    
+                };
+                _repository.AddProductionCategory(productionCategory);
+            }
+                    
 
             if(await _repository.SaveAll())
                 return CreatedAtAction("GetProduction", new { id = mapPorduction.ProductionId }, _mapper.Map<Production, ProductionViewModel>(mapPorduction));
