@@ -198,19 +198,32 @@ export class ProductionFormComponent implements OnInit {
         })
         .then((data) => {
           console.log(data);
-
+          
           if (data.movie_results.length > 0) {
             const movieArray = data.movie_results[0];
+            
+            const categories = movieArray.genre_ids.map(el =>
+              this.categoryList.find(x => x.genreApiId === el).categoryName
+            );
 
+            this.productionForm.controls.categories.setValue(categories);
             this.productionForm.controls.title.setValue(movieArray.title);
             this.productionForm.controls.synopsis.setValue(movieArray.overview);
             this.productionForm.controls.type.setValue(0);
-            //this.productionForm.controls.type.setValue(this.typeSelect[0].id);
+            
 
             this.productionForm.controls.releaseDate.setValue(new Date(movieArray.release_date));
           }
           else if (data.tv_results.length > 0) {
             const seriesArray = data.tv_results[0];
+
+         
+            const categories = seriesArray.genre_ids.map(el =>
+              this.categoryList.find(x => x.genreApiId === el).categoryName
+            );
+
+  
+            this.productionForm.controls.categories.setValue(categories);
             this.productionForm.controls.title.setValue(seriesArray.name);
             this.productionForm.controls.synopsis.setValue(seriesArray.overview);
             this.productionForm.controls.type.setValue(1);
