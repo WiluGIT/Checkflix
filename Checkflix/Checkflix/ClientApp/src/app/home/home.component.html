@@ -9,8 +9,17 @@
 </div>
 
 <div class="row">
-  <div class="col-md-2" *ngFor="let production of productionList">
-    <img src="{{production.poster}}" class="img-thumbnail"/>
-    <span>{{production.title}} ({{production.releaseDate.substr(0,4)}})</span>
+  <div class="col-lg-2 col-md-3 col-sm-4 col-6" *ngFor="let production of productionList">
+    <div class="card-prod">
+      <div>
+        <img src="{{production.poster}}" class="img-thumbnail-prod"/>    
+        <div class="text-center">
+          <span *ngIf="production.title.length>48;else short_title" class="title text-center">{{production.title.substr(0,48)}}... ({{production.releaseDate.substr(0,4)}})</span> 
+          <ng-template #short_title><span class="title text-center">{{production.title}} ({{production.releaseDate.substr(0,4)}})</span></ng-template>             
+        </div>
+      </div>
+
+      
+    </div>
   </div>
 </div>
