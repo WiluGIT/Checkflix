@@ -43,6 +43,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 /* Bootstrap ovverides */
 
 .card {
+  margin: auto;
   position: relative;
   display: -webkit-box;
   display: flex;
