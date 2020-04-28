@@ -31,7 +31,6 @@ export class ProductionFormComponent implements OnInit {
       value: "Serial"
     }
   ];
-  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
   constructor(private fb: FormBuilder, private productionService: ProductionService, private route: ActivatedRoute) {
     route.params.subscribe(p => {
@@ -68,10 +67,10 @@ export class ProductionFormComponent implements OnInit {
         Validators.max(10),
         Validators.minLength(1)
       ]],
-      categories: [[], [
+      categories: ['', [
         Validators.required
       ]],
-      vods: [[], [
+      vods: ['', [
         Validators.required
       ]]
     });
@@ -84,7 +83,6 @@ export class ProductionFormComponent implements OnInit {
       .getCategories()
       .subscribe(categories => this.categoryList = categories);
 
-    
     // if its update populate form and 
     if (this.productionId) {
       this.actionText = "Aktualizuj";
@@ -100,9 +98,34 @@ export class ProductionFormComponent implements OnInit {
           this.productionForm.controls.releaseDate.setValue(production.releaseDate);
           this.productionForm.controls.imbdId.setValue(production.imbdId);
           this.productionForm.controls.imbdRating.setValue(production.imbdRating);
+
+
+          // populate dropdown lists
+          const selectedCategories = production.categories.map(cat => cat.categoryName);
+          const selectedVods = production.vods.map(vod => vod.platformName);
+          this.productionForm.controls.categories.setValue(selectedCategories);
+          this.productionForm.controls.vods.setValue(selectedVods);
         });
     }
     
+  }
+
+  essa() {
+
+  
+
+    const categories = this.productionForm.controls.categories.value.map(el =>
+        this.categoryList.find(x => x.categoryName === el)
+    );
+    const vods = this.productionForm.controls.vods.value.map(el =>
+      this.vodList.find(x => x.platformName === el)
+    );
+
+    this.productionForm.controls.categories.setValue(categories);
+    this.productionForm.controls.vods.setValue(vods);
+  
+
+
   }
 
   get title() {
@@ -128,11 +151,25 @@ export class ProductionFormComponent implements OnInit {
   }
 
   submitForm() {
+    // convert categories, vods dropdownlist value to proper object and set to form value
+    const categories = this.productionForm.controls.categories.value.map(el =>
+      this.categoryList.find(x => x.categoryName === el)
+    );
+    const vods = this.productionForm.controls.vods.value.map(el =>
+      this.vodList.find(x => x.platformName === el)
+    );
+
+    this.productionForm.controls.categories.setValue(categories);
+    this.productionForm.controls.vods.setValue(vods);
+
+
+    // bind values from form to API POST/PUT
     this.production = this.productionForm.value;
     this.production.imbdRating = parseFloat(this.productionForm.value.imbdRating);
     this.production.type = parseInt(this.productionForm.value.type);
     this.production.releaseDate = new Date(this.productionForm.value.releaseDate);
 
+    // if its update (id is in url)
     if (this.productionId) {
       this.production.productionId = this.productionId;
       this.productionService.updateProduction(this.productionId, this.production).subscribe(res => console.log(res));
@@ -141,13 +178,12 @@ export class ProductionFormComponent implements OnInit {
       this.productionService.createProduction(this.production).subscribe(res => console.log(res));
     }
 
-  }
-  essa() {
 
-    console.log(this.productionForm.controls.categories.value)
-    console.log(this.productionForm.controls.vods.value)
-    console.log(this.productionForm.controls.vods.errors)
-
+    // populate dropdown lists back 
+    const selectedCategories = this.production.categories.map(cat => cat.categoryName);
+    const selectedVods = this.production.vods.map(vod => vod.platformName);
+    this.productionForm.controls.categories.setValue(selectedCategories);
+    this.productionForm.controls.vods.setValue(selectedVods);
   }
 
 
@@ -162,19 +198,32 @@ export class ProductionFormComponent implements OnInit {
         })
         .then((data) => {
           console.log(data);
-
+          
           if (data.movie_results.length > 0) {
             const movieArray = data.movie_results[0];
+            
+            const categories = movieArray.genre_ids.map(el =>
+              this.categoryList.find(x => x.genreApiId === el).categoryName
+            );
 
+            this.productionForm.controls.categories.setValue(categories);
             this.productionForm.controls.title.setValue(movieArray.title);
             this.productionForm.controls.synopsis.setValue(movieArray.overview);
             this.productionForm.controls.type.setValue(0);
-            //this.productionForm.controls.type.setValue(this.typeSelect[0].id);
+            
 
             this.productionForm.controls.releaseDate.setValue(new Date(movieArray.release_date));
           }
           else if (data.tv_results.length > 0) {
             const seriesArray = data.tv_results[0];
+
+         
+            const categories = seriesArray.genre_ids.map(el =>
+              this.categoryList.find(x => x.genreApiId === el).categoryName
+            );
+
+  
+            this.productionForm.controls.categories.setValue(categories);
             this.productionForm.controls.title.setValue(seriesArray.name);
             this.productionForm.controls.synopsis.setValue(seriesArray.overview);
             this.productionForm.controls.type.setValue(1);

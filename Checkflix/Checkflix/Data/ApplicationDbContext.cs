@@ -54,7 +54,15 @@ namespace Checkflix.Data
                 new Category { CategoryId = 16, CategoryName = "Animacja", GenreApiId = 16 },
                 new Category { CategoryId = 17, CategoryName = "Przygodowy", GenreApiId = 12 },
                 new Category { CategoryId = 18, CategoryName = "Fantasy", GenreApiId = 14 },
-                new Category { CategoryId = 19, CategoryName = "Western", GenreApiId = 37 }
+                new Category { CategoryId = 19, CategoryName = "Western", GenreApiId = 37 },
+                new Category { CategoryId = 20, CategoryName = "Akcja i Przygoda", GenreApiId = 10759 },
+                new Category { CategoryId = 21, CategoryName = "Dzieci", GenreApiId = 10762 },
+                new Category { CategoryId = 22, CategoryName = "News", GenreApiId = 10763 },
+                new Category { CategoryId = 23, CategoryName = "Reality", GenreApiId = 10764 },
+                new Category { CategoryId = 24, CategoryName = "Sci-Fi & Fantasy", GenreApiId = 10765 },
+                new Category { CategoryId = 25, CategoryName = "Opera", GenreApiId = 10766 },
+                new Category { CategoryId = 26, CategoryName = "Rozmowy", GenreApiId = 10767 },
+                new Category { CategoryId = 27, CategoryName = "Wojna & Polityka", GenreApiId = 10768 }
                 );
 
             // n-n table configurations
