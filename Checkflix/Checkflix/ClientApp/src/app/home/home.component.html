@@ -1,25 +1,39 @@
-<div class="row">
-  <div class="mb-3 card">
-    <div class="text-center card-header-tab card-header">Opcje filtrowania</div>
-      <div class="row">
-  
-      </div>
-       
+<div class="A">
+  <div class="B is-loaded">
   </div>
 </div>
 
-<div class="row">
-  <div class="col-lg-2 col-md-3 col-sm-4 col-6" *ngFor="let production of productionList">
-    <div class="card-prod">
-      <div>
-        <img src="{{production.poster}}" class="img-thumbnail-prod"/>    
-        <div class="text-center">
-          <span *ngIf="production.title.length>48;else short_title" class="title text-center">{{production.title.substr(0,48)}}... ({{production.releaseDate.substr(0,4)}})</span> 
-          <ng-template #short_title><span class="title text-center">{{production.title}} ({{production.releaseDate.substr(0,4)}})</span></ng-template>             
-        </div>
-      </div>
+<h1 class="prod-header">Filmy i seriale</h1>
 
+<div class="well full-width">
+  <div class="curved">
+    <svg class="skew-r" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <polygon fill="white" points="0,0 100,0 100,100"/>
+    </svg>
+    <svg class="circle-b" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" preserveAspectRatio="none">
+      <circle fill="white" cx="0" cy="100" r="100"/>
+      <circle fill="white" cx="200" cy="100" r="100"/>
+    </svg>
+    <div class="row" >
+      <section class="prod-section">
+        <div class="col-xl-2 col-md-3 col-sm-4 col-6" *ngFor="let production of productionList">
+          <div class="card-prod">
+            <div>
+              <img src="{{production.poster}}" class="img-thumbnail-prod"/>    
+              <div class="text-center">
+                <span *ngIf="production.title.length>48;else short_title" class="title text-center">{{production.title.substr(0,48)}}... ({{production.releaseDate.substr(0,4)}})</span> 
+                <ng-template #short_title><span class="title text-center">{{production.title}} ({{production.releaseDate.substr(0,4)}})</span></ng-template>             
+              </div>
+            </div>     
+          </div>
+        </div>
+      </section>
       
     </div>
+
+    
+   
   </div>
 </div>
+
+
