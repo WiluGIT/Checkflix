@@ -3,7 +3,7 @@
   </div>
 </div>
 
-<h1 class="prod-header">Filmy i seriale</h1>
+<h1 class="prod-header" #target>Filmy i seriale</h1>
 
 <div class="well full-width">
   <div class="curved">
@@ -16,8 +16,8 @@
     </svg>
     <div class="row" >
       <section class="prod-section">
-        <div class="col-xl-2 col-md-3 col-sm-4 col-6" *ngFor="let production of productionList">
-          <div class="card-prod">
+        <div class="col-xl-2 col-md-3 col-sm-4 col-6" *ngFor="let production of activePageDataChunk">
+          <div class="card-prod" >
             <div>
               <img src="{{production.poster}}" class="img-thumbnail-prod"/>    
               <div class="text-center">
@@ -28,12 +28,13 @@
           </div>
         </div>
       </section>
-      
-    </div>
-
-    
-   
+    </div>  
   </div>
 </div>
+<mat-paginator [length]="length"
+[pageSize]="pageSize"
+(page)="onPageChanged($event,target)"
+[hidePageSize]="true">
+</mat-paginator>
 
 

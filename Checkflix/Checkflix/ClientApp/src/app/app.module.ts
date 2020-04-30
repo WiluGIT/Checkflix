@@ -29,6 +29,9 @@ import { MatNativeDateModule, MatRippleModule, MAT_DATE_LOCALE } from '@angular/
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import {MatPaginatorModule, MatPaginatorIntl} from '@angular/material/paginator';
+import { PaginatorCustomComponent } from './paginator-custom/paginator-custom.component';
+import { getPlPaginatorIntl } from './paginator-custom/pl-paginator-intl';
 
 @NgModule({
   declarations: [
@@ -38,7 +41,8 @@ import { MatIconModule } from '@angular/material/icon';
     CounterComponent,
     FetchDataComponent,
     AdminComponent,
-    ProductionFormComponent
+    ProductionFormComponent,
+    PaginatorCustomComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -66,12 +70,14 @@ import { MatIconModule } from '@angular/material/icon';
     MatNativeDateModule,
     MatTableModule,
     MatSortModule,
-    MatIconModule
+    MatIconModule,
+    MatPaginatorModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
-    { provide: MAT_DATE_LOCALE, useValue: 'pl-Pl' }
+    { provide: MAT_DATE_LOCALE, useValue: 'pl-Pl' },
+    { provide: MatPaginatorIntl, useValue: getPlPaginatorIntl() }
   ],
   bootstrap: [AppComponent]
 })
