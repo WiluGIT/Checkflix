@@ -9,7 +9,7 @@ import {PageEvent} from '@angular/material/paginator';
 export class HomeComponent implements OnInit {
   productionList: Array<IProductionViewModel>;
   length:number;
-  pageSize:number = 10;
+  pageSize:number = 20;
   pageEvent: PageEvent;
   activePageDataChunk:Array<IProductionViewModel> = [];
 
@@ -32,6 +32,6 @@ export class HomeComponent implements OnInit {
     let firstCut = e.pageIndex * e.pageSize;
     let secondCut = firstCut + e.pageSize;
     this.activePageDataChunk = this.productionList.slice(firstCut, secondCut);
-    htmlTarget.scrollIntoView();
+    htmlTarget.scrollIntoView({behavior:"smooth"});
   }
 }
