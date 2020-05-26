@@ -196,7 +196,7 @@ export class ProductionFormComponent implements OnInit {
             'x-rapidapi-key': '8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120'
           }
         }).toPromise();
-
+        
         if (movieDbData.movie_results.length > 0) {
           const movieArray = movieDbData.movie_results[0];
 

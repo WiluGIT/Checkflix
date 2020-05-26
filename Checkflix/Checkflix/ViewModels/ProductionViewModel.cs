@@ -16,7 +16,6 @@ namespace Checkflix.ViewModels
         [Required]
         public string Poster { get; set; }
         [Required]
-        [MinLength(25)]
         public string Synopsis { get; set; }
         [Required]
         public ProductionType Type { get; set; }

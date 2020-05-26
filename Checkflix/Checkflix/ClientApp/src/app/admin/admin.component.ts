@@ -8,6 +8,7 @@ import { Observable, of } from 'rxjs';
 import { ProductionService } from '../../services/production.service';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-admin',
@@ -22,12 +23,11 @@ export class AdminComponent implements OnInit {
   productionList: Array<IProductionViewModel>;
   categoriesList: Array<ICategoryViewModel> = [];
   deletedProduction: IProductionViewModel;
-  fetchedProductionList: Array<IProductionViewModel> = [];
   categoryList: ICategoryViewModel[];
   productionFromApi: IProductionViewModel = {
     productionId: 0,
     poster: " ",
-    title: " ",
+    title: "brak",
     synopsis: "brak",
     type: null,
     releaseDate: null,
@@ -37,8 +37,13 @@ export class AdminComponent implements OnInit {
     categories: []
 
   };
+  productionListFromApi: Array<IProductionViewModel>;
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  constructor(private authService: AuthorizeService, private productionService: ProductionService, private router: Router) {
+  constructor(private authService: AuthorizeService,
+    private productionService: ProductionService,
+    private router: Router,
+    private http: HttpClient) {
     this.dataSource = new MatTableDataSource(this.productionList);
   }
 
@@ -98,162 +103,243 @@ export class AdminComponent implements OnInit {
     this.dataSource.data = data;
 
   }
-  fetchNetflix() {
-    // const fetchedCount = this.getNetflixProductionCount();
-    // let count = Math.ceil(4253 / 100);
-    this.getImbdRating("beczka")
 
-  }
-  gowno() {
-    console.log(this.fetchedProductionList);
-  }
 
-  getNetflixProductionCount() {
-    fetch("https://unogs-unogs-v1.p.rapidapi.com/aaapi.cgi?q=get%3Anew99999%3APL&p=1&t=ns&st=adv", {
-      "method": "GET",
-      "headers": {
+  async fetchNetflix() {
+
+    // unongs endpoint
+    const unongsUrl = "https://unogs-unogs-v1.p.rapidapi.com/aaapi.cgi?q=get%3Anew99999%3APL&p=1&t=ns&st=adv";
+    let productionCount = await this.http.get(unongsUrl, {
+      headers: {
         "x-rapidapi-host": "unogs-unogs-v1.p.rapidapi.com",
         "x-rapidapi-key": "8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120"
       }
-    })
-      .then(response => {
-        return response.json()
-      })
-      .then((data) => {
-        console.log(data.COUNT);
-        const iterationCount = Math.ceil(parseInt(data) / 100);
-        for (let i = 0; i < 1; i++) {
-          const currentPage = i + 1;
-          const url = `https://unogs-unogs-v1.p.rapidapi.com/aaapi.cgi?q=get%3Anew99999%3APL&p=${currentPage}&t=ns&st=adv`;
-
-          fetch(url, {
-            "method": "GET",
-            "headers": {
-              "x-rapidapi-host": "unogs-unogs-v1.p.rapidapi.com",
-              "x-rapidapi-key": "8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120"
-            }
-          })
-            .then(response => {
-              return response.json()
-            })
-            .then((data) => {
-
-              for (let i = 0; i < data.ITEMS.length; i++) {
-                if (data.ITEMS[i].imdbid !== "notfound") {
-                  const apiData = data.ITEMS[i];
-                  const movieDburl = `https://api.themoviedb.org/3/find/${apiData.imdbid}?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl_PL&external_source=imdb_id`;
-
-                  fetch(movieDburl)
-                    .then((response) => {
-                      return response.json();
-                    })
-                    .then((data) => {
-                      console.log(data);
-
-                      if (data.movie_results.length > 0) {
-                        const movieArray = data.movie_results[0];
-
-                        const categories = movieArray.genre_ids.map(el =>
-                          this.categoryList.find(x => x.genreApiId === el)
-                        );
-                        this.productionFromApi.imbdId = apiData.imdbid
-                        this.productionFromApi.poster = apiData.image;
-                        //this.productionFromApi.imbdRating = apiData.rating;
-                        //this.productionFromApi.title = movieArray.title;
-                        this.productionFromApi.title = apiData.title;
-                        if (movieArray.overview)
-                          this.productionFromApi.synopsis = movieArray.overview;
-                        this.productionFromApi.type = 0;
-                        this.productionFromApi.releaseDate = new Date(movieArray.release_date);
-                        this.productionFromApi.categories = categories;
-                        this.productionFromApi.vods = [{
-                          vodId: 1,
-                          platformName: "Netflix"
-                        }];
-                      }
-                      else if (data.tv_results.length > 0) {
-                        const seriesArray = data.tv_results[0];
+    }).toPromise();
 
 
-                        const categories = seriesArray.genre_ids.map(el =>
-                          this.categoryList.find(x => x.genreApiId === el)
-                        );
+    if (productionCount) {
+      for (let i = 0; i < 3; i++) {
+        const currentPage = i + 1;
+        const currentPageUrl = `https://unogs-unogs-v1.p.rapidapi.com/aaapi.cgi?q=get%3Anew99999%3APL&p=${currentPage}&t=ns&st=adv`;
 
-                        this.productionFromApi.imbdId = apiData.imdbid
-                        this.productionFromApi.poster = apiData.image;
-                        //this.productionFromApi.imbdRating = apiData.rating;
-                        //this.productionFromApi.title = seriesArray.name;
-                        this.productionFromApi.title = apiData.title;
-                        if (seriesArray.overview)
-                          this.productionFromApi.synopsis = seriesArray.overview;
-                        this.productionFromApi.type = 1;
-                        this.productionFromApi.releaseDate = new Date(seriesArray.first_air_date);
-                        this.productionFromApi.categories = categories;
-                        this.productionFromApi.vods = [{
-                          vodId: 1,
-                          platformName: "Netflix"
-                        }];
-                      }
+        let currentPageData = await this.http.get(unongsUrl, {
+          headers: {
+            "x-rapidapi-host": "unogs-unogs-v1.p.rapidapi.com",
+            "x-rapidapi-key": "8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120"
+          }
+        }).toPromise();
 
-                      //
-                      const rapidApiUrl = "https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/" + apiData.imdbid;
-                      const imbdResponse = this.getImbdRating(apiData.imdbid);
-                      //this.productionFromApi.imbdRating = parseFloat(imbdResponse.rating);
-                      // fetch(rapidApiUrl, {
-                      //   "method": "GET",
-                      //   "headers": {
-                      //     "x-rapidapi-host": "imdb-internet-movie-database-unofficial.p.rapidapi.com",
-                      //     "x-rapidapi-key": "8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120"
-                      //   }
-                      // })
-                      //   .then(response => {
+        for (let j = 0; j < currentPageData.ITEMS.length; j++) {
+          if (currentPageData.ITEMS[j].imdbid !== "notfound") {           
+            const apiData = currentPageData.ITEMS[j];
 
-                      //     return response.json()
-                      //   })
-                      //   .then((data) => {
-                      //     console.log(data);
-                      //     this.productionFromApi.imbdRating = parseFloat(data.rating);
+            // themoviedb endpoint
+            const movieDburl = `https://api.themoviedb.org/3/find/${apiData.imdbid}?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl_PL&external_source=imdb_id`;
+            let movieDbData = await this.http.get(movieDburl).toPromise();
 
-                      //     this.fetchedProductionList.push(this.productionFromApi);
-
-                      //   })
-                      //   .catch(err => {
-                      //     console.log(err);
-                      //   });
-
-
-
-
-                    })
-                    .catch(err => {
-                      console.log(err);
-                    });
-
-                }
+            // imbd endpoint
+            const imbdUrl = "https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/" + apiData.imdbid;
+            let imbdData = await this.http.get(imbdUrl, {
+              headers: {
+                'x-rapidapi-host': 'imdb-internet-movie-database-unofficial.p.rapidapi.com',
+                'x-rapidapi-key': '8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120'
               }
-            })
-            .catch(err => {
-              console.log(err);
-            });
+            }).toPromise();
+
+            if (movieDbData.movie_results.length > 0) {
+              const movieArray = movieDbData.movie_results[0];
+
+              const categories = movieArray.genre_ids.map(el =>
+                this.categoryList.find(x => x.genreApiId === el)
+              );
+              this.productionFromApi.imbdId = apiData.imdbid;
+              this.productionFromApi.categories = categories;
+              this.productionFromApi.title = movieArray.title;
+              if (movieArray.overview)
+                this.productionFromApi.synopsis = movieArray.overview;
+              this.productionFromApi.type = 0;
+              this.productionFromApi.releaseDate = new Date(movieArray.release_date);
+              this.productionFromApi.vods = [{
+                      vodId: 1,
+                      platformName: "Netflix"
+              }];
+
+            }
+            else if (movieDbData.tv_results.length > 0) {
+              const seriesArray = movieDbData.tv_results[0];
+
+
+              const categories = seriesArray.genre_ids.map(el =>
+                this.categoryList.find(x => x.genreApiId === el)
+              );
+              this.productionFromApi.imbdId = apiData.imdbid;
+              this.productionFromApi.categories = categories;
+              this.productionFromApi.title = seriesArray.name;
+              if (seriesArray.overview)
+                this.productionFromApi.synopsis = seriesArray.overview;
+              this.productionFromApi.type = 1;
+              this.productionFromApi.releaseDate = new Date(seriesArray.first_air_date);
+              this.productionFromApi.vods = [{
+                vodId: 1,
+                platformName: "Netflix"
+              }];
+            }
+
+            if (imbdData) {
+              this.productionFromApi.imbdRating = parseFloat(imbdData.rating);
+              this.productionFromApi.poster = imbdData.poster;
+            }
+
+            this.productionService.createProduction(this.productionFromApi).subscribe(res => console.log(res));
+
+            this.productionFromApi = {
+              productionId: 0,
+              poster: " ",
+              title: "brak",
+              synopsis: "brak",
+              type: null,
+              releaseDate: null,
+              imbdId: " ",
+              imbdRating: null,
+              vods: [],
+              categories: []
+
+            };
+          }
         }
 
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
 
-  async getImbdRating(imbdId) {
-    const response = await fetch("https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/" + imbdId, {
-      "method": "GET",
-      "headers": {
-        "x-rapidapi-host": "imdb-internet-movie-database-unofficial.p.rapidapi.com",
-        "x-rapidapi-key": "8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120"
       }
-    })
-    return await response.json();
+    }
+    //for (let i = 0; i < 1; i++) {
+    //  const currentPage = i + 1;
+    //  const url = `https://unogs-unogs-v1.p.rapidapi.com/aaapi.cgi?q=get%3Anew99999%3APL&p=${currentPage}&t=ns&st=adv`;
+
+    //  fetch(url, {
+    //    "method": "GET",
+    //    "headers": {
+    //      "x-rapidapi-host": "unogs-unogs-v1.p.rapidapi.com",
+    //      "x-rapidapi-key": "8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120"
+    //    }
+    //  })
+    //    .then(response => {
+    //      return response.json()
+    //    })
+    //    .then((data) => {
+
+    //      for (let i = 0; i < data.ITEMS.length; i++) {
+    //        if (data.ITEMS[i].imdbid !== "notfound") {
+    //          const apiData = data.ITEMS[i];
+    //          const movieDburl = `https://api.themoviedb.org/3/find/${apiData.imdbid}?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl_PL&external_source=imdb_id`;
+
+    //          fetch(movieDburl)
+    //            .then((response) => {
+    //              return response.json();
+    //            })
+    //            .then((data) => {
+    //              console.log(data);
+
+    //              if (data.movie_results.length > 0) {
+    //                const movieArray = data.movie_results[0];
+
+    //                const categories = movieArray.genre_ids.map(el =>
+    //                  this.categoryList.find(x => x.genreApiId === el)
+    //                );
+    //                this.productionFromApi.imbdId = apiData.imdbid
+    //                this.productionFromApi.poster = apiData.image;
+    //                //this.productionFromApi.imbdRating = apiData.rating;
+    //                //this.productionFromApi.title = movieArray.title;
+    //                this.productionFromApi.title = apiData.title;
+    //                if (movieArray.overview)
+    //                  this.productionFromApi.synopsis = movieArray.overview;
+    //                this.productionFromApi.type = 0;
+    //                this.productionFromApi.releaseDate = new Date(movieArray.release_date);
+    //                this.productionFromApi.categories = categories;
+    //                this.productionFromApi.vods = [{
+    //                  vodId: 1,
+    //                  platformName: "Netflix"
+    //                }];
+    //              }
+    //              else if (data.tv_results.length > 0) {
+    //                const seriesArray = data.tv_results[0];
+
+
+    //                const categories = seriesArray.genre_ids.map(el =>
+    //                  this.categoryList.find(x => x.genreApiId === el)
+    //                );
+
+    //                this.productionFromApi.imbdId = apiData.imdbid
+    //                this.productionFromApi.poster = apiData.image;
+    //                //this.productionFromApi.imbdRating = apiData.rating;
+    //                //this.productionFromApi.title = seriesArray.name;
+    //                this.productionFromApi.title = apiData.title;
+    //                if (seriesArray.overview)
+    //                  this.productionFromApi.synopsis = seriesArray.overview;
+    //                this.productionFromApi.type = 1;
+    //                this.productionFromApi.releaseDate = new Date(seriesArray.first_air_date);
+    //                this.productionFromApi.categories = categories;
+    //                this.productionFromApi.vods = [{
+    //                  vodId: 1,
+    //                  platformName: "Netflix"
+    //                }];
+    //              }
+
+    //              //
+    //              const rapidApiUrl = "https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/" + apiData.imdbid;
+    //              const imbdResponse = this.getImbdRating(apiData.imdbid);
+    //              //this.productionFromApi.imbdRating = parseFloat(imbdResponse.rating);
+    //              // fetch(rapidApiUrl, {
+    //              //   "method": "GET",
+    //              //   "headers": {
+    //              //     "x-rapidapi-host": "imdb-internet-movie-database-unofficial.p.rapidapi.com",
+    //              //     "x-rapidapi-key": "8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120"
+    //              //   }
+    //              // })
+    //              //   .then(response => {
+
+    //              //     return response.json()
+    //              //   })
+    //              //   .then((data) => {
+    //              //     console.log(data);
+    //              //     this.productionFromApi.imbdRating = parseFloat(data.rating);
+
+    //              //     this.fetchedProductionList.push(this.productionFromApi);
+
+    //              //   })
+    //              //   .catch(err => {
+    //              //     console.log(err);
+    //              //   });
+
+
+
+
+    //            })
+    //            .catch(err => {
+    //              console.log(err);
+    //            });
+
+    //        }
+    //      }
+    //    })
+    //    .catch(err => {
+    //      console.log(err);
+    //    });
+    //}
+
+
+    //let imbdData = await this.http.get(imbdUrl, {
+    //  headers: {
+    //    'x-rapidapi-host': 'imdb-internet-movie-database-unofficial.p.rapidapi.com',
+    //    'x-rapidapi-key': '8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120'
+    //  }
+    //}).toPromise();
+    // const fetchedCount = this.getNetflixProductionCount();
+    // let count = Math.ceil(4253 / 100);
+    //this.getImbdRating("beczka")
 
   }
+
+
 
   updateCategories() {
     const categoriesUrl = "https://api.themoviedb.org/3/genre/movie/list?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl-PL";
