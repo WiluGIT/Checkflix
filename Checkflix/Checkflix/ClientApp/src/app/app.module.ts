@@ -32,7 +32,7 @@ import { MatIconModule } from '@angular/material/icon';
 import {MatPaginatorModule, MatPaginatorIntl} from '@angular/material/paginator';
 import { PaginatorCustomComponent } from './paginator-custom/paginator-custom.component';
 import { getPlPaginatorIntl } from './paginator-custom/pl-paginator-intl';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -71,7 +71,8 @@ import { getPlPaginatorIntl } from './paginator-custom/pl-paginator-intl';
     MatTableModule,
     MatSortModule,
     MatIconModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSnackBarModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },

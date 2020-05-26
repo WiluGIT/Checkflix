@@ -158,6 +158,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   font-size: 15px !important;
 }
 
+.red-snackbar {
+  background: #F44336;
+}
+
+.green-snackbar {
+  background: #339933;
+}
+
 /* Bootstrap ovverides */
 
 .card {
