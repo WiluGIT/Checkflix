@@ -14,6 +14,8 @@ namespace Checkflix.ViewModels
         [Required]
         public string Title { get; set; }
         [Required]
+        public string Subtitle { get; set; }
+        [Required]
         public string Poster { get; set; }
         [Required]
         public string Synopsis { get; set; }

@@ -26,6 +26,10 @@ export class ProductionService {
     return this.http.post('/api/productions', production).pipe(map((production: IProductionViewModel) => production));
   }
 
+  createProductions(productions: IProductionViewModel[]) {
+    return this.http.post('/api/productions/BulkProductionsCreate', productions).pipe(map((productions: IProductionViewModel[]) => productions));
+  }
+
   updateProduction(id:number, production: IProductionViewModel) {
     return this.http.put('/api/productions/'+id, production).pipe(map((production: IProductionViewModel) => production));
   }

@@ -1,4 +1,5 @@
 ﻿using Checkflix.Models;
+using EFCore.BulkExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -109,6 +110,15 @@ namespace Checkflix.Data.Persistance
             _context.Entry(production2update).CurrentValues.SetValues(production2update);
             //_context.VodProductions.Update(vodProduction);
         }
+
+        public void AddVodProductions(List<VodProduction> vodProductions)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                _context.BulkInsert(vodProductions);
+                transaction.Commit();
+            }
+        }
         #endregion
 
         #region ProductionCategory
@@ -125,6 +135,16 @@ namespace Checkflix.Data.Persistance
         public void UpdateProductionCategory(ProductionCategory productionCategory)
         {
             _context.ProductionCategories.Update(productionCategory);
+        }
+
+
+        public void AddProductionCategories(List<ProductionCategory> productionCategories)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                _context.BulkInsert(productionCategories);
+                transaction.Commit();
+            }
         }
         #endregion
         public async Task<bool> SaveAll()

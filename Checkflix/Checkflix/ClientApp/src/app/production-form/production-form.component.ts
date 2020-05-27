@@ -197,8 +197,8 @@ export class ProductionFormComponent implements OnInit {
           }
         }).toPromise();
         
-        if (movieDbData.movie_results.length > 0) {
-          const movieArray = movieDbData.movie_results[0];
+        if (movieDbData["movie_results"].length > 0) {
+          const movieArray = movieDbData["movie_results"][0];
 
           const categories = movieArray.genre_ids.map(el =>
             this.categoryList.find(x => x.genreApiId === el).categoryName
@@ -212,8 +212,8 @@ export class ProductionFormComponent implements OnInit {
 
           this.productionForm.controls.releaseDate.setValue(new Date(movieArray.release_date));
         }
-        else if (movieDbData.tv_results.length > 0) {
-          const seriesArray = movieDbData.tv_results[0];
+        else if (movieDbData["tv_results"].length > 0) {
+          const seriesArray = movieDbData["tv_results"][0];
 
 
           const categories = seriesArray.genre_ids.map(el =>
@@ -229,8 +229,8 @@ export class ProductionFormComponent implements OnInit {
         }
 
         if (imbdData) {
-          this.productionForm.controls.imbdRating.setValue(imbdData.rating);
-          this.productionForm.controls.poster.setValue(imbdData.poster);
+          this.productionForm.controls.imbdRating.setValue(imbdData["rating"]);
+          this.productionForm.controls.poster.setValue(imbdData["poster"]);
         }
       } catch (err) {
         this.openSnackBar("Wystąpił błąd w pobieraniu danych", 'Zamknij', 'red-snackbar')

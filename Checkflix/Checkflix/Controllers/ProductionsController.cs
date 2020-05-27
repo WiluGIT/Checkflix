@@ -193,6 +193,47 @@ namespace Checkflix.Controllers
             return BadRequest("Failed to add production");
         }
 
+        [Route("/api/productions/BulkProductionsCreate")]
+        public async Task<ActionResult> BulkProductionsCreate([FromBody]IEnumerable<ProductionViewModel> productions)
+        {
+            foreach (var p in productions)
+            {
+                var mapPorduction = _mapper.Map<ProductionViewModel, Production>(p);
+
+                foreach (var v in p.Vods)
+                {
+                    var currentVod = await _repository.GetVod(v.VodId);
+                    var vodProduction = new VodProduction
+                    {
+                        Production = mapPorduction,
+                        ProductionId = mapPorduction.ProductionId,
+                        Vod = currentVod,
+                        VodId = v.VodId
+                    };
+                    _repository.AddVodProduction(vodProduction); // first loop add production and vod, another only vods
+                }
+
+                foreach (var c in p.Categories)
+                {
+                    var currentCategory = await _repository.GetCategory(c.CategoryId);
+                    var productionCategory = new ProductionCategory
+                    {
+                        Category = currentCategory,
+                        CategoryId = currentCategory.CategoryId,
+                        Production = mapPorduction,
+                        ProductionId = mapPorduction.ProductionId
+                    };
+                    _repository.AddProductionCategory(productionCategory);
+                }
+            }
+
+
+            if (await _repository.SaveAll())
+                return Ok("Added");
+
+            return BadRequest("ehhh");
+        }
+
         // DELETE: api/Productions/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Production>> DeleteProduction(int id)
@@ -200,7 +241,7 @@ namespace Checkflix.Controllers
             var production = await _repository.GetProduction(id);
             if (production == null)
             {
-                return NotFound();
+                
             }
 
             _repository.RemoveProduction(production);

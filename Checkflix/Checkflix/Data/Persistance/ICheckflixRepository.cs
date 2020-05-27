@@ -8,8 +8,10 @@ namespace Checkflix.Data.Persistance
     public interface ICheckflixRepository
     {
         void AddProduction(Production production);
+        void AddProductionCategories(List<ProductionCategory> productionCategories);
         void AddProductionCategory(ProductionCategory productionCategory);
         void AddVodProduction(VodProduction vodProduction);
+        void AddVodProductions(List<VodProduction> vodProductions);
         Task<IEnumerable<Category>> GetAllCategories();
         Task<IEnumerable<Production>> GetAllProductions();
         Task<IEnumerable<Vod>> GetAllVods();

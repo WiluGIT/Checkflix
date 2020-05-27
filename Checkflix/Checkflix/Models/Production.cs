@@ -10,6 +10,7 @@ namespace Checkflix.Models
     {
         public int ProductionId { get; set; }
         public string Title { get; set; }
+        public string Subtitle { get; set; }
         public string Poster { get; set; }
         public string Synopsis { get; set; }
         public ProductionType Type { get; set; }
