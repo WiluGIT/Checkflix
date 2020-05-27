@@ -1,4 +1,5 @@
 ﻿using Checkflix.Models;
+using EFCore.BulkExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -109,6 +110,7 @@ namespace Checkflix.Data.Persistance
             _context.Entry(production2update).CurrentValues.SetValues(production2update);
             //_context.VodProductions.Update(vodProduction);
         }
+
         #endregion
 
         #region ProductionCategory
@@ -126,6 +128,7 @@ namespace Checkflix.Data.Persistance
         {
             _context.ProductionCategories.Update(productionCategory);
         }
+
         #endregion
         public async Task<bool> SaveAll()
         {

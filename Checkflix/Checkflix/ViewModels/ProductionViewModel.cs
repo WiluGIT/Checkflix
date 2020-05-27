@@ -1,4 +1,5 @@
 ﻿using Checkflix.Models;
+using Checkflix.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,9 +15,10 @@ namespace Checkflix.ViewModels
         [Required]
         public string Title { get; set; }
         [Required]
+        public string Subtitle { get; set; }
+        [Required]
         public string Poster { get; set; }
         [Required]
-        [MinLength(25)]
         public string Synopsis { get; set; }
         [Required]
         public ProductionType Type { get; set; }

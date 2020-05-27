@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Checkflix.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {
@@ -35,6 +35,10 @@ namespace Checkflix.Controllers
             try
             {
                 var categories = await _repository.GetAllCategories();
+
+                if (categories == null)
+                    return NotFound();
+
                 return Ok(_mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(categories));
             }
             catch (Exception ex)

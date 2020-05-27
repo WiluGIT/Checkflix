@@ -5,6 +5,8 @@ import { ProductionService } from '../../services/production.service';
 import { ActivatedRoute } from '@angular/router';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { IVodViewModel } from '../ClientViewModels/IVodViewModel';
+import { HttpClient } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material';
 
 
 @Component({
@@ -32,7 +34,11 @@ export class ProductionFormComponent implements OnInit {
     }
   ];
 
-  constructor(private fb: FormBuilder, private productionService: ProductionService, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder,
+    private productionService: ProductionService,
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    public snackBar: MatSnackBar) {
     route.params.subscribe(p => {
       //+before p converts id to a number
       this.productionId = +p['id'] || null;
@@ -110,23 +116,7 @@ export class ProductionFormComponent implements OnInit {
     
   }
 
-  essa() {
 
-  
-
-    const categories = this.productionForm.controls.categories.value.map(el =>
-        this.categoryList.find(x => x.categoryName === el)
-    );
-    const vods = this.productionForm.controls.vods.value.map(el =>
-      this.vodList.find(x => x.platformName === el)
-    );
-
-    this.productionForm.controls.categories.setValue(categories);
-    this.productionForm.controls.vods.setValue(vods);
-  
-
-
-  }
 
   get title() {
     return this.productionForm.get('title');
@@ -149,6 +139,8 @@ export class ProductionFormComponent implements OnInit {
   get imbdRating() {
     return this.productionForm.get('imbdRating');
   }
+
+ 
 
   submitForm() {
     // convert categories, vods dropdownlist value to proper object and set to form value
@@ -186,83 +178,68 @@ export class ProductionFormComponent implements OnInit {
     this.productionForm.controls.vods.setValue(selectedVods);
   }
 
-
-  fetchImbd() {
+  async fetchImbd() {
     const imbdId = this.productionForm.value.imbdId;
+
     if (imbdId) {
 
-      const movieDburl = `https://api.themoviedb.org/3/find/${imbdId}?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl_PL&external_source=imdb_id`;
-      fetch(movieDburl)
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data);
-          
-          if (data.movie_results.length > 0) {
-            const movieArray = data.movie_results[0];
-            
-            const categories = movieArray.genre_ids.map(el =>
-              this.categoryList.find(x => x.genreApiId === el).categoryName
-            );
+      try {
+        // themoviedb endpoint 
+        const movieDburl = `https://api.themoviedb.org/3/find/${imbdId}?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl_PL&external_source=imdb_id`;
+        let movieDbData = await this.http.get(movieDburl).toPromise();
 
-            this.productionForm.controls.categories.setValue(categories);
-            this.productionForm.controls.title.setValue(movieArray.title);
-            this.productionForm.controls.synopsis.setValue(movieArray.overview);
-            this.productionForm.controls.type.setValue(0);
-            
-
-            this.productionForm.controls.releaseDate.setValue(new Date(movieArray.release_date));
+        // imbd endpoint
+        const imbdUrl = "https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/" + imbdId;
+        let imbdData = await this.http.get(imbdUrl, {
+          headers: {
+            'x-rapidapi-host': 'imdb-internet-movie-database-unofficial.p.rapidapi.com',
+            'x-rapidapi-key': '8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120'
           }
-          else if (data.tv_results.length > 0) {
-            const seriesArray = data.tv_results[0];
+        }).toPromise();
+        
+        if (movieDbData["movie_results"].length > 0) {
+          const movieArray = movieDbData["movie_results"][0];
 
-         
-            const categories = seriesArray.genre_ids.map(el =>
-              this.categoryList.find(x => x.genreApiId === el).categoryName
-            );
+          const categories = movieArray.genre_ids.map(el =>
+            this.categoryList.find(x => x.genreApiId === el).categoryName
+          );
 
-  
-            this.productionForm.controls.categories.setValue(categories);
-            this.productionForm.controls.title.setValue(seriesArray.name);
-            this.productionForm.controls.synopsis.setValue(seriesArray.overview);
-            this.productionForm.controls.type.setValue(1);
-            this.productionForm.controls.releaseDate.setValue(new Date(seriesArray.first_air_date));
-          }
+          this.productionForm.controls.categories.setValue(categories);
+          this.productionForm.controls.title.setValue(movieArray.title);
+          this.productionForm.controls.synopsis.setValue(movieArray.overview);
+          this.productionForm.controls.type.setValue(0);
 
-          // if this api response is null create another api call to omdbapi
-          const rapidApiUrl = "https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/" + imbdId;
-          fetch(rapidApiUrl, {
-            "method": "GET",
-            "headers": {
-              "x-rapidapi-host": "imdb-internet-movie-database-unofficial.p.rapidapi.com",
-              "x-rapidapi-key": "8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120"
-            }
-          })
-            .then(response => {
-              return response.json()
-            })
-            .then((data) => {
-              console.log(data);
-              this.productionForm.controls.imbdRating.setValue(data.rating);
-              this.productionForm.controls.poster.setValue(data.poster);
 
-            })
-            .catch(err => {
-              console.log(err);
-            });
+          this.productionForm.controls.releaseDate.setValue(new Date(movieArray.release_date));
+        }
+        else if (movieDbData["tv_results"].length > 0) {
+          const seriesArray = movieDbData["tv_results"][0];
 
-        })
-        .catch(err => {
-          console.log(err);
-        });
 
-    }
-    else {
+          const categories = seriesArray.genre_ids.map(el =>
+            this.categoryList.find(x => x.genreApiId === el).categoryName
+          );
+
+
+          this.productionForm.controls.categories.setValue(categories);
+          this.productionForm.controls.title.setValue(seriesArray.name);
+          this.productionForm.controls.synopsis.setValue(seriesArray.overview);
+          this.productionForm.controls.type.setValue(1);
+          this.productionForm.controls.releaseDate.setValue(new Date(seriesArray.first_air_date));
+        }
+
+        if (imbdData) {
+          this.productionForm.controls.imbdRating.setValue(imbdData["rating"]);
+          this.productionForm.controls.poster.setValue(imbdData["poster"]);
+        }
+      } catch (err) {
+        this.openSnackBar("Wystąpił błąd w pobieraniu danych", 'Zamknij', 'red-snackbar')
+      }
+
+    } else {
       this.imbdFetchClicked = true;
       this.productionForm.controls.imbdId.markAsTouched();
     }
-    
 
   }
 
@@ -271,6 +248,13 @@ export class ProductionFormComponent implements OnInit {
       return "Wprowadź Imbd id, aby pobrać dane";
       
 
+  }
+
+  openSnackBar(message: string, action: string, className: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+      panelClass: [className]
+    });
   }
 
 

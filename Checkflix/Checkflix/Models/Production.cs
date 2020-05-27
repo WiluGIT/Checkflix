@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Checkflix.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace Checkflix.Models
     {
         public int ProductionId { get; set; }
         public string Title { get; set; }
+        public string Subtitle { get; set; }
         public string Poster { get; set; }
         public string Synopsis { get; set; }
         public ProductionType Type { get; set; }
@@ -28,11 +30,5 @@ namespace Checkflix.Models
             VodProductions = new Collection<VodProduction>();
             ProductionCategories = new Collection<ProductionCategory>();
         }
-    }
-
-    public enum ProductionType
-    {
-        Movie=0,
-        Series
     }
 }
