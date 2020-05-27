@@ -15,7 +15,7 @@ export class ProductionService {
   private getProductionPath = environment.apiUrl + '/api/productions/GetProduction/';
   private createProductionPath = environment.apiUrl + '/api/productions/PostProduction';
   private createProductionsPath = environment.apiUrl + '/api/productions/BulkProductionsCreate';
-  private updateProductionPath = environment.apiUrl + '/api/productions/';
+  private updateProductionPath = environment.apiUrl + '/api/productions/PutProduction/';
   private deleteProductionPath = environment.apiUrl + '/api/productions/DeleteProduction/';
   //to another service
   private getCategoriesPath = environment.apiUrl + '/api/categories/GetCategories';
