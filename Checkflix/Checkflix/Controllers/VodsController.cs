@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Checkflix.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class VodsController : ControllerBase
     {
@@ -35,12 +35,15 @@ namespace Checkflix.Controllers
             try
             {
                 var vods = await _repository.GetAllVods();
+                if (vods == null)
+                    return NotFound();
+                     
                 return Ok(_mapper.Map<IEnumerable<Vod>, IEnumerable<VodViewModel>>(vods));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Failed to get vods {ex}");
-                return BadRequest("Bad request");
+                return BadRequest("Couldn't get vods");
             }
 
         }

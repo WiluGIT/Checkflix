@@ -1,4 +1,5 @@
 ﻿using Checkflix.Models;
+using Checkflix.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

@@ -14,10 +14,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.VisualBasic;
 using System.Collections.ObjectModel;
+using Checkflix.Models.Enums;
 
 namespace Checkflix.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProductionsController : ControllerBase
     {
@@ -40,6 +41,9 @@ namespace Checkflix.Controllers
             try
             {
                 var products = await _repository.GetAllProductions();
+                if (products == null)
+                    return NotFound();
+
                 return Ok(_mapper.Map<IEnumerable<Production>, IEnumerable<ProductionViewModel>>(products));
             }
             catch(Exception ex)
@@ -65,8 +69,6 @@ namespace Checkflix.Controllers
         }
 
         // PUT: api/Productions/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduction(int id, [FromBody]ProductionViewModel production)
         {
@@ -156,8 +158,6 @@ namespace Checkflix.Controllers
         }
 
         // POST: api/Productions
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult<ProductionViewModel>> PostProduction([FromBody]ProductionViewModel production)
         {
@@ -193,7 +193,7 @@ namespace Checkflix.Controllers
             return BadRequest("Failed to add production");
         }
 
-        [Route("/api/productions/BulkProductionsCreate")]
+        [HttpPost]
         public async Task<ActionResult> BulkProductionsCreate([FromBody]IEnumerable<ProductionViewModel> productions)
         {
             foreach (var p in productions)
@@ -236,25 +236,53 @@ namespace Checkflix.Controllers
 
         // DELETE: api/Productions/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Production>> DeleteProduction(int id)
+        public async Task<ActionResult<ResponseViewModel>> DeleteProduction(int id)
         {
             var production = await _repository.GetProduction(id);
-            if (production == null)
-            {
-                
-            }
+
+            var response = ValidateProductionDelete(production);
+
+            if (response.Status == ResponseStatus.Error) 
+                return response;
 
             _repository.RemoveProduction(production);
             if (await _repository.SaveAll())
-                // return here deleted product to filter it out in front-end
-                return Ok(_mapper.Map<Production, ProductionViewModel>(production));
+            {
+                response.Data = (ProductionViewModel)_mapper.Map<Production, ProductionViewModel>(production);
+                response.Messages.Add("Produkcja została usunięta");
+                return Ok(response);
+            }
+            else
+            {
+                response.Status = ResponseStatus.Error;
+                response.Messages.Add("Nie udało się usunąć produktu z bazy");
+                return response;
+            }
+            
 
-            return production;
         }
 
         private bool ProductionExists(int id)
         {
             return _repository.ProductionsExists(id);
+        }
+
+        private ResponseViewModel ValidateProductionDelete(Production production)
+        {
+            var validationResponse = new ResponseViewModel
+            {
+                Status = ResponseStatus.Success,
+                Messages = new List<string>()
+            };
+
+            if (production == null)
+            {
+                validationResponse.Status = ResponseStatus.Error;
+                validationResponse.Messages.Add("Produkcja o podanym id nie istnieje");
+                return validationResponse;
+            }
+
+            return validationResponse;
         }
     }
 }

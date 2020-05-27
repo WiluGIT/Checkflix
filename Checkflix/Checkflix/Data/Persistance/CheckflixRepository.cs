@@ -111,14 +111,6 @@ namespace Checkflix.Data.Persistance
             //_context.VodProductions.Update(vodProduction);
         }
 
-        public void AddVodProductions(List<VodProduction> vodProductions)
-        {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                _context.BulkInsert(vodProductions);
-                transaction.Commit();
-            }
-        }
         #endregion
 
         #region ProductionCategory
@@ -137,15 +129,6 @@ namespace Checkflix.Data.Persistance
             _context.ProductionCategories.Update(productionCategory);
         }
 
-
-        public void AddProductionCategories(List<ProductionCategory> productionCategories)
-        {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                _context.BulkInsert(productionCategories);
-                transaction.Commit();
-            }
-        }
         #endregion
         public async Task<bool> SaveAll()
         {
