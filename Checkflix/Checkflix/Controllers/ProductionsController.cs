@@ -246,8 +246,21 @@ namespace Checkflix.Controllers
                 var response = ValidateBulkCreate(productions);
 
                 if (response.Status == ResponseStatus.Error)
-                    return response;
+                    return BadRequest(response);
 
+                if(_repository.AnyProductionsExists())
+                {
+                    // delete all existing productions
+                    _repository.RemoveAllProductions();
+                    if (!await _repository.SaveAll())
+                    {
+                        response.Status = ResponseStatus.Error;
+                        response.Messages.Add("Nie udało się usunąć istniejących produkcji");
+                        return response;
+                    }
+                }
+                             
+                // add new productions
                 foreach (var p in productions)
                 {
                     var mapPorduction = _mapper.Map<ProductionViewModel, Production>(p);
@@ -290,7 +303,6 @@ namespace Checkflix.Controllers
                     response.Messages.Add("Produkcje nie zostały dodane");
                     return response;
                 }
-                    
             }
             catch(Exception ex)
             {
@@ -364,7 +376,7 @@ namespace Checkflix.Controllers
                 Messages = new List<string>()
             };
 
-            if (productions == null)
+            if (productions == null || productions.Count() == 0)
             {
                 validationResponse.Status = ResponseStatus.Error;
                 validationResponse.Messages.Add("Kolekcja, którą chcesz dodać jest pusta");

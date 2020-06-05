@@ -60,6 +60,15 @@ namespace Checkflix.Data.Persistance
             return _context.Productions.Any(e => e.ProductionId == id);
         }
 
+        public void RemoveAllProductions()
+        {
+            _context.Productions.RemoveRange(_context.Productions);
+        }
+        public bool AnyProductionsExists()
+        {
+            return _context.Productions.Any();
+        }
+
         #endregion
 
         #region Categories

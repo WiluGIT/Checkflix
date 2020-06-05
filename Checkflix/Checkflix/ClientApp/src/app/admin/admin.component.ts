@@ -9,6 +9,7 @@ import { ProductionService } from '../../services/production.service';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-admin',
@@ -24,6 +25,7 @@ export class AdminComponent implements OnInit {
   categoriesList: Array<ICategoryViewModel> = [];
   deletedProduction: IProductionViewModel;
   categoryList: ICategoryViewModel[];
+
   productionFromApi: IProductionViewModel = {
     productionId: 0,
     poster: "brak",
@@ -44,7 +46,8 @@ export class AdminComponent implements OnInit {
   constructor(private authService: AuthorizeService,
     private productionService: ProductionService,
     private router: Router,
-    private http: HttpClient) {
+    private http: HttpClient,
+    public snackBar: MatSnackBar) {
     this.dataSource = new MatTableDataSource(this.productionList);
   }
 
@@ -83,12 +86,14 @@ export class AdminComponent implements OnInit {
   }
 
   deleteProduction(productionId) {
-    console.log(this.productionList);
-
     this.productionService
       .deleteProduction(productionId)
-      .subscribe(deleted => {
-        console.log(deleted)
+      .subscribe(res => {
+        if (res['status'] == 1) {
+          this.openSnackBar(res['messages'], 'Zamknij', 'red-snackbar');
+        } else {
+          this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
+        }
       },
         err => {
           if (err.status == 404) {
@@ -104,10 +109,12 @@ export class AdminComponent implements OnInit {
     this.dataSource.data = data;
 
   }
-
+  gowno() {
+    this.productionService.createProductions(this.productionList).subscribe(res => console.log(res));
+  }
 
   async fetchNetflix() {
-
+    this.productionListFromApi = [];
     // unongs endpoint
     const unongsUrl = "https://unogs-unogs-v1.p.rapidapi.com/aaapi.cgi?q=get%3Anew99999%3APL&p=1&t=ns&st=adv";
     //let productionCount = await this.http.get(unongsUrl, {
@@ -254,6 +261,13 @@ export class AdminComponent implements OnInit {
       .catch(err => {
         console.log(err);
       });
+  }
+
+  openSnackBar(message: string, action: string, className: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+      panelClass: [className]
+    });
   }
 
 

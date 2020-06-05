@@ -119,8 +119,6 @@ export class ProductionFormComponent implements OnInit {
     
   }
 
-
-
   get title() {
     return this.productionForm.get('title');
   }
@@ -252,6 +250,8 @@ export class ProductionFormComponent implements OnInit {
           this.productionForm.controls.poster.setValue(imbdData["poster"]);
           this.productionForm.controls.subtitle.setValue(imbdData["title"]);
         }
+
+        this.openSnackBar('Dane zostały pobrane', 'Zamknij', 'green-snackbar');
       } catch (err) {
         this.openSnackBar("Wystąpił błąd w pobieraniu danych", 'Zamknij', 'red-snackbar')
       }
@@ -266,8 +266,6 @@ export class ProductionFormComponent implements OnInit {
   getErrorMessage() {
     if (this.imbdFetchClicked) 
       return "Wprowadź Imbd id, aby pobrać dane";
-      
-
   }
 
   openSnackBar(message: string, action: string, className: string) {
