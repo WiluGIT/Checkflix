@@ -15,12 +15,13 @@ export class AuthorizeAdminGuard implements CanActivate {
     _next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
-    if (this.authorize.isAdmin())
+    if (this.authorize.isAdmin()) {
       return true;
-
-    this.router.navigate(['/authentication/login']);
-    return false;
-
+    } else {
+      this.router.navigate(['/authentication/login']);
+      return false;
+    }
+     
   }
 
   private handleAuthorization(isAuthenticated: boolean, state: RouterStateSnapshot) {

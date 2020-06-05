@@ -170,10 +170,22 @@ export class ProductionFormComponent implements OnInit {
     // if its update (id is in url)
     if (this.productionId) {
       this.production.productionId = this.productionId;
-      this.productionService.updateProduction(this.productionId, this.production).subscribe(res => console.log(res));
+      this.productionService.updateProduction(this.productionId, this.production).subscribe(res => {
+        if (res['status'] == 1) {
+          this.openSnackBar(res['messages'], 'Zamknij', 'red-snackbar');
+        } else {
+          this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
+        }
+      });
 
     } else {
-      this.productionService.createProduction(this.production).subscribe(res => console.log(res));
+      this.productionService.createProduction(this.production).subscribe(res => {
+        if (res['status'] == 1) {
+          this.openSnackBar(res['messages'], 'Zamknij', 'red-snackbar');
+        } else {
+          this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
+        }
+      });
     }
 
 
