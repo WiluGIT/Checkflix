@@ -20,6 +20,7 @@ namespace Checkflix.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class ProductionsController : ControllerBase
     {
         private readonly ICheckflixRepository _repository;
@@ -58,14 +59,23 @@ namespace Checkflix.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Production>> GetProduction(int id)
         {
-            var production = await _repository.GetProduction(id);
-  
-            if (production == null)
+            try
             {
-                return NotFound("Production with specified id does not exist");
+                var production = await _repository.GetProduction(id);
+
+                if (production == null)
+                {
+                    return NotFound("Production with specified id does not exist");
+                }
+
+                return Ok(_mapper.Map<Production, ProductionViewModel>(production));
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"Failed to get product {ex}");
+                return BadRequest("Bad request");
             }
 
-            return Ok(_mapper.Map<Production, ProductionViewModel>(production));
         }
 
         // PUT: api/Productions/5
@@ -80,7 +90,7 @@ namespace Checkflix.Controllers
             try
             {
                 var mapPorduction = _mapper.Map<ProductionViewModel, Production>(production);
-                var response = ValidateProductionCreate(mapPorduction);
+                var response = ValidateProduction(mapPorduction);
 
                 if (response.Status == ResponseStatus.Error)
                     return response;
@@ -179,7 +189,7 @@ namespace Checkflix.Controllers
             {
                 var mapPorduction = _mapper.Map<ProductionViewModel, Production>(production);
 
-                var response = ValidateProductionCreate(mapPorduction);
+                var response = ValidateProduction(mapPorduction);
                 if (response.Status == ResponseStatus.Error)
                     return response;
 
@@ -224,7 +234,7 @@ namespace Checkflix.Controllers
             }
             catch(Exception ex)
             {
-                return BadRequest("Coś poszło nie tak");
+                return BadRequest($"Coś poszło nie tak. Error: {ex}");
             }                                
         }
 
@@ -284,7 +294,7 @@ namespace Checkflix.Controllers
             }
             catch(Exception ex)
             {
-                return BadRequest("Coś poszło nie tak");
+                return BadRequest($"Coś poszło nie tak. Error: {ex}");
             }            
         }
 
@@ -296,7 +306,7 @@ namespace Checkflix.Controllers
             {
                 var production = await _repository.GetProduction(id);
 
-                var response = ValidateProductionDelete(production);
+                var response = ValidateProduction(production);
 
                 if (response.Status == ResponseStatus.Error)
                     return response;
@@ -311,13 +321,13 @@ namespace Checkflix.Controllers
                 else
                 {
                     response.Status = ResponseStatus.Error;
-                    response.Messages.Add("Nie udało się usunąć produktu z bazy");
+                    response.Messages.Add("Nie udało się usunąć produkcji z bazy");
                     return response;
                 }
             }
             catch(Exception ex)
             {
-                return BadRequest("Coś poszło nie tak");
+                return BadRequest($"Coś poszło nie tak. Error: {ex}");
             }                      
 
         }
@@ -328,7 +338,7 @@ namespace Checkflix.Controllers
         }
 
 
-        private ResponseViewModel ValidateProductionCreate(Production production)
+        private ResponseViewModel ValidateProduction(Production production)
         {
             var validationResponse = new ResponseViewModel
             {
@@ -340,24 +350,6 @@ namespace Checkflix.Controllers
             {
                 validationResponse.Status = ResponseStatus.Error;
                 validationResponse.Messages.Add("Podana produkcja jest pusta");
-                return validationResponse;
-            }
-
-            return validationResponse;
-        }
-
-        private ResponseViewModel ValidateProductionDelete(Production production)
-        {
-            var validationResponse = new ResponseViewModel
-            {
-                Status = ResponseStatus.Success,
-                Messages = new List<string>()
-            };
-
-            if (production == null)
-            {
-                validationResponse.Status = ResponseStatus.Error;
-                validationResponse.Messages.Add("Produkcja o podanym id nie istnieje");
                 return validationResponse;
             }
 

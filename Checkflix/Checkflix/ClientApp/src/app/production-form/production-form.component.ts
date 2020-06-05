@@ -107,7 +107,7 @@ export class ProductionFormComponent implements OnInit {
           this.productionForm.controls.releaseDate.setValue(production.releaseDate);
           this.productionForm.controls.imbdId.setValue(production.imbdId);
           this.productionForm.controls.imbdRating.setValue(production.imbdRating);
-
+          this.productionForm.controls.subtitle.setValue(production.subtitle);
 
           // populate dropdown lists
           const selectedCategories = production.categories.map(cat => cat.categoryName);

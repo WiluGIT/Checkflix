@@ -14,15 +14,13 @@ export class AuthorizeAdminGuard implements CanActivate {
   canActivate(
     _next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    let authenticated = this.authorize.isAuthenticated()
-      .pipe(tap(isAuthenticated => this.handleAuthorization(isAuthenticated, state)));
-    let userRole;
-    this.authorize.getUser().subscribe(x => userRole = x.role)
-    if (authenticated && userRole == "Admin") {
+
+    if (this.authorize.isAdmin())
       return true;
-    }
-    this.router.navigate(['/']);
+
+    this.router.navigate(['/authentication/login']);
     return false;
+
   }
 
   private handleAuthorization(isAuthenticated: boolean, state: RouterStateSnapshot) {
