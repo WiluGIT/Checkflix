@@ -52,6 +52,9 @@ export class ProductionFormComponent implements OnInit {
       title: ['', [
         Validators.required
       ]],
+      subtitle: ['', [
+        Validators.required
+      ]],
       poster: ['', [
         Validators.required
       ]],
@@ -104,7 +107,7 @@ export class ProductionFormComponent implements OnInit {
           this.productionForm.controls.releaseDate.setValue(production.releaseDate);
           this.productionForm.controls.imbdId.setValue(production.imbdId);
           this.productionForm.controls.imbdRating.setValue(production.imbdRating);
-
+          this.productionForm.controls.subtitle.setValue(production.subtitle);
 
           // populate dropdown lists
           const selectedCategories = production.categories.map(cat => cat.categoryName);
@@ -116,10 +119,11 @@ export class ProductionFormComponent implements OnInit {
     
   }
 
-
-
   get title() {
     return this.productionForm.get('title');
+  }
+  get subtitle() {
+    return this.productionForm.get('subtitle');
   }
   get poster() {
     return this.productionForm.get('poster');
@@ -164,10 +168,22 @@ export class ProductionFormComponent implements OnInit {
     // if its update (id is in url)
     if (this.productionId) {
       this.production.productionId = this.productionId;
-      this.productionService.updateProduction(this.productionId, this.production).subscribe(res => console.log(res));
+      this.productionService.updateProduction(this.productionId, this.production).subscribe(res => {
+        if (res['status'] == 1) {
+          this.openSnackBar(res['messages'], 'Zamknij', 'red-snackbar');
+        } else {
+          this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
+        }
+      });
 
     } else {
-      this.productionService.createProduction(this.production).subscribe(res => console.log(res));
+      this.productionService.createProduction(this.production).subscribe(res => {
+        if (res['status'] == 1) {
+          this.openSnackBar(res['messages'], 'Zamknij', 'red-snackbar');
+        } else {
+          this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
+        }
+      });
     }
 
 
@@ -196,7 +212,8 @@ export class ProductionFormComponent implements OnInit {
             'x-rapidapi-key': '8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120'
           }
         }).toPromise();
-        
+
+
         if (movieDbData["movie_results"].length > 0) {
           const movieArray = movieDbData["movie_results"][0];
 
@@ -231,7 +248,10 @@ export class ProductionFormComponent implements OnInit {
         if (imbdData) {
           this.productionForm.controls.imbdRating.setValue(imbdData["rating"]);
           this.productionForm.controls.poster.setValue(imbdData["poster"]);
+          this.productionForm.controls.subtitle.setValue(imbdData["title"]);
         }
+
+        this.openSnackBar('Dane zostały pobrane', 'Zamknij', 'green-snackbar');
       } catch (err) {
         this.openSnackBar("Wystąpił błąd w pobieraniu danych", 'Zamknij', 'red-snackbar')
       }
@@ -246,8 +266,6 @@ export class ProductionFormComponent implements OnInit {
   getErrorMessage() {
     if (this.imbdFetchClicked) 
       return "Wprowadź Imbd id, aby pobrać dane";
-      
-
   }
 
   openSnackBar(message: string, action: string, className: string) {

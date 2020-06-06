@@ -22,18 +22,26 @@
         <input matInput placeholder="np. tt4574334" formControlName="imbdId">
         <mat-error *ngIf="imbdFetchClicked">{{getErrorMessage()}}</mat-error>
         <mat-error *ngIf="imbdId.invalid">Imbd id musi być podane</mat-error>
-
       </mat-form-field>
+
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź tytuł</mat-label>
         <input matInput placeholder="Tytuł" formControlName="title">
         <mat-error *ngIf="title.invalid">Tytuł musi być podany</mat-error>
       </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Wprowadź podtytuł</mat-label>
+        <input matInput placeholder="Podtytuł" formControlName="subtitle">
+        <mat-error *ngIf="title.invalid">Podtytuł musi być podany</mat-error>
+      </mat-form-field>
+
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź opis fabuły</mat-label>
         <textarea matInput placeholder="Dawno, dawno temu..." formControlName="synopsis"></textarea>
         <mat-error *ngIf="synopsis.invalid">Opis fabuły musi być podany</mat-error>
       </mat-form-field>
+
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź typ</mat-label>
         <mat-select formControlName="type">
@@ -41,6 +49,7 @@
         </mat-select>
         <mat-error *ngIf="type.invalid">Typ musi być podany</mat-error>
       </mat-form-field>
+
       <mat-form-field>
         <mat-label>Wprowadź datę premiery</mat-label>
         <input formControlName="releaseDate" matInput [matDatepicker]="picker">
@@ -48,11 +57,13 @@
         <mat-datepicker #picker disabled="false"></mat-datepicker>
         <mat-error *ngIf="releaseDate.invalid">Data musi być podana</mat-error>
       </mat-form-field>
+
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź link do plakatu</mat-label>
         <input matInput placeholder="https://static.posters.cz/image/750/plakaty/stranger-things-summer-of-85-i76122.jpg" formControlName="poster">
         <mat-error *ngIf="poster.invalid">Link do plakatu musi być podany</mat-error>
       </mat-form-field>
+
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź ocenę Imbd </mat-label>
         <input min="0" max="10" type="number" matInput placeholder="np. 6.5" formControlName="imbdRating">
@@ -60,6 +71,7 @@
         <mat-error *ngIf="imbdRating.errors?.max && imbdRating.touched"> Ocena imbd musi być mniejsza niż {{imbdRating.errors.max.actual}}</mat-error>
         <mat-error *ngIf="imbdRating.errors?.required">Ocena imbd musi być podana</mat-error>
       </mat-form-field>
+
       <mat-form-field>
         <mat-label>Wybierz kategorie</mat-label>
         <mat-select formControlName="categories" multiple>
@@ -73,6 +85,7 @@
         </mat-select>
         <mat-error *ngIf="productionForm.controls.categories.errors?.required">Kategoria musi być podana</mat-error>
       </mat-form-field>
+
       <mat-form-field>
         <mat-label>Wybierz platformę VOD</mat-label>
         <mat-select formControlName="vods" multiple>
@@ -86,6 +99,7 @@
         </mat-select>
         <mat-error *ngIf="productionForm.controls.vods.errors?.required">Platforma VOD musi być podana</mat-error>
       </mat-form-field>
+
       <div class="text-center">
         <button type="submit" [disabled]="productionForm.invalid" class="btn btn-outline-primary">{{actionText}}</button>
 

@@ -10,6 +10,7 @@ namespace Checkflix.Data.Persistance
         void AddProduction(Production production);
         void AddProductionCategory(ProductionCategory productionCategory);
         void AddVodProduction(VodProduction vodProduction);
+        bool AnyProductionsExists();
         Task<IEnumerable<Category>> GetAllCategories();
         Task<IEnumerable<Production>> GetAllProductions();
         Task<IEnumerable<Vod>> GetAllVods();
@@ -19,6 +20,7 @@ namespace Checkflix.Data.Persistance
         Task<Vod> GetVod(int id);
         Task<VodProduction> GetVodProduction(int vodId, int productionId);
         bool ProductionsExists(int id);
+        void RemoveAllProductions();
         void RemoveProduction(Production production);
         Task<bool> SaveAll();
         void UpdateCategories(IEnumerable<Category> categories);

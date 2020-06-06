@@ -22,12 +22,8 @@
                 Produkcji HBO
               </div>
             </div>
-
           </div>
-
-        </div>
-      
-      
+        </div>   
     </div>
   </mat-tab>
   <mat-tab label="Produkcje">
@@ -87,6 +83,14 @@
         <button class="btn btn-outline-primary" (click)="fetchNetflix()">Pobierz dane Netflixa</button>
         <button class="btn btn-outline-primary" (click)="gowno()">dsadsa</button>
       </div>
+      <div>
+        <mat-progress-spinner class="progress-spinner"
+                              [color]="color"
+                              [mode]="mode"
+                              [value]="value">
+        </mat-progress-spinner>
+      </div>
+
     </div>
   </mat-tab>
 </mat-tab-group>
