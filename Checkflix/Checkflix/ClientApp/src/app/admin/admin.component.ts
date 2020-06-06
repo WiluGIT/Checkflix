@@ -10,6 +10,8 @@ import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'app-admin',
@@ -40,7 +42,14 @@ export class AdminComponent implements OnInit {
     categories: []
 
   };
-  productionListFromApi: Array<IProductionViewModel> = [];
+  productionListFromApi: Array<IProductionViewModel>;
+
+
+  // XD
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'determinate';
+  value = 0;
+
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   constructor(private authService: AuthorizeService,
@@ -110,28 +119,40 @@ export class AdminComponent implements OnInit {
 
   }
   gowno() {
-    this.productionService.createProductions(this.productionList).subscribe(res => console.log(res));
+    console.log(this.value)
+    this.value = 0
+    let dataCount = 1000;
+    let counter = 0;
+    for (let i = 0; i < dataCount; i++) {
+      counter += 1;
+      this.value = counter / dataCount * 100; 
+    }
+
   }
 
   async fetchNetflix() {
     this.productionListFromApi = [];
     // unongs endpoint
     const unongsUrl = "https://unogs-unogs-v1.p.rapidapi.com/aaapi.cgi?q=get%3Anew99999%3APL&p=1&t=ns&st=adv";
-    //let productionCount = await this.http.get(unongsUrl, {
-    //  headers: {
-    //    "x-rapidapi-host": "unogs-unogs-v1.p.rapidapi.com",
-    //    "x-rapidapi-key": "8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120"
-    //  }
-    //}).toPromise();
-    let productionCount = 2;
+    let productionCount = await this.http.get(unongsUrl, {
+      headers: {
+        "x-rapidapi-host": "unogs-unogs-v1.p.rapidapi.com",
+        "x-rapidapi-key": "8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120"
+      }
+    }).toPromise();
 
+    let productionsProcessedCounter = 0;
     if (productionCount) {
-      for (let i = 0; i < 1; i++) {
+      // calculate real count
+      const realCount = parseInt(productionCount['COUNT'])
+      const pageCount = Math.ceil(realCount / 100);
+      for (let i = 0; i < pageCount; i++) {
         const currentPage = i + 1;
+        // TODO currentPage in URL IS NOT INCREMENTING
         const currentPageUrl = `https://unogs-unogs-v1.p.rapidapi.com/aaapi.cgi?q=get%3Anew99999%3APL&p=${currentPage}&t=ns&st=adv`;
 
         // unongs endpoint
-        let currentPageData = await this.http.get(unongsUrl, {
+        let currentPageData = await this.http.get(currentPageUrl, {
           headers: {
             "x-rapidapi-host": "unogs-unogs-v1.p.rapidapi.com",
             "x-rapidapi-key": "8a5735bcd6msh35b94dd1467c587p1baf48jsn33eb07d88120"
@@ -139,7 +160,7 @@ export class AdminComponent implements OnInit {
         }).toPromise();
 
         for (let j = 0; j < currentPageData["ITEMS"].length; j++) {
-          if (currentPageData["ITEMS"][j].imdbid !== "notfound") {           
+          if (currentPageData["ITEMS"][j].imdbid !== "notfound") {
             const apiData = currentPageData["ITEMS"][j];
 
             // themoviedb endpoint
@@ -155,6 +176,12 @@ export class AdminComponent implements OnInit {
               }
             }).toPromise();
 
+            // update counter for progress bar
+            productionsProcessedCounter += 1;
+            this.value = (productionsProcessedCounter / (realCount * 2)) * 100;
+            
+
+            // gather data from api
             this.productionFromApi.poster = apiData.image;
             this.productionFromApi.title = apiData.title;
 
@@ -202,7 +229,6 @@ export class AdminComponent implements OnInit {
               this.productionFromApi.poster = imbdData["poster"];
             }
 
-            //this.productionService.createProduction(this.productionFromApi).subscribe(res => console.log(res));
             if (this.productionFromApi.imbdId && this.productionFromApi.imbdRating && this.productionFromApi.releaseDate && this.productionFromApi.type)
               this.productionListFromApi.push(this.productionFromApi)
 
@@ -227,7 +253,15 @@ export class AdminComponent implements OnInit {
       }
       this.productionService
         .createProductions(this.productionListFromApi)
-        .subscribe(data => console.log(data));
+        .subscribe(res => {
+          if (res['status'] == 1) {
+            this.openSnackBar(res['messages'], 'Zamknij', 'red-snackbar');
+            this.value = 0;
+          } else {
+            this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
+            this.value = 0;
+          }
+        });
     }
   }
 
