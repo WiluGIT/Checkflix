@@ -348,3 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+Checkflix/Checkflix/checkflix.db
+Checkflix/Checkflix/checkflix.db-shm
+Checkflix/Checkflix/checkflix.db-wal
