@@ -119,14 +119,14 @@ export class AdminComponent implements OnInit {
 
   }
   gowno() {
-    console.log(this.value)
-    this.value = 0
-    let dataCount = 1000;
-    let counter = 0;
-    for (let i = 0; i < dataCount; i++) {
-      counter += 1;
-      this.value = counter / dataCount * 100; 
-    }
+    console.log(this.productionListFromApi)
+    // this.value = 0
+    // let dataCount = 1000;
+    // let counter = 0;
+    // for (let i = 0; i < dataCount; i++) {
+    //   counter += 1;
+    //   this.value = counter / dataCount * 100; 
+    // }
 
   }
 
@@ -146,7 +146,8 @@ export class AdminComponent implements OnInit {
       // calculate real count
       const realCount = parseInt(productionCount['COUNT'])
       const pageCount = Math.ceil(realCount / 100);
-      for (let i = 0; i < pageCount; i++) {
+      // TMP var PAGECOUNT -> 3
+      for (let i = 0; i < 3; i++) {
         const currentPage = i + 1;
         // TODO currentPage in URL IS NOT INCREMENTING
         const currentPageUrl = `https://unogs-unogs-v1.p.rapidapi.com/aaapi.cgi?q=get%3Anew99999%3APL&p=${currentPage}&t=ns&st=adv`;
@@ -160,7 +161,7 @@ export class AdminComponent implements OnInit {
         }).toPromise();
 
         for (let j = 0; j < currentPageData["ITEMS"].length; j++) {
-          if (currentPageData["ITEMS"][j].imdbid !== "notfound") {
+          if (currentPageData["ITEMS"][j].imdbid !== "notfound" && currentPageData["ITEMS"][j].imdbid) {
             const apiData = currentPageData["ITEMS"][j];
 
             // themoviedb endpoint
