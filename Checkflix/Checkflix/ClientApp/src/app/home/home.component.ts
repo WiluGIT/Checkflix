@@ -9,34 +9,39 @@ import {PageEvent} from '@angular/material/paginator';
 })
 export class HomeComponent implements OnInit {
   productionList: Array<IProductionViewModel>;
+  productionsCount:number;
   postQueryFilters: IPostQueryFilters = {
-    pageNumber: 2,
-    pageSize: 20
+    pageNumber: 1,
+    pageSize: 25
   };
-  length:number;
-
-  pageEvent: PageEvent;
   activePageDataChunk:Array<IProductionViewModel> = [];
 
-  constructor(private productionService:ProductionService){
-    
+  constructor(private productionService:ProductionService){ 
   }
 
   ngOnInit(){
     this.productionService.getProductions(this.postQueryFilters)
-    .subscribe(productions => {
-      this.productionList = productions;
-      this.length = productions.length;
-      this.activePageDataChunk = this.productionList.slice(0,this.postQueryFilters.pageSize);
-      console.log(this.activePageDataChunk)
+    .subscribe(response => {
+      const headers = JSON.parse(response.headers.get('X-Pagination'));
+
+      this.productionList = response.body;
+      this.productionsCount = headers["TotalCount"];
+      this.activePageDataChunk = this.productionList;
     });
   }
 
   onPageChanged(e,htmlTarget: HTMLElement) {
-    console.log(e.pageIndex)
-    let firstCut = e.pageIndex * e.pageSize;
-    let secondCut = firstCut + e.pageSize;
-    this.activePageDataChunk = this.productionList.slice(firstCut, secondCut);
+    // Update current page index
+    this.postQueryFilters.pageNumber = e.pageIndex + 1;
+
+    // Call endpoint
+    this.productionService.getProductions(this.postQueryFilters)
+    .subscribe(response => {
+      this.productionList = response.body;
+      this.activePageDataChunk = this.productionList;
+    });
+
+    // Scroll to target
     htmlTarget.scrollIntoView({behavior:"smooth"});
   }
 }

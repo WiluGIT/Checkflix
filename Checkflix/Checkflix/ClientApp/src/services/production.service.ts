@@ -24,11 +24,12 @@ export class ProductionService {
   constructor(private http: HttpClient) { }
 
   // Productions
-  getProductions(filters: IPostQueryFilters): Observable<IProductionViewModel[]> {
+  getProductions(filters: IPostQueryFilters): Observable<any> {
     let params = new HttpParams();
     params = params.append('pageNumber', filters.pageNumber.toString());
     params = params.append('pageSize', filters.pageSize.toString());
-    return this.http.get(this.getProductionsPath, {params:params}).pipe(map((productions: IProductionViewModel[]) => productions));
+
+    return this.http.get(this.getProductionsPath, { params, observe: 'response' }).pipe(map((productions: any) => productions));
   }
 
   getProduction(id: number): Observable<IProductionViewModel> {

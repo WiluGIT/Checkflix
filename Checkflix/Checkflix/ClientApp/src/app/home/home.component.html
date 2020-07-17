@@ -31,8 +31,8 @@
     </div>  
   </div>
 </div>
-<mat-paginator [length]="length"
-[pageSize]="pageSize"
+<mat-paginator [length]="productionsCount"
+[pageSize]="postQueryFilters.pageSize"
 (page)="onPageChanged($event,target)"
 [hidePageSize]="true">
 </mat-paginator>
