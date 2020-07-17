@@ -39,6 +39,8 @@ namespace Checkflix.Data.Persistance
                 .ThenInclude(m=>m.Category)
                 .ToListAsync();
 
+            // Here in if condition implement filter logic for each patameter in PostQueryFilters class
+
             var pagedProductions = PagedList<Production>.Create(productions,filters.PageNumber,filters.PageSize);
 
             return pagedProductions;

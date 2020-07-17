@@ -1,5 +1,6 @@
+import { IPostQueryFilters } from './../app/ClientViewModels/IPostQueryFilters';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IProductionViewModel } from '../app/ClientViewModels/IProductionViewModel';
 import { map } from 'rxjs/operators';
@@ -23,8 +24,11 @@ export class ProductionService {
   constructor(private http: HttpClient) { }
 
   // Productions
-  getProductions(): Observable<IProductionViewModel[]> {
-    return this.http.get(this.getProductionsPath).pipe(map((productions: IProductionViewModel[]) => productions));
+  getProductions(filters: IPostQueryFilters): Observable<IProductionViewModel[]> {
+    let params = new HttpParams();
+    params = params.append('pageNumber', filters.pageNumber.toString());
+    params = params.append('pageSize', filters.pageSize.toString());
+    return this.http.get(this.getProductionsPath, {params:params}).pipe(map((productions: IProductionViewModel[]) => productions));
   }
 
   getProduction(id: number): Observable<IProductionViewModel> {

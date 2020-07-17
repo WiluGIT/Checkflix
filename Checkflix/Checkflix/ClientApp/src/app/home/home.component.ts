@@ -1,3 +1,4 @@
+import { IPostQueryFilters } from './../ClientViewModels/IPostQueryFilters';
 import { ProductionService } from './../../services/production.service';
 import { Component, OnInit} from '@angular/core';
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
@@ -8,8 +9,12 @@ import {PageEvent} from '@angular/material/paginator';
 })
 export class HomeComponent implements OnInit {
   productionList: Array<IProductionViewModel>;
+  postQueryFilters: IPostQueryFilters = {
+    pageNumber: 2,
+    pageSize: 20
+  };
   length:number;
-  pageSize:number = 20;
+
   pageEvent: PageEvent;
   activePageDataChunk:Array<IProductionViewModel> = [];
 
@@ -18,11 +23,11 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(){
-    this.productionService.getProductions()
+    this.productionService.getProductions(this.postQueryFilters)
     .subscribe(productions => {
       this.productionList = productions;
       this.length = productions.length;
-      this.activePageDataChunk = this.productionList.slice(0,this.pageSize);
+      this.activePageDataChunk = this.productionList.slice(0,this.postQueryFilters.pageSize);
       console.log(this.activePageDataChunk)
     });
   }
