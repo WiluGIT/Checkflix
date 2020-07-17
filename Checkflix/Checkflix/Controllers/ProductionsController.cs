@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.VisualBasic;
 using System.Collections.ObjectModel;
 using Checkflix.Models.Enums;
+using Checkflix.Data.QueryExtensions;
+using Newtonsoft.Json;
 
 namespace Checkflix.Controllers
 {
@@ -36,23 +38,51 @@ namespace Checkflix.Controllers
         }
 
         // GET: api/Productions
+        // [HttpGet]
+        // public async Task<ActionResult<IEnumerable<ProductionViewModel>>> GetProductions()
+        // {
+        //     try
+        //     {
+        //         var products = await _repository.GetAllProductions();
+        //         if (products == null)
+        //             return NotFound();
+
+        //         return Ok(_mapper.Map<IEnumerable<Production>, IEnumerable<ProductionViewModel>>(products));
+        //     }
+        //     catch(Exception ex)
+        //     {
+        //         _logger.LogError($"Failed to get products {ex}");
+        //         return BadRequest("Bad request");
+        //     }
+            
+        // }
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductionViewModel>>> GetProductions()
+        public async Task<ActionResult<IEnumerable<ProductionViewModel>>> GetProductions([FromQuery]PostQueryFilters filters)
         {
             try
             {
-                var products = await _repository.GetAllProductions();
-                if (products == null)
+                var productions = await _repository.GetAllProductions(filters);
+                if(productions == null)
                     return NotFound();
 
-                return Ok(_mapper.Map<IEnumerable<Production>, IEnumerable<ProductionViewModel>>(products));
+                var metadata = new {
+                    productions.TotalCount,
+                    productions.PageSize,
+                    productions.CurrentPage,
+                    productions.TotalPages,
+                    productions.HasNextPage,
+                    productions.HasPreviousPage
+                };
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(_mapper.Map<IEnumerable<Production>, IEnumerable<ProductionViewModel>>(productions));
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Failed to get products {ex}");
+                _logger.LogError($"Failed to get productions {ex}");
                 return BadRequest("Bad request");
             }
-            
+
         }
 
         // GET: api/Productions/5

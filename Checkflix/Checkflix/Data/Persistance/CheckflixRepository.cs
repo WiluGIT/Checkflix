@@ -1,4 +1,6 @@
-﻿using Checkflix.Models;
+﻿using Checkflix.Data.QueryExtensions;
+using Checkflix.Models;
+using Checkflix.Models.CustomEntities;
 using EFCore.BulkExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,14 +21,27 @@ namespace Checkflix.Data.Persistance
 
         #region Productions
         // Productions
-        public async Task<IEnumerable<Production>> GetAllProductions()
-        {
-            return await _context.Productions
+        // public async Task<IEnumerable<Production>> GetAllProductions()
+        // {
+        //     return await _context.Productions
+        //         .Include(m=> m.VodProductions)
+        //         .ThenInclude(m=>m.Vod)
+        //         .Include(m=>m.ProductionCategories)
+        //         .ThenInclude(m=>m.Category)
+        //         .ToListAsync();
+        // }
+        public async Task<PagedList<Production>> GetAllProductions(PostQueryFilters filters)
+        {         
+            var productions = await _context.Productions
                 .Include(m=> m.VodProductions)
                 .ThenInclude(m=>m.Vod)
                 .Include(m=>m.ProductionCategories)
                 .ThenInclude(m=>m.Category)
                 .ToListAsync();
+
+            var pagedProductions = PagedList<Production>.Create(productions,filters.PageNumber,filters.PageSize);
+
+            return pagedProductions;
         }
 
         public async Task<Production> GetProduction(int id)

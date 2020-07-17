@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   }
 
   onPageChanged(e,htmlTarget: HTMLElement) {
-    console.log(htmlTarget)
+    console.log(e.pageIndex)
     let firstCut = e.pageIndex * e.pageSize;
     let secondCut = firstCut + e.pageSize;
     this.activePageDataChunk = this.productionList.slice(firstCut, secondCut);

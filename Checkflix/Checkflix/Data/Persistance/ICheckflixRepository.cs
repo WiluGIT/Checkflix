@@ -1,4 +1,6 @@
-﻿using Checkflix.Models;
+﻿using Checkflix.Data.QueryExtensions;
+using Checkflix.Models;
+using Checkflix.Models.CustomEntities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,7 +14,9 @@ namespace Checkflix.Data.Persistance
         void AddVodProduction(VodProduction vodProduction);
         bool AnyProductionsExists();
         Task<IEnumerable<Category>> GetAllCategories();
-        Task<IEnumerable<Production>> GetAllProductions();
+        //Task<IEnumerable<Production>> GetAllProductions();
+        Task<PagedList<Production>> GetAllProductions(PostQueryFilters filters);
+
         Task<IEnumerable<Vod>> GetAllVods();
         Task<Category> GetCategory(int id);
         Task<Production> GetProduction(int id);
