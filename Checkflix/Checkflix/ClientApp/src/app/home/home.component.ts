@@ -1,22 +1,29 @@
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { IPostQueryFilters } from './../ClientViewModels/IPostQueryFilters';
 import { ProductionService } from './../../services/production.service';
 import { Component, OnInit} from '@angular/core';
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
-import {PageEvent} from '@angular/material/paginator';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   productionList: Array<IProductionViewModel>;
   productionsCount:number;
   postQueryFilters: IPostQueryFilters = {
     pageNumber: 1,
-    pageSize: 25
+    pageSize: 25,
+    searchQuery: null
   };
   activePageDataChunk:Array<IProductionViewModel> = [];
+  // Filter form
+  productionsFilterForm: FormGroup;
 
-  constructor(private productionService:ProductionService){ 
+  constructor(
+    private productionService:ProductionService,
+    private fb: FormBuilder){ 
   }
 
   ngOnInit(){
@@ -27,6 +34,10 @@ export class HomeComponent implements OnInit {
       this.productionList = response.body;
       this.productionsCount = headers["TotalCount"];
       this.activePageDataChunk = this.productionList;
+    });
+
+    this.productionsFilterForm = this.fb.group({
+      searchQuery: ''
     });
   }
 
@@ -43,5 +54,29 @@ export class HomeComponent implements OnInit {
 
     // Scroll to target
     htmlTarget.scrollIntoView({behavior:"smooth"});
+  }
+
+  applyFilters(){
+    // Apply additional filters to query params
+    if (this.productionsFilterForm.controls["searchQuery"].value) {
+      this.postQueryFilters["searchQuery"] = this.productionsFilterForm.controls["searchQuery"].value;
+    }
+
+    // Change params to default
+    this.postQueryFilters.pageNumber = 1;
+    this.postQueryFilters.pageSize = 25;
+
+
+    this.productionService.getProductions(this.postQueryFilters)
+    .subscribe(response => {
+      const headers = JSON.parse(response.headers.get('X-Pagination'));
+
+      this.productionList = response.body;
+      this.productionsCount = headers["TotalCount"];
+      this.activePageDataChunk = this.productionList;
+    });
+
+    // Reset fields
+    this.postQueryFilters.searchQuery = null;
   }
 }

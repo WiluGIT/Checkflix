@@ -21,15 +21,6 @@ namespace Checkflix.Data.Persistance
 
         #region Productions
         // Productions
-        // public async Task<IEnumerable<Production>> GetAllProductions()
-        // {
-        //     return await _context.Productions
-        //         .Include(m=> m.VodProductions)
-        //         .ThenInclude(m=>m.Vod)
-        //         .Include(m=>m.ProductionCategories)
-        //         .ThenInclude(m=>m.Category)
-        //         .ToListAsync();
-        // }
         public async Task<PagedList<Production>> GetAllProductions(PostQueryFilters filters)
         {         
             var productions = await _context.Productions
@@ -40,6 +31,12 @@ namespace Checkflix.Data.Persistance
                 .ToListAsync();
 
             // Here in if condition implement filter logic for each patameter in PostQueryFilters class
+            if (!string.IsNullOrEmpty(filters.SearchQuery))
+            {
+                var querySearch = filters.SearchQuery.ToLower();
+                productions = productions.Where(x => x.Title.ToLower().Contains(querySearch) || x.Subtitle.ToLower().Contains(querySearch)).ToList();
+            }
+
 
             var pagedProductions = PagedList<Production>.Create(productions,filters.PageNumber,filters.PageSize);
 
