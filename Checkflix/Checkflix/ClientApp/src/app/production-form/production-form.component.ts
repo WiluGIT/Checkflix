@@ -1,3 +1,5 @@
+import { CategoryService } from './../../services/category.service';
+import { VodService } from './../../services/vod.service';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
@@ -36,6 +38,8 @@ export class ProductionFormComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private productionService: ProductionService,
+    private vodService:VodService,
+    private categorySevice:CategoryService,
     private route: ActivatedRoute,
     private http: HttpClient,
     public snackBar: MatSnackBar) {
@@ -84,11 +88,11 @@ export class ProductionFormComponent implements OnInit {
       ]]
     });
     // populate vods and categories to select boxes
-    this.productionService
+    this.vodService
       .getVods()
       .subscribe(vods => this.vodList = vods);
 
-    this.productionService
+    this.categorySevice
       .getCategories()
       .subscribe(categories => this.categoryList = categories);
 

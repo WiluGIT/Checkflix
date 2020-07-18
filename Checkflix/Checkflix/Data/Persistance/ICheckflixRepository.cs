@@ -1,6 +1,7 @@
 ﻿using Checkflix.Data.QueryExtensions;
 using Checkflix.Models;
 using Checkflix.Models.CustomEntities;
+using Checkflix.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace Checkflix.Data.Persistance
         Task<Production> GetProduction(int id);
         Task<ProductionCategory> GetProductionCategory(int categoryId, int productionId);
         Task<Vod> GetVod(int id);
+        Task<VodCountViewModel> GetVodCount();
         Task<VodProduction> GetVodProduction(int vodId, int productionId);
         bool ProductionsExists(int id);
         void RemoveAllProductions();

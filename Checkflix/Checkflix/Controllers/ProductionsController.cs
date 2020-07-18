@@ -38,25 +38,6 @@ namespace Checkflix.Controllers
         }
 
         // GET: api/Productions
-        // [HttpGet]
-        // public async Task<ActionResult<IEnumerable<ProductionViewModel>>> GetProductions()
-        // {
-        //     try
-        //     {
-        //         var products = await _repository.GetAllProductions();
-        //         if (products == null)
-        //             return NotFound();
-
-        //         return Ok(_mapper.Map<IEnumerable<Production>, IEnumerable<ProductionViewModel>>(products));
-        //     }
-        //     catch(Exception ex)
-        //     {
-        //         _logger.LogError($"Failed to get products {ex}");
-        //         return BadRequest("Bad request");
-        //     }
-            
-        // }
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductionViewModel>>> GetProductions([FromQuery]PostQueryFilters filters)
         {

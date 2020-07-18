@@ -47,5 +47,12 @@ namespace Checkflix.Controllers
             }
 
         }
+        [HttpGet]
+        public async Task<ActionResult<VodCountViewModel>> GetVodCount()
+        {
+            var countViewModel = await _repository.GetVodCount();
+
+            return countViewModel;
+        }
     }
 }
