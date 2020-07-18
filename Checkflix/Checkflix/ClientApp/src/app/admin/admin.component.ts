@@ -1,3 +1,6 @@
+import { CategoryService } from './../../services/category.service';
+import { IVodCountViewModel } from 'src/app/ClientViewModels/IVodCountViewModel';
+import { VodService } from './../../services/vod.service';
 import { IProductionViewModel } from './../ClientViewModels/IProductionViewModel';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthorizeService } from '../../api-authorization/authorize.service';
@@ -43,6 +46,10 @@ export class AdminComponent implements OnInit {
 
   };
   productionListFromApi: Array<IProductionViewModel>;
+  vodsCount:IVodCountViewModel = {
+    netflixCount:0,
+    hboCount:0
+  };
 
   // Filter
   postQueryFilters: IPostQueryFilters = {
@@ -61,6 +68,8 @@ export class AdminComponent implements OnInit {
 
   constructor(private authService: AuthorizeService,
     private productionService: ProductionService,
+    private vodService:VodService,
+    private categoryService:CategoryService,
     private router: Router,
     private http: HttpClient,
     public snackBar: MatSnackBar,
@@ -78,10 +87,16 @@ export class AdminComponent implements OnInit {
       });
 
     // Categories
-    this.productionService
+    this.categoryService
       .getCategories()
       .subscribe(categories => this.categoryList = categories);
 
+    // Vods 
+    this.vodService.getVodCount()
+    .subscribe(response =>{
+      this.vodsCount.netflixCount = response.netflixCount;
+      this.vodsCount.hboCount = response.hboCount;
+    });
 
     this.productionsFilterForm = this.fb.group({
       searchQuery: ''

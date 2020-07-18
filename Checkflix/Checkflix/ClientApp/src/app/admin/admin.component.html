@@ -6,7 +6,7 @@
         <div class="col-md-6 col-sm-12">
           <div class="vod-blocks red">
             <div class="production-count">
-              30210412402
+              {{vodsCount.netflixCount}}
             </div>
             <div class="production-title">
               Produkcji Netflixa
@@ -16,7 +16,7 @@
         <div class="col-md-6 col-sm-12">
           <div class="vod-blocks black">
             <div class="production-count">
-              7676
+              {{vodsCount.hboCount}}
             </div>
             <div class="production-title">
               Produkcji HBO
@@ -33,13 +33,12 @@
 
       <form [formGroup]="productionsFilterForm" (ngSubmit)="applyFilters()">
         <mat-form-field class="example-full-width text-center">
-          <mat-label>Search by title</mat-label>
+          <mat-label>Szukaj po tytule</mat-label>
           <input matInput formControlName="searchQuery" placeholder="Np. Stranger Things">
         </mat-form-field>
 
         <div class="text-center">
-          <button type="submit" [disabled]="productionsFilterForm.invalid" class="btn btn-outline-primary">Apply
-            filters</button>
+          <button type="submit" [disabled]="productionsFilterForm.invalid" class="btn btn-outline-primary">Filtruj</button>
         </div>
       </form>
 

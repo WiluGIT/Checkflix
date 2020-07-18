@@ -18,9 +18,8 @@ export class ProductionService {
   private createProductionsPath = environment.apiUrl + '/api/productions/BulkProductionsCreate';
   private updateProductionPath = environment.apiUrl + '/api/productions/PutProduction/';
   private deleteProductionPath = environment.apiUrl + '/api/productions/DeleteProduction/';
-  //to another service
-  private getCategoriesPath = environment.apiUrl + '/api/categories/GetCategories';
-  private getVodsPath = environment.apiUrl + '/api/vods/GetVods';
+
+  
   constructor(private http: HttpClient) { }
 
   // Productions
@@ -54,17 +53,7 @@ export class ProductionService {
     return this.http.delete(this.deleteProductionPath + id).pipe(map((production: IProductionViewModel) => production));
   }
 
-  // Categories
-  getCategories(): Observable<ICategoryViewModel[]> {
-    return this.http.get(this.getCategoriesPath).pipe(map((categories: ICategoryViewModel[]) => categories));
-  }
-  updateCategories(categories: ICategoryViewModel[]) {
-    return this.http.post('/api/categories', categories).pipe(map((production: IProductionViewModel) => production));
 
-  }
 
-  // Vods
-  getVods(): Observable<IVodViewModel[]> {
-    return this.http.get(this.getVodsPath).pipe(map((vods: IVodViewModel[]) => vods));
-  }
+
 }

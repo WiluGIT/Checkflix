@@ -1,6 +1,7 @@
 ﻿using Checkflix.Data.QueryExtensions;
 using Checkflix.Models;
 using Checkflix.Models.CustomEntities;
+using Checkflix.ViewModels;
 using EFCore.BulkExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -111,6 +112,20 @@ namespace Checkflix.Data.Persistance
         public async Task<IEnumerable<Vod>> GetAllVods()
         {
             return await _context.Vods.ToListAsync();
+        }
+
+        public async Task<VodCountViewModel> GetVodCount()
+        {
+            var netflixCount = await _context.VodProductions.Where(v => v.VodId.Equals(1)).CountAsync();
+            var hboCount = await _context.VodProductions.Where(v => v.VodId.Equals(2)).CountAsync();
+
+            var countViewModel = new VodCountViewModel
+            {
+                NetflixCount = netflixCount,
+                HboCount = hboCount
+            };
+
+            return countViewModel;
         }
         #endregion
 
