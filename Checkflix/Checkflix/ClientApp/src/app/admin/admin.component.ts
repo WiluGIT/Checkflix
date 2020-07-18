@@ -2,7 +2,6 @@ import { IProductionViewModel } from './../ClientViewModels/IProductionViewModel
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthorizeService } from '../../api-authorization/authorize.service';
 import { map, filter, delay } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable, of } from 'rxjs';
 import { ProductionService } from '../../services/production.service';
@@ -12,6 +11,8 @@ import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { ThemePalette } from '@angular/material/core';
+import { IPostQueryFilters } from '../ClientViewModels/IPostQueryFilters';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-admin',
@@ -19,15 +20,14 @@ import { ThemePalette } from '@angular/material/core';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
+  // Data table
   displayedColumns: string[] = ['Id', 'Tytuł', 'Data premiery', 'Akcje'];
   dataSource: MatTableDataSource<IProductionViewModel>;
-  isShowed: boolean = false;
-  moreThan5result: boolean = false;
   productionList: Array<IProductionViewModel>;
-  categoriesList: Array<ICategoryViewModel> = [];
   deletedProduction: IProductionViewModel;
-  categoryList: ICategoryViewModel[];
 
+  // Api call
+  categoryList: ICategoryViewModel[];
   productionFromApi: IProductionViewModel = {
     productionId: 0,
     poster: "brak",
@@ -44,54 +44,84 @@ export class AdminComponent implements OnInit {
   };
   productionListFromApi: Array<IProductionViewModel>;
 
+  // Filter
+  postQueryFilters: IPostQueryFilters = {
+    pageNumber: 1,
+    pageSize: 10,
+    searchQuery: null
+  };
+  productionsFilterForm: FormGroup;
+  productionsCount: number;
 
-  // XD
+  // Progress bar
   color: ThemePalette = 'primary';
   mode: ProgressSpinnerMode = 'determinate';
   value = 0;
 
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
   constructor(private authService: AuthorizeService,
     private productionService: ProductionService,
     private router: Router,
     private http: HttpClient,
-    public snackBar: MatSnackBar) {
-    this.dataSource = new MatTableDataSource(this.productionList);
-  }
+    public snackBar: MatSnackBar,
+    private fb: FormBuilder) { }
 
   ngOnInit() {
-    // this.productionService
-    //   .getProductions()
-    //   .subscribe(productions => this.productionList = productions);
+    // Productions
+    this.productionService.getProductions(this.postQueryFilters)
+      .subscribe(response => {
+        const headers = JSON.parse(response.headers.get('X-Pagination'));
+        this.productionList = response.body;
+        this.productionsCount = headers["TotalCount"];
+        //datasource for tab
+        this.dataSource = new MatTableDataSource(this.productionList);
+      });
 
-    // this.productionService
-    //   .getCategories()
-    //   .subscribe(categories => this.categoryList = categories);
+    // Categories
+    this.productionService
+      .getCategories()
+      .subscribe(categories => this.categoryList = categories);
 
-    this.dataSource.sort = this.sort;
 
+    this.productionsFilterForm = this.fb.group({
+      searchQuery: ''
+    });
   }
 
-  applyFilter(event: Event) {
-    //set datasource and flags
-    this.dataSource = new MatTableDataSource(this.productionList);
-    this.isShowed = true;
-    this.moreThan5result = false;
+  onPageChanged(e) {
+    // Update current page index
+    this.postQueryFilters.pageNumber = e.pageIndex + 1;
 
-    //filter
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    // Call endpoint
+    this.productionService.getProductions(this.postQueryFilters)
+      .subscribe(response => {
+        this.productionList = response.body;
+        this.dataSource = new MatTableDataSource(this.productionList);
+      });
+  }
 
-    if (this.dataSource.filteredData.length > 5)
-      this.moreThan5result = true
+  applyFilters() {
+    // Apply additional filters to query params
+    if (this.productionsFilterForm.controls["searchQuery"].value) {
+      this.postQueryFilters["searchQuery"] = this.productionsFilterForm.controls["searchQuery"].value;
+    }
+
+    // Change params to default
+    this.postQueryFilters.pageNumber = 1;
+    this.postQueryFilters.pageSize = 10;
 
 
+    this.productionService.getProductions(this.postQueryFilters)
+      .subscribe(response => {
+        const headers = JSON.parse(response.headers.get('X-Pagination'));
 
-    //slice 5 first results
-    const data = this.dataSource.filteredData.slice(0, 5);
-    this.dataSource.data = data;
+        this.productionList = response.body;
+        this.productionsCount = headers["TotalCount"];
+        this.dataSource = new MatTableDataSource(this.productionList);
+      });
 
+    // Reset fields
+    this.postQueryFilters.searchQuery = null;
   }
 
   deleteProduction(productionId) {
@@ -101,7 +131,14 @@ export class AdminComponent implements OnInit {
         if (res['status'] == 1) {
           this.openSnackBar(res['messages'], 'Zamknij', 'red-snackbar');
         } else {
+          var filteredList: IProductionViewModel[] = this.productionList.filter(production => production.productionId !== productionId);
+          this.productionList = filteredList;
+          this.productionsCount -= 1;
+          this.dataSource = new MatTableDataSource(this.productionList);
+
+          // Notification
           this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
+
         }
       },
         err => {
@@ -111,11 +148,7 @@ export class AdminComponent implements OnInit {
           }
         });
 
-    var filteredList: IProductionViewModel[] = this.productionList.filter(production => production.productionId !== productionId);
-    this.productionList = filteredList;
-    this.dataSource = new MatTableDataSource(this.dataSource.filteredData);
-    const data = this.dataSource.filteredData.filter(production => production.productionId !== productionId).slice(0, 5);
-    this.dataSource.data = data;
+
 
   }
   gowno() {
@@ -180,7 +213,7 @@ export class AdminComponent implements OnInit {
             // update counter for progress bar
             productionsProcessedCounter += 1;
             this.value = (productionsProcessedCounter / (realCount * 2)) * 100;
-            
+
 
             // gather data from api
             this.productionFromApi.poster = apiData.image;
@@ -200,8 +233,8 @@ export class AdminComponent implements OnInit {
               this.productionFromApi.type = 0;
               this.productionFromApi.releaseDate = new Date(movieArray.release_date);
               this.productionFromApi.vods = [{
-                      vodId: 1,
-                      platformName: "Netflix"
+                vodId: 1,
+                platformName: "Netflix"
               }];
 
             }
@@ -266,37 +299,38 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  // Update trzea zrobic tak ze robie se enpointa z hardkodowanymi kategoriami i je po prostu zwracam es
 
-  updateCategories() {
-    const categoriesUrl = "https://api.themoviedb.org/3/genre/movie/list?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl-PL";
-    fetch(categoriesUrl)
-      .then(response => {
-        return response.json()
-      })
-      .then((data) => {
-        this.categoriesList = []
-        let categoryElement: ICategoryViewModel;
-        data.genres.map(el => {
-          categoryElement = {
-            categoryId: 0,
-            categoryName: el.name,
-            genreApiId: el.id
-          };
-          this.categoriesList.push(categoryElement)
-        })
-        this.productionService
-          .updateCategories(this.categoriesList)
-          .subscribe(res => {
-            console.log("Added", res)
-          },
-            (err) => { console.log("Category list is up to date") }
-          );
+  // updateCategories() {
+  //   const categoriesUrl = "https://api.themoviedb.org/3/genre/movie/list?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl-PL";
+  //   fetch(categoriesUrl)
+  //     .then(response => {
+  //       return response.json()
+  //     })
+  //     .then((data) => {
+  //       this.categoriesList = []
+  //       let categoryElement: ICategoryViewModel;
+  //       data.genres.map(el => {
+  //         categoryElement = {
+  //           categoryId: 0,
+  //           categoryName: el.name,
+  //           genreApiId: el.id
+  //         };
+  //         this.categoriesList.push(categoryElement)
+  //       })
+  //       this.productionService
+  //         .updateCategories(this.categoriesList)
+  //         .subscribe(res => {
+  //           console.log("Added", res)
+  //         },
+  //           (err) => { console.log("Category list is up to date") }
+  //         );
 
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // }
 
   openSnackBar(message: string, action: string, className: string) {
     this.snackBar.open(message, action, {

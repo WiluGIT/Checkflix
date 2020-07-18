@@ -83,3 +83,9 @@
 .vod-blocks:hover:before {
   opacity: .2;
 }
+.mat-form-field {
+  margin: 1em;
+  display: block;
+  position: relative;
+  text-align: center;
+}
