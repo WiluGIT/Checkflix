@@ -61,13 +61,13 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.productionService
-      .getProductions()
-      .subscribe(productions => this.productionList = productions);
+    // this.productionService
+    //   .getProductions()
+    //   .subscribe(productions => this.productionList = productions);
 
-    this.productionService
-      .getCategories()
-      .subscribe(categories => this.categoryList = categories);
+    // this.productionService
+    //   .getCategories()
+    //   .subscribe(categories => this.categoryList = categories);
 
     this.dataSource.sort = this.sort;
 

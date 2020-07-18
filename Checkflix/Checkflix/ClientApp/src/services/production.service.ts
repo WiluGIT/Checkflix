@@ -28,6 +28,8 @@ export class ProductionService {
     let params = new HttpParams();
     params = params.append('pageNumber', filters.pageNumber.toString());
     params = params.append('pageSize', filters.pageSize.toString());
+    if(filters.searchQuery)
+      params = params.append('searchQuery', filters.searchQuery.toString());
 
     return this.http.get(this.getProductionsPath, { params, observe: 'response' }).pipe(map((productions: any) => productions));
   }
