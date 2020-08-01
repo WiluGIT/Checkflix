@@ -32,6 +32,7 @@ import { PaginatorCustomComponent } from './paginator-custom/paginator-custom.co
 import { getPlPaginatorIntl } from './paginator-custom/pl-paginator-intl';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MultiSliderComponent } from './multi-slider/multi-slider.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,7 +40,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     HomeComponent,
     AdminComponent,
     ProductionFormComponent,
-    PaginatorCustomComponent
+    PaginatorCustomComponent,
+    MultiSliderComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
