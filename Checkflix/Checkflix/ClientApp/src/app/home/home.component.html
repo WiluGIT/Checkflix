@@ -42,7 +42,7 @@
     </div>  
   </div>
 </div>
-<mat-paginator [length]="productionsCount"
+<mat-paginator #homePaginator [length]="productionsCount"
 [pageSize]="postQueryFilters.pageSize"
 (page)="onPageChanged($event,target)"
 [hidePageSize]="true">
