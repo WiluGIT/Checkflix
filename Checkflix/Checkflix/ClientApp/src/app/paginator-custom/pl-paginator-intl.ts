@@ -20,6 +20,8 @@ export function getPlPaginatorIntl() {
   const paginatorIntl = new MatPaginatorIntl();
   
   paginatorIntl.getRangeLabel = plRangeLabel;
-  
+  paginatorIntl.nextPageLabel = "Następna";
+  paginatorIntl.previousPageLabel = "Poprzednia";
+
   return paginatorIntl;
 }

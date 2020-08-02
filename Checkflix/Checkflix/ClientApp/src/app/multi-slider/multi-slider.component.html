@@ -1,0 +1,18 @@
+<div class="middle">
+	<div class="multi-range-slider">
+		<input (mouseup)="mouseUp($event)" (mousedown)="mouseDown($event)" (mouseout)="mouseOut($event)" (mouseover)="mouseOver($event)" (input)="setLeftValue()" #inputLeft type="range" id="input-left" min="{{minValue}}" max="{{maxValue}}" value="{{minValue}}">
+		<input (mouseup)="mouseUp($event)"  (mousedown)="mouseDown($event)" (mouseout)="mouseOut($event)"  (mouseover)="mouseOver($event)" (input)="setRightValue()" #inputRight type="range" id="input-right" min="{{minValue}}" max="{{maxValue}}" value="{{maxValue}}">
+
+		<div class="slider">
+			<div class="track"></div>
+			<div #rangeBar class="range"></div>
+			<div #thumbLeft class="thumb left"></div>
+			<div #thumbRight class="thumb right"></div>
+        </div>
+        <div class="info-box">         
+            <div class="left-value">{{this.leftValue}}</div>
+            <div class="right-value">{{this.rightValue}}</div>
+            <div class="slider-title">Siemanko</div>
+        </div>
+	</div>
+</div>
