@@ -26,6 +26,11 @@ export class HomeComponent implements OnInit {
   //Child component slider
   minValueYear:number;
   maxValueYear:number;
+  minImbdRating:number;
+  maxImbdRating:number;
+  //Vods icons
+  netflixClicked:boolean=true;
+  hboClicked:boolean=true;
 
   @ViewChild('homePaginator', {static: false}) paginator: MatPaginator;
   constructor(
@@ -51,6 +56,40 @@ export class HomeComponent implements OnInit {
     //Set variables
     this.maxValueYear = new Date().getFullYear();
     this.minValueYear = 1900;
+    this.minImbdRating = 0.0;
+    this.maxImbdRating = 10.0;
+  }
+
+  getYearSliderValues(valueEmitted){
+    console.log("Emitted y: ", valueEmitted);
+  }
+  getImbdSliderValues(valueEmitted){
+    console.log("Emitted r: ", valueEmitted);
+
+  }
+  checkBtn(e){
+    const target = e.currentTarget;
+    if(target.id ==="hbo-btn"){
+      if(this.hboClicked){
+        target.classList.add("vod-gray");
+        target.classList.remove("hbo-btn");
+        this.hboClicked = false;
+      }else{
+        target.classList.remove("vod-gray");
+        target.classList.add("hbo-btn");
+        this.hboClicked = true;
+      }
+    }else if(target.id === "netflix-btn"){
+      if(this.netflixClicked){
+        target.classList.add("vod-gray");
+        target.classList.remove("netflix-btn");
+        this.netflixClicked = false;
+      }else{
+        target.classList.remove("vod-gray");
+        target.classList.add("netflix-btn");
+        this.netflixClicked = true;
+      }
+    }
   }
 
   onPageChanged(e, htmlTarget: HTMLElement) {
