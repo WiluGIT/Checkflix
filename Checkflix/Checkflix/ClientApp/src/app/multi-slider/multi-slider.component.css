@@ -1,8 +1,8 @@
-/* .middle {
+.middle {
 	position: relative;
-	width: 50%;
+	/* width: 50%; */
 	max-width: 500px;
-} */
+}
 
 .left-value{
 	float: left;
@@ -36,8 +36,8 @@
 .slider > .range {
 	position: absolute;
 	z-index: 2;
-	left: 25%;
-	right: 25%;
+	left: 0%;
+	right: 0%;
 	top: 0;
 	bottom: 0;
 	border-radius: 5px;
@@ -54,11 +54,11 @@
 	transition: box-shadow .3s ease-in-out;
 }
 .slider > .thumb.left {
-	left: 25%;
+	left: 0%;
 	transform: translate(-10px, -5px);
 }
 .slider > .thumb.right {
-	right: 25%;
+	right: 0%;
 	transform: translate(10px, -5px);
 }
 .slider > .thumb.hover {

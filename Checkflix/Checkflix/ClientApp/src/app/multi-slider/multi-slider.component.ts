@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input } from '@angular/core';
 import { NgModuleResolver } from '@angular/compiler';
 
 @Component({
@@ -6,26 +6,25 @@ import { NgModuleResolver } from '@angular/compiler';
   templateUrl: './multi-slider.component.html',
   styleUrls: ['./multi-slider.component.css']
 })
-export class MultiSliderComponent implements OnInit, AfterViewInit {
+export class MultiSliderComponent implements OnInit {
   @ViewChild('inputRight', { static: false }) inputRight;
   @ViewChild('inputLeft', { static: false }) inputLeft;
   @ViewChild('thumbLeft', { static: false }) thumbLeft;
   @ViewChild('thumbRight', { static: false }) thumbRight;
   @ViewChild('rangeBar', { static: false }) rangeBar;
+  @Input() minValue:number;
+  @Input() maxValue:number;
+
   leftValue: number;
   rightValue: number;
   constructor() {
+
   }
 
   ngOnInit() {
+    this.leftValue = this.minValue;
+    this.rightValue = this.maxValue;
 
-  }
-  
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.leftValue = this.inputLeft.nativeElement.value;
-      this.rightValue = this.inputRight.nativeElement.value
-    }, 1000);
   }
 
   mouseOver(e) {
@@ -62,9 +61,11 @@ export class MultiSliderComponent implements OnInit, AfterViewInit {
 
     let min = parseInt(this.inputRight.nativeElement.min);
     let max = parseInt(this.inputRight.nativeElement.max);
-
+    
     this.inputRight.nativeElement.value = Math.max(parseInt(this.inputRight.nativeElement.value), parseInt(this.inputLeft.nativeElement.value) + 1);
     this.rightValue = this.inputRight.nativeElement.value;
+
+    console.log(this.inputRight.nativeElement.value)
 
     var percent = ((this.inputRight.nativeElement.value - min) / (max - min)) * 100;
 
@@ -77,10 +78,12 @@ export class MultiSliderComponent implements OnInit, AfterViewInit {
 
     let min = parseInt(this.inputLeft.nativeElement.min);
     let max = parseInt(this.inputLeft.nativeElement.max);
-    console.log(this.inputLeft.nativeElement.value)
+    
 
     this.inputLeft.nativeElement.value = Math.min(parseInt(this.inputLeft.nativeElement.value), parseInt(this.inputRight.nativeElement.value) - 1);
     this.leftValue = this.inputLeft.nativeElement.value;
+
+    console.log(this.inputLeft.nativeElement.value)
 
     var percent = ((this.inputLeft.nativeElement.value - min) / (max - min)) * 100;
 

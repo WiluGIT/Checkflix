@@ -1,4 +1,4 @@
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, NumberValueAccessor } from '@angular/forms';
 import { IPostQueryFilters } from './../ClientViewModels/IPostQueryFilters';
 import { ProductionService } from './../../services/production.service';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
@@ -23,6 +23,9 @@ export class HomeComponent implements OnInit {
   // Filter form
   productionsFilterForm: FormGroup;
 
+  //Child component slider
+  minValueYear:number;
+  maxValueYear:number;
 
   @ViewChild('homePaginator', {static: false}) paginator: MatPaginator;
   constructor(
@@ -31,6 +34,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    //Endpoint calls
     this.productionService.getProductions(this.postQueryFilters)
       .subscribe(response => {
         const headers = JSON.parse(response.headers.get('X-Pagination'));
@@ -43,6 +47,10 @@ export class HomeComponent implements OnInit {
     this.productionsFilterForm = this.fb.group({
       searchQuery: ''
     });
+
+    //Set variables
+    this.maxValueYear = new Date().getFullYear();
+    this.minValueYear = 1900;
   }
 
   onPageChanged(e, htmlTarget: HTMLElement) {
