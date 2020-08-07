@@ -1,9 +1,10 @@
 import { FormGroup, FormBuilder, NumberValueAccessor } from '@angular/forms';
 import { IPostQueryFilters } from './../ClientViewModels/IPostQueryFilters';
 import { ProductionService } from './../../services/production.service';
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Inject } from '@angular/core';
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
 import { MatPaginator } from '@angular/material';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -35,7 +36,8 @@ export class HomeComponent implements OnInit {
   @ViewChild('homePaginator', {static: false}) paginator: MatPaginator;
   constructor(
     private productionService: ProductionService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    @Inject(DOCUMENT) document) {
   }
 
   ngOnInit() {
@@ -89,6 +91,14 @@ export class HomeComponent implements OnInit {
         target.classList.add("netflix-btn");
         this.netflixClicked = true;
       }
+    }
+    if(!this.hboClicked && !this.netflixClicked){
+      this.hboClicked = true;
+      this.netflixClicked = true;
+      document.getElementById('hbo-btn').classList.remove("vod-gray");
+      document.getElementById('netflix-btn').classList.remove("vod-gray");
+      document.getElementById('hbo-btn').classList.add("hbo-btn");
+      document.getElementById('netflix-btn').classList.add("netflix-btn");
     }
   }
 
