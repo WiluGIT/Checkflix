@@ -19,7 +19,7 @@ export class ProductionService {
   private updateProductionPath = environment.apiUrl + '/api/productions/PutProduction/';
   private deleteProductionPath = environment.apiUrl + '/api/productions/DeleteProduction/';
 
-  
+
   constructor(private http: HttpClient) { }
 
   // Productions
@@ -27,8 +27,20 @@ export class ProductionService {
     let params = new HttpParams();
     params = params.append('pageNumber', filters.pageNumber.toString());
     params = params.append('pageSize', filters.pageSize.toString());
-    if(filters.searchQuery)
+    if (filters.searchQuery)
       params = params.append('searchQuery', filters.searchQuery.toString());
+    if (filters.isHbo == false)
+      params = params.append('isHbo', filters.isHbo.toString());
+    if (filters.isNetflix == false)
+      params = params.append('isNetflix', filters.isNetflix.toString());
+    if (filters.ratingFrom || filters.ratingFrom === 0)
+      params = params.append('ratingFrom', filters.ratingFrom.toString());
+    if (filters.ratingTo || filters.ratingFrom === 0)
+      params = params.append('ratingTo', filters.ratingTo.toString());
+    if (filters.yearFrom)
+      params = params.append('yearFrom', filters.yearFrom.toString());
+    if (filters.yearTo)
+      params = params.append('yearTo', filters.yearTo.toString());
 
     return this.http.get(this.getProductionsPath, { params, observe: 'response' }).pipe(map((productions: any) => productions));
   }
@@ -45,7 +57,7 @@ export class ProductionService {
     return this.http.post(this.createProductionsPath, productions).pipe(map((productions: IProductionViewModel[]) => productions));
   }
 
-  updateProduction(id:number, production: IProductionViewModel) {
+  updateProduction(id: number, production: IProductionViewModel) {
     return this.http.put(this.updateProductionPath + id, production).pipe(map((production: IProductionViewModel) => production));
   }
 

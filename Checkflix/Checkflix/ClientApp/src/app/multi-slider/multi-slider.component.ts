@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgModuleResolver } from '@angular/compiler';
 
 @Component({
@@ -12,8 +12,12 @@ export class MultiSliderComponent implements OnInit {
   @ViewChild('thumbLeft', { static: false }) thumbLeft;
   @ViewChild('thumbRight', { static: false }) thumbRight;
   @ViewChild('rangeBar', { static: false }) rangeBar;
+  //Inputs from parent
   @Input() minValue:number;
   @Input() maxValue:number;
+  @Input() sliderTitle:string;
+  //Output to parent
+  @Output() sliderValues: EventEmitter<any> = new EventEmitter<any>();
 
   leftValue: number;
   rightValue: number;
@@ -57,16 +61,15 @@ export class MultiSliderComponent implements OnInit {
   }
 
   setRightValue() {
-    console.log("clicked r")
-
     let min = parseInt(this.inputRight.nativeElement.min);
     let max = parseInt(this.inputRight.nativeElement.max);
     
-    this.inputRight.nativeElement.value = Math.max(parseInt(this.inputRight.nativeElement.value), parseInt(this.inputLeft.nativeElement.value) + 1);
+    this.inputRight.nativeElement.value = Math.max(parseInt(this.inputRight.nativeElement.value), parseInt(this.inputLeft.nativeElement.value));
     this.rightValue = this.inputRight.nativeElement.value;
-
-    console.log(this.inputRight.nativeElement.value)
-
+    this.sliderValues.emit({
+      left: this.leftValue,
+      right: this.rightValue
+    });
     var percent = ((this.inputRight.nativeElement.value - min) / (max - min)) * 100;
 
     this.thumbRight.nativeElement.style.right = (100 - percent) + "%";
@@ -74,20 +77,34 @@ export class MultiSliderComponent implements OnInit {
   }
 
   setLeftValue() {
-    console.log("clicked l")
-
     let min = parseInt(this.inputLeft.nativeElement.min);
     let max = parseInt(this.inputLeft.nativeElement.max);
     
 
-    this.inputLeft.nativeElement.value = Math.min(parseInt(this.inputLeft.nativeElement.value), parseInt(this.inputRight.nativeElement.value) - 1);
+    this.inputLeft.nativeElement.value = Math.min(parseInt(this.inputLeft.nativeElement.value), parseInt(this.inputRight.nativeElement.value));
     this.leftValue = this.inputLeft.nativeElement.value;
-
-    console.log(this.inputLeft.nativeElement.value)
+    this.sliderValues.emit({
+      left: this.leftValue,
+      right: this.rightValue
+    });
 
     var percent = ((this.inputLeft.nativeElement.value - min) / (max - min)) * 100;
 
     this.thumbLeft.nativeElement.style.left = percent + "%";
     this.rangeBar.nativeElement.style.left = percent + "%";
+  }
+
+  resetValues(){
+    this.inputRight.nativeElement.value = this.maxValue;
+    this.inputLeft.nativeElement.value = this.minValue;
+    this.leftValue = this.minValue;
+    this.rightValue = this.maxValue;
+    
+    var percentR = ((this.inputRight.nativeElement.value - this.minValue) / (this.maxValue - this.minValue)) * 100;  
+    var percentL = ((this.inputLeft.nativeElement.value - this.minValue) / (this.maxValue - this.minValue)) * 100;
+    this.thumbRight.nativeElement.style.right = (100 - percentR) + "%";
+    this.rangeBar.nativeElement.style.right = (100 - percentR) + "%";
+    this.thumbLeft.nativeElement.style.left = percentL + "%";
+    this.rangeBar.nativeElement.style.left = percentL + "%";
   }
 }

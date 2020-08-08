@@ -32,12 +32,34 @@ namespace Checkflix.Data.Persistance
                 .ToListAsync();
 
             // Here in if condition implement filter logic for each patameter in PostQueryFilters class
+            // Search string
             if (!string.IsNullOrEmpty(filters.SearchQuery))
             {
                 var querySearch = filters.SearchQuery.ToLower();
                 productions = productions.Where(x => x.Title.ToLower().Contains(querySearch) || x.Subtitle.ToLower().Contains(querySearch)).ToList();
             }
-
+            // Vod platform // if filters have query like isHbo = false - filter netflix
+            if(!filters.IsHbo || !filters.IsNetflix)
+            {
+                if(!filters.IsHbo)
+                {
+                    productions = productions.Where(x => x.VodProductions.Any(vp => vp.VodId.Equals(1))).ToList();
+                }
+                else if(!filters.IsNetflix)
+                {
+                    productions = productions.Where(x => x.VodProductions.Any(vp => vp.VodId.Equals(2))).ToList();
+                }          
+            }
+            // Year from to filter
+            if(filters.YearFrom != null && filters.YearTo != null)
+            {
+                productions = productions.Where(x => x.ReleaseDate.Year >= filters.YearFrom && x.ReleaseDate.Year <= filters.YearTo).ToList();
+            }
+            // Rating from to filter
+            if(filters.RatingFrom != null && filters.RatingTo != null)
+            {
+                productions = productions.Where(x => x.ImbdRating >= filters.RatingFrom && x.ImbdRating <= filters.RatingTo).ToList();
+            }
 
             var pagedProductions = PagedList<Production>.Create(productions,filters.PageNumber,filters.PageSize);
 
