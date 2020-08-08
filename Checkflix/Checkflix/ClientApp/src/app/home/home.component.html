@@ -5,15 +5,21 @@
               <mat-label>Szukaj po tytule</mat-label>
               <input matInput formControlName="searchQuery" placeholder="Np. Stranger Things">
           </mat-form-field>
-          <app-multi-slider (sliderValues)="getYearSliderValues($event)" [sliderTitle]="'Rok produkcji'" [minValue]="minValueYear" [maxValue]="maxValueYear"></app-multi-slider>
-          <app-multi-slider (sliderValues)="getImbdSliderValues($event)" [sliderTitle]="'Oceny IMBd'" [minValue]="minImbdRating" [maxValue]="maxImbdRating"></app-multi-slider>
+          <app-multi-slider #yearSlider (sliderValues)="getYearSliderValues($event)" [sliderTitle]="'Rok produkcji'" [minValue]="minValueYear" [maxValue]="maxValueYear"></app-multi-slider>
+          <app-multi-slider #ratingSlider (sliderValues)="getImbdSliderValues($event)" [sliderTitle]="'Oceny IMBd'" [minValue]="minImbdRating" [maxValue]="maxImbdRating"></app-multi-slider>
           <div class="logo-checkboxes">
             <div (click)="checkBtn($event)" id="hbo-btn" class="icon-btn hbo-btn"><span class="iconify vod-logo" data-icon="simple-icons:hbo" data-inline="false"></span></div>
             <div (click)="checkBtn($event)" id="netflix-btn" class="icon-btn netflix-btn"><span class="iconify vod-logo" data-icon="mdi:netflix" data-inline="false"></span></div>
           </div>
-          <div class="text-center">
-              <button type="submit" [disabled]="productionsFilterForm.invalid" class="btn btn-outline-primary">Filtruj</button>
-          </div>       
+          <div>
+            <div class="clear-btn">
+              <button class="transparent-btn" type="button" (click)="clearFilters()"><span class="material-icons">close</span></button>
+            </div>
+            <div class="text-center">
+                <button type="submit" [disabled]="productionsFilterForm.invalid" class="btn btn-outline-primary">Filtruj</button>
+            </div>   
+          </div>
+    
       </form>
 
   </div>

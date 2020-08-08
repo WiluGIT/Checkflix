@@ -91,3 +91,16 @@ th.mat-header-cell {
 .vod-gray{
   color:gray;
 }
+.clear-btn{
+  display: inline-block;
+  position: absolute;
+  right: 0;
+}
+.transparent-btn{
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  border: none;
+  cursor:pointer;
+  overflow: hidden;
+  outline:none;
+}

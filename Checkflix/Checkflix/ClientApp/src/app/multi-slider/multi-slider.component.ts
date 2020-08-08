@@ -70,7 +70,6 @@ export class MultiSliderComponent implements OnInit {
       left: this.leftValue,
       right: this.rightValue
     });
-
     var percent = ((this.inputRight.nativeElement.value - min) / (max - min)) * 100;
 
     this.thumbRight.nativeElement.style.right = (100 - percent) + "%";
@@ -93,5 +92,19 @@ export class MultiSliderComponent implements OnInit {
 
     this.thumbLeft.nativeElement.style.left = percent + "%";
     this.rangeBar.nativeElement.style.left = percent + "%";
+  }
+
+  resetValues(){
+    this.inputRight.nativeElement.value = this.maxValue;
+    this.inputLeft.nativeElement.value = this.minValue;
+    this.leftValue = this.minValue;
+    this.rightValue = this.maxValue;
+    
+    var percentR = ((this.inputRight.nativeElement.value - this.minValue) / (this.maxValue - this.minValue)) * 100;  
+    var percentL = ((this.inputLeft.nativeElement.value - this.minValue) / (this.maxValue - this.minValue)) * 100;
+    this.thumbRight.nativeElement.style.right = (100 - percentR) + "%";
+    this.rangeBar.nativeElement.style.right = (100 - percentR) + "%";
+    this.thumbLeft.nativeElement.style.left = percentL + "%";
+    this.rangeBar.nativeElement.style.left = percentL + "%";
   }
 }

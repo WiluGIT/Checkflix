@@ -1,3 +1,4 @@
+import { MultiSliderComponent } from './../multi-slider/multi-slider.component';
 import { FormGroup, FormBuilder, NumberValueAccessor } from '@angular/forms';
 import { IPostQueryFilters } from './../ClientViewModels/IPostQueryFilters';
 import { ProductionService } from './../../services/production.service';
@@ -40,6 +41,8 @@ export class HomeComponent implements OnInit {
   hboClicked:boolean=true;
 
   @ViewChild('homePaginator', {static: false}) paginator: MatPaginator;
+  @ViewChild('ratingSlider', { static: false }) ratingSlider: MultiSliderComponent;
+  @ViewChild('yearSlider', { static: false }) yearSlider: MultiSliderComponent;
   constructor(
     private productionService: ProductionService,
     private fb: FormBuilder,
@@ -113,12 +116,7 @@ export class HomeComponent implements OnInit {
     }
     // At least one element must be clicked
     if(!this.hboClicked && !this.netflixClicked){
-      this.hboClicked = true;
-      this.netflixClicked = true;
-      document.getElementById('hbo-btn').classList.remove("vod-gray");
-      document.getElementById('netflix-btn').classList.remove("vod-gray");
-      document.getElementById('hbo-btn').classList.add("hbo-btn");
-      document.getElementById('netflix-btn').classList.add("netflix-btn");
+      this.resetVodButtons();
       this.productionsFilterForm.controls["isNetflix"].setValue(null);
       this.productionsFilterForm.controls["isHbo"].setValue(null);
     }
@@ -185,5 +183,23 @@ export class HomeComponent implements OnInit {
       pageNumber: 1,
       pageSize: 25
     };
+  }
+
+  clearFilters(){
+    this.productionsFilterForm.reset();
+    this.resetVodButtons();
+    this.ratingSlider.resetValues();
+    this.yearSlider.resetValues();
+  }
+
+  resetVodButtons(){
+    this.hboClicked = true;
+    this.netflixClicked = true;
+    let hboBtn = document.getElementById('hbo-btn');
+    let netflixBtn = document.getElementById('netflix-btn');
+    hboBtn.classList.remove("vod-gray");
+    netflixBtn.classList.remove("vod-gray");
+    hboBtn.classList.add("hbo-btn");
+    netflixBtn.classList.add("netflix-btn");
   }
 }

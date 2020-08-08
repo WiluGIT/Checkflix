@@ -42,8 +42,6 @@ export class ProductionService {
     if (filters.yearTo)
       params = params.append('yearTo', filters.yearTo.toString());
 
-
-
     return this.http.get(this.getProductionsPath, { params, observe: 'response' }).pipe(map((productions: any) => productions));
   }
 
