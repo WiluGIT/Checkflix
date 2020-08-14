@@ -39,7 +39,7 @@ export class AdminComponent implements OnInit {
     synopsis: "brak",
     type: null,
     releaseDate: null,
-    imbdId: " ",
+    imbdId: "",
     imbdRating: null,
     vods: [],
     categories: []
@@ -55,7 +55,13 @@ export class AdminComponent implements OnInit {
   postQueryFilters: IPostQueryFilters = {
     pageNumber: 1,
     pageSize: 10,
-    searchQuery: null
+    searchQuery: null,
+    isNetflix: null,
+    isHbo: null,
+    yearFrom: null,
+    yearTo: null,
+    ratingFrom: null,
+    ratingTo: null
   };
   productionsFilterForm: FormGroup;
   productionsCount: number;
@@ -195,7 +201,7 @@ export class AdminComponent implements OnInit {
       const realCount = parseInt(productionCount['COUNT'])
       const pageCount = Math.ceil(realCount / 100);
       // TMP var PAGECOUNT -> 3
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < pageCount; i++) {
         const currentPage = i + 1;
         // TODO currentPage in URL IS NOT INCREMENTING
         const currentPageUrl = `https://unogs-unogs-v1.p.rapidapi.com/aaapi.cgi?q=get%3Anew99999%3APL&p=${currentPage}&t=ns&st=adv`;
@@ -227,12 +233,13 @@ export class AdminComponent implements OnInit {
 
             // update counter for progress bar
             productionsProcessedCounter += 1;
-            this.value = (productionsProcessedCounter / (realCount * 2)) * 100;
-
+            this.value = (productionsProcessedCounter / realCount) * 100;
 
             // gather data from api
-            this.productionFromApi.poster = apiData.image;
-            this.productionFromApi.title = apiData.title;
+            if(apiData.image)
+              this.productionFromApi.poster = apiData.image;
+            if(apiData.title)
+              this.productionFromApi.title = apiData.title;
 
             if (movieDbData["movie_results"].length > 0) {
               const movieArray = movieDbData["movie_results"][0];
@@ -242,11 +249,13 @@ export class AdminComponent implements OnInit {
               );
               this.productionFromApi.imbdId = apiData.imdbid;
               this.productionFromApi.categories = categories;
-              this.productionFromApi.subtitle = movieArray.title;
+              if(movieArray.title)
+                this.productionFromApi.subtitle = movieArray.title;
               if (movieArray.overview)
                 this.productionFromApi.synopsis = movieArray.overview;
               this.productionFromApi.type = 0;
-              this.productionFromApi.releaseDate = new Date(movieArray.release_date);
+              if(movieArray.release_date)
+                this.productionFromApi.releaseDate = new Date(movieArray.release_date);
               this.productionFromApi.vods = [{
                 vodId: 1,
                 platformName: "Netflix"
@@ -262,11 +271,13 @@ export class AdminComponent implements OnInit {
               );
               this.productionFromApi.imbdId = apiData.imdbid;
               this.productionFromApi.categories = categories;
-              this.productionFromApi.subtitle = seriesArray.name;
+              if(seriesArray.name)
+                this.productionFromApi.subtitle = seriesArray.name;
               if (seriesArray.overview)
                 this.productionFromApi.synopsis = seriesArray.overview;
               this.productionFromApi.type = 1;
-              this.productionFromApi.releaseDate = new Date(seriesArray.first_air_date);
+              if(seriesArray.first_air_date)
+                this.productionFromApi.releaseDate = new Date(seriesArray.first_air_date);
               this.productionFromApi.vods = [{
                 vodId: 1,
                 platformName: "Netflix"
@@ -275,11 +286,17 @@ export class AdminComponent implements OnInit {
 
             if (imbdData) {
               this.productionFromApi.imbdRating = parseFloat(imbdData["rating"]);
-              this.productionFromApi.poster = imbdData["poster"];
+              if(this.productionFromApi.poster === "brak" && imbdData["poster"])
+                this.productionFromApi.poster = imbdData["poster"];
             }
 
-            if (this.productionFromApi.imbdId && this.productionFromApi.imbdRating && this.productionFromApi.releaseDate && this.productionFromApi.type)
-              this.productionListFromApi.push(this.productionFromApi)
+            if (this.productionFromApi.imbdId 
+              && this.productionFromApi.imbdRating 
+              && this.productionFromApi.releaseDate 
+              && this.productionFromApi.type 
+              && this.productionFromApi.categories.length > 0){
+                this.productionListFromApi.push(this.productionFromApi)
+              }
 
             this.productionFromApi = {
               productionId: 0,
@@ -289,7 +306,7 @@ export class AdminComponent implements OnInit {
               synopsis: "brak",
               type: null,
               releaseDate: null,
-              imbdId: " ",
+              imbdId: "",
               imbdRating: null,
               vods: [],
               categories: []
@@ -297,8 +314,6 @@ export class AdminComponent implements OnInit {
             };
           }
         }
-
-
       }
       this.productionService
         .createProductions(this.productionListFromApi)
