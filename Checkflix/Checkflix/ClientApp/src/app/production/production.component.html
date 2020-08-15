@@ -1,4 +1,4 @@
-<h1 class="prod-header" #target>{{production?.title}}</h1>
+<!-- <h1 class="prod-header" #target>{{production?.title}}</h1> -->
 
 <div class="well full-width">
   <div class="curved">
@@ -16,17 +16,17 @@
               <img src="{{production?.poster}}" class="img-thumbnail-prod"/> 
             </div>
             <div>
-              <span><img class="imbd-icon" src="https://img.icons8.com/color/96/000000/imdb.png"/> </span>
+              <a href="https://www.imdb.com/title/{{production?.imbdId}}" target="_blank"><img class="imbd-icon" src="https://img.icons8.com/color/96/000000/imdb.png"/></a>
               <span class="rating-font"> {{production?.imbdRating}}/10</span>
             </div>
           </div>
         </div>
         <div class="col-sm-8">
           <div class="prod-right">
-            <div>
+            <div class="prod-title">
               {{production?.title}}
             </div>
-            <div>
+            <div class="prod-subtitle">
               <span *ngIf="production?.type == 0">Film: </span>
               <span *ngIf="production?.type == 1">Serial: </span>
               <span>{{production?.subtitle}} ({{production?.releaseDate.substr(0,4)}})</span>
@@ -36,6 +36,16 @@
             <div>
               {{production?.synopsis}}
             </div>
+            <div>
+              <hr/>
+              <button *ngFor="let category of production?.categories">{{category.categoryName}}</button>
+              <hr/>
+              <span *ngFor="let vod of production?.vods">          
+                <img class="vods-icons" *ngIf="vod.vodId == 1" src="https://img.icons8.com/nolan/256/netflix.png"/>
+                <img class="vods-icons" *ngIf="vod.vodId == 2" src="https://img.icons8.com/nolan/256/hbo-go.png"/>
+              </span>
+            </div>
+
           </div>
         </div>
       </section>

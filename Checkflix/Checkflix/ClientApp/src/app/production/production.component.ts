@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ProductionComponent implements OnInit {
   productionId: number;
+  vodId: number;
   production:IProductionViewModel;
   productionType:string;
 

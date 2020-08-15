@@ -4,7 +4,10 @@
 a {
   color: #0366d6;
 }
-
+a:hover {
+  color: none;
+  text-decoration: none;
+}
 code {
   color: #e01a76;
 }

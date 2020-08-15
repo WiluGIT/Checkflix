@@ -4,8 +4,19 @@
 .prod-right{
     color:#fff;
 }
+.prod-title{
+    font-weight: 900;
+    font-size: 30px;
+}
+.prod-subtitle{
+    font-size: 15px;
+}
 .imbd-icon{
     width: 48px;
+}
+.vods-icons{
+    width: 70px;
+    margin: 10px;
 }
 .rating-font{
     color: #f5c611;
@@ -17,4 +28,11 @@
     flex-wrap: wrap;
     margin-right: 15px;
     margin-left: 15px;
+}
+
+.curved {
+    position: relative;
+    height: auto;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#0d3e61), to(#461717));
+    background-image: linear-gradient(#0d3e61, #461717);
 }
