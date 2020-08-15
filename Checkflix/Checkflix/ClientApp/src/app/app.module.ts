@@ -33,6 +33,7 @@ import { getPlPaginatorIntl } from './paginator-custom/pl-paginator-intl';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MultiSliderComponent } from './multi-slider/multi-slider.component';
+import { ProductionComponent } from './production/production.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,7 +42,8 @@ import { MultiSliderComponent } from './multi-slider/multi-slider.component';
     AdminComponent,
     ProductionFormComponent,
     PaginatorCustomComponent,
-    MultiSliderComponent
+    MultiSliderComponent,
+    ProductionComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -53,6 +55,7 @@ import { MultiSliderComponent } from './multi-slider/multi-slider.component';
       { path: 'admin', component: AdminComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production-form', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production-form/:id', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
+      { path: 'production/:id', component: ProductionComponent }
     ], { anchorScrolling: 'enabled'}),
     BrowserAnimationsModule,
     MatTabsModule,
