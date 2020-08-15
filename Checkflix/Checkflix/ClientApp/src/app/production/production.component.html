@@ -1,0 +1,44 @@
+<h1 class="prod-header" #target>{{production?.title}}</h1>
+
+<div class="well full-width">
+  <div class="curved">
+    <svg class="circle-t" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" preserveAspectRatio="none">
+        <circle fill="white" cx="100" cy="0" r="100"/>
+    </svg>
+    <svg class="circle-b-one" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" preserveAspectRatio="none">
+      <circle fill="white" cx="100" cy="100" r="100"/>
+    </svg>
+    <div class="row-custom" >
+      <section class="prod-section">     
+        <div class="col-sm-4">
+          <div class="prod-left">
+            <div>
+              <img src="{{production?.poster}}" class="img-thumbnail-prod"/> 
+            </div>
+            <div>
+              <span><img class="imbd-icon" src="https://img.icons8.com/color/96/000000/imdb.png"/> </span>
+              <span class="rating-font"> {{production?.imbdRating}}/10</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="prod-right">
+            <div>
+              {{production?.title}}
+            </div>
+            <div>
+              <span *ngIf="production?.type == 0">Film: </span>
+              <span *ngIf="production?.type == 1">Serial: </span>
+              <span>{{production?.subtitle}} ({{production?.releaseDate.substr(0,4)}})</span>
+              
+            </div>
+            <br/>
+            <div>
+              {{production?.synopsis}}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>  
+  </div>
+</div>

@@ -85,7 +85,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   border-image-slice: 0 0 100% 0;
 }
 
-
+/* Background shapes */
 .full-width {
   width: 100vw;
   position: relative;
@@ -111,6 +111,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   bottom:0;
   width: 100%;
   height: 100px;
+}
+.circle-t{
+  position: absolute;
+  top:0;
+  width: 100%;
+  height: 5vw;
+}
+.circle-b-one{
+  position: absolute;
+  bottom:0;
+  width: 100%;
+  height: 5vw;
 }
 
 .prod-header {

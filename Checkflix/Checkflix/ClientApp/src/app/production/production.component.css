@@ -1,0 +1,20 @@
+.prod-left{
+    text-align:center;
+}
+.prod-right{
+    color:#fff;
+}
+.imbd-icon{
+    width: 48px;
+}
+.rating-font{
+    color: #f5c611;
+    font-weight: 900;
+}
+.row-custom{
+    display: -webkit-box;
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 15px;
+    margin-left: 15px;
+}
