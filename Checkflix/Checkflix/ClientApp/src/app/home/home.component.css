@@ -104,3 +104,9 @@ th.mat-header-cell {
   overflow: hidden;
   outline:none;
 }
+.default-wdh{
+  max-width: 100%;
+}
+
+
+
