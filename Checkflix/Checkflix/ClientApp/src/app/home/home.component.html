@@ -5,6 +5,19 @@
               <mat-label>Szukaj po tytule</mat-label>
               <input matInput formControlName="searchQuery" placeholder="Np. Stranger Things">
           </mat-form-field>
+          <mat-form-field>
+            <mat-label>Wybierz kategorie</mat-label>
+            <mat-select formControlName="categories" multiple>
+              <mat-select-trigger>
+                {{this.productionsFilterForm.controls.categories.value ? this.productionsFilterForm.controls['categories']?.value[0]: ''}}
+                <span *ngIf="productionsFilterForm.controls.categories.value?.length > 1" class="example-additional-selection">
+                  (+{{productionsFilterForm.controls.categories.value.length - 1}} {{productionsFilterForm.controls.categories.value?.length === 2 ? 'inny' : 'inne'}})
+                </span>
+              </mat-select-trigger>
+              <mat-option *ngFor="let category of categoryList" [value]="category.categoryName">{{category.categoryName}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="productionsFilterForm.controls.categories.errors?.required">Kategoria musi być podana</mat-error>
+          </mat-form-field>
           <app-multi-slider #yearSlider (sliderValues)="getYearSliderValues($event)" [sliderTitle]="'Rok produkcji'" [minValue]="minValueYear" [maxValue]="maxValueYear"></app-multi-slider>
           <app-multi-slider #ratingSlider (sliderValues)="getImbdSliderValues($event)" [sliderTitle]="'Oceny IMBd'" [minValue]="minImbdRating" [maxValue]="maxImbdRating"></app-multi-slider>
           <div class="logo-checkboxes">

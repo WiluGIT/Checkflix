@@ -41,6 +41,10 @@ export class ProductionService {
       params = params.append('yearFrom', filters.yearFrom.toString());
     if (filters.yearTo)
       params = params.append('yearTo', filters.yearTo.toString());
+    if (filters.categories)
+      filters.categories.map(el => {
+        params = params.append('categories', el.toString());
+      });
 
     return this.http.get(this.getProductionsPath, { params, observe: 'response' }).pipe(map((productions: any) => productions));
   }

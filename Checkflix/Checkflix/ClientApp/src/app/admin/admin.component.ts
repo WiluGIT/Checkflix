@@ -61,7 +61,8 @@ export class AdminComponent implements OnInit {
     yearFrom: null,
     yearTo: null,
     ratingFrom: null,
-    ratingTo: null
+    ratingTo: null,
+    categories: null
   };
   productionsFilterForm: FormGroup;
   productionsCount: number;
