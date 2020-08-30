@@ -38,7 +38,7 @@
             </div>
             <div>
               <hr/>
-              <button *ngFor="let category of production?.categories">{{category.categoryName}}</button>
+              <span class="category-spn" *ngFor="let category of production?.categories; let lastItem = last">{{category.categoryName}}<span *ngIf="!lastItem">, </span></span>
               <hr/>
               <span *ngFor="let vod of production?.vods">          
                 <img class="vods-icons" *ngIf="vod.vodId == 1" src="https://img.icons8.com/nolan/256/netflix.png"/>

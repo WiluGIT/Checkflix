@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit {
       .subscribe(categories => this.categoryList = categories)
 
     this.productionsFilterForm = this.fb.group({
-      searchQuery: '',
+      searchQuery: null,
       isNetflix: null,
       isHbo: null,
       yearFrom: null,
@@ -110,6 +110,7 @@ export class HomeComponent implements OnInit {
         target.classList.add("hbo-btn");
         this.hboClicked = true;
         this.productionsFilterForm.controls["isHbo"].setValue(null);
+        this.postQueryFilters.isHbo = null;
       }
     } else if (target.id === "netflix-btn") {
       if (this.netflixClicked) {
@@ -122,6 +123,7 @@ export class HomeComponent implements OnInit {
         target.classList.add("netflix-btn");
         this.netflixClicked = true;
         this.productionsFilterForm.controls["isNetflix"].setValue(null);
+        this.postQueryFilters.isNetflix = null;
       }
     }
     // At least one element must be clicked
@@ -135,7 +137,6 @@ export class HomeComponent implements OnInit {
   onPageChanged(e, htmlTarget: HTMLElement) {
     // Update current page index
     this.postQueryFilters.pageNumber = e.pageIndex + 1;
-
     // Call endpoint
     this.productionService.getProductions(this.postQueryFilters)
       .subscribe(response => {
@@ -170,7 +171,6 @@ export class HomeComponent implements OnInit {
       );
       this.postQueryFilters["categories"] = categories;
     }
-    console.log(this.postQueryFilters)
     // Change params to default
     this.postQueryFilters.pageNumber = 1;
     this.postQueryFilters.pageSize = 25;
@@ -185,21 +185,6 @@ export class HomeComponent implements OnInit {
         this.productionsCount = headers["TotalCount"];
         this.activePageDataChunk = this.productionList;
       });
-
-    // Reset fields
-    //this.postQueryFilters.searchQuery = null;
-    this.postQueryFilters = {
-      searchQuery: '',
-      isNetflix: null,
-      isHbo: null,
-      yearFrom: null,
-      yearTo: null,
-      ratingFrom: null,
-      ratingTo: null,
-      pageNumber: 1,
-      pageSize: 25,
-      categories: null
-    };
   }
 
   clearFilters() {
@@ -207,6 +192,18 @@ export class HomeComponent implements OnInit {
     this.resetVodButtons();
     this.ratingSlider.resetValues();
     this.yearSlider.resetValues();
+    this.postQueryFilters = {
+      pageNumber: 1,
+      pageSize: 25,
+      searchQuery: null,
+      isNetflix: null,
+      isHbo: null,
+      yearFrom: null,
+      yearTo: null,
+      ratingFrom: null,
+      ratingTo: null,
+      categories: null
+    };
   }
 
   resetVodButtons() {

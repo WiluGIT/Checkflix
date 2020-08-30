@@ -36,3 +36,7 @@
     background-image: -webkit-gradient(linear, left top, left bottom, from(#0d3e61), to(#461717));
     background-image: linear-gradient(#0d3e61, #461717);
 }
+
+.category-spn{
+    color: #ff8f00;
+}

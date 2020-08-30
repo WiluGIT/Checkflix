@@ -22,7 +22,6 @@ namespace Checkflix.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
     public class ProductionsController : ControllerBase
     {
         private readonly ICheckflixRepository _repository;
