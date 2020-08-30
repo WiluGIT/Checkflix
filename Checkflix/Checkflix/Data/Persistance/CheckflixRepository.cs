@@ -23,14 +23,26 @@ namespace Checkflix.Data.Persistance
         #region Productions
         // Productions
         public async Task<PagedList<Production>> GetAllProductions(PostQueryFilters filters)
-        {         
-            var productions = await _context.Productions
-                .Include(m=> m.VodProductions)
-                .ThenInclude(m=>m.Vod)
-                .Include(m=>m.ProductionCategories)
-                .ThenInclude(m=>m.Category)
-                .ToListAsync();
-
+        {
+            var productions = new List<Production>();
+            if (filters.Categories != null)
+            {
+                productions = await _context.ProductionCategories
+                                .Where(x => filters.Categories
+                                .Contains(x.CategoryId))
+                                .Select(x => x.Production)
+                                .Distinct()
+                                .ToListAsync();
+            }
+            else
+            {
+                productions = await _context.Productions
+                               .Include(m => m.VodProductions)
+                               .ThenInclude(m => m.Vod)
+                               .Include(m => m.ProductionCategories)
+                               .ThenInclude(m => m.Category)
+                               .ToListAsync();
+            }
             // Here in if condition implement filter logic for each patameter in PostQueryFilters class
             // Search string
             if (!string.IsNullOrEmpty(filters.SearchQuery))
@@ -39,29 +51,29 @@ namespace Checkflix.Data.Persistance
                 productions = productions.Where(x => x.Title.ToLower().Contains(querySearch) || x.Subtitle.ToLower().Contains(querySearch)).ToList();
             }
             // Vod platform // if filters have query like isHbo = false - filter netflix
-            if(!filters.IsHbo || !filters.IsNetflix)
+            if (!filters.IsHbo || !filters.IsNetflix)
             {
-                if(!filters.IsHbo)
+                if (!filters.IsHbo)
                 {
                     productions = productions.Where(x => x.VodProductions.Any(vp => vp.VodId.Equals(1))).ToList();
                 }
-                else if(!filters.IsNetflix)
+                else if (!filters.IsNetflix)
                 {
                     productions = productions.Where(x => x.VodProductions.Any(vp => vp.VodId.Equals(2))).ToList();
-                }          
+                }
             }
             // Year from to filter
-            if(filters.YearFrom != null && filters.YearTo != null)
+            if (filters.YearFrom != null && filters.YearTo != null)
             {
                 productions = productions.Where(x => x.ReleaseDate.Year >= filters.YearFrom && x.ReleaseDate.Year <= filters.YearTo).ToList();
             }
             // Rating from to filter
-            if(filters.RatingFrom != null && filters.RatingTo != null)
+            if (filters.RatingFrom != null && filters.RatingTo != null)
             {
                 productions = productions.Where(x => x.ImbdRating >= filters.RatingFrom && x.ImbdRating <= filters.RatingTo).ToList();
             }
 
-            var pagedProductions = PagedList<Production>.Create(productions,filters.PageNumber,filters.PageSize);
+            var pagedProductions = PagedList<Production>.Create(productions, filters.PageNumber, filters.PageSize);
 
             return pagedProductions;
         }
@@ -69,7 +81,7 @@ namespace Checkflix.Data.Persistance
         public async Task<Production> GetProduction(int id)
         {
             return await _context.Productions
-                .Where(m=>m.ProductionId.Equals(id))
+                .Where(m => m.ProductionId.Equals(id))
                 .Include(m => m.VodProductions)
                 .ThenInclude(m => m.Vod)
                 .Include(m => m.ProductionCategories)
@@ -79,7 +91,7 @@ namespace Checkflix.Data.Persistance
 
         public void AddProduction(Production production)
         {
-             _context.Productions.Add(production);
+            _context.Productions.Add(production);
         }
 
         public void RemoveProduction(Production production)
@@ -119,7 +131,7 @@ namespace Checkflix.Data.Persistance
         }
         public void UpdateCategories(IEnumerable<Category> categories)
         {
-            foreach(var c in categories)
+            foreach (var c in categories)
             {
                 _context.Categories.Add(c);
             }
@@ -166,7 +178,7 @@ namespace Checkflix.Data.Persistance
         {
             var production2update = await _context.VodProductions.Where(m => m.ProductionId.Equals(vodProduction.ProductionId) && m.VodId.Equals(vodProduction.VodId)).FirstOrDefaultAsync();
 
-           
+
             _context.Entry(production2update).CurrentValues.SetValues(production2update);
             //_context.VodProductions.Update(vodProduction);
         }

@@ -1,3 +1,4 @@
+import { CategoryService } from './../../services/category.service';
 import { MultiSliderComponent } from './../multi-slider/multi-slider.component';
 import { FormGroup, FormBuilder, NumberValueAccessor } from '@angular/forms';
 import { IPostQueryFilters } from './../ClientViewModels/IPostQueryFilters';
@@ -6,6 +7,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, Inject } from '@angular/co
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
 import { MatPaginator } from '@angular/material';
 import { DOCUMENT } from '@angular/common';
+import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 
 @Component({
   selector: 'app-home',
@@ -25,26 +27,29 @@ export class HomeComponent implements OnInit {
     yearFrom: null,
     yearTo: null,
     ratingFrom: null,
-    ratingTo: null
+    ratingTo: null,
+    categories: null
   };
+  categoryList: ICategoryViewModel[];
   activePageDataChunk: Array<IProductionViewModel> = [];
   // Filter form
   productionsFilterForm: FormGroup;
 
   //Child component slider
-  minValueYear:number;
-  maxValueYear:number;
-  minImbdRating:number;
-  maxImbdRating:number;
+  minValueYear: number;
+  maxValueYear: number;
+  minImbdRating: number;
+  maxImbdRating: number;
   //Vods icons
-  netflixClicked:boolean=true;
-  hboClicked:boolean=true;
+  netflixClicked: boolean = true;
+  hboClicked: boolean = true;
 
-  @ViewChild('homePaginator', {static: false}) paginator: MatPaginator;
+  @ViewChild('homePaginator', { static: false }) paginator: MatPaginator;
   @ViewChild('ratingSlider', { static: false }) ratingSlider: MultiSliderComponent;
   @ViewChild('yearSlider', { static: false }) yearSlider: MultiSliderComponent;
   constructor(
     private productionService: ProductionService,
+    private categoryService: CategoryService,
     private fb: FormBuilder,
     @Inject(DOCUMENT) document) {
   }
@@ -59,6 +64,10 @@ export class HomeComponent implements OnInit {
         this.productionsCount = headers["TotalCount"];
         this.activePageDataChunk = this.productionList;
       });
+    // Categories
+    this.categoryService
+      .getCategories()
+      .subscribe(categories => this.categoryList = categories)
 
     this.productionsFilterForm = this.fb.group({
       searchQuery: '',
@@ -67,7 +76,8 @@ export class HomeComponent implements OnInit {
       yearFrom: null,
       yearTo: null,
       ratingFrom: null,
-      ratingTo: null
+      ratingTo: null,
+      categories: null
     });
 
     //Set variables
@@ -77,37 +87,37 @@ export class HomeComponent implements OnInit {
     this.maxImbdRating = 10;
   }
 
-  getYearSliderValues(valueEmitted){
+  getYearSliderValues(valueEmitted) {
     this.productionsFilterForm.controls["yearFrom"].setValue(parseInt(valueEmitted['left']));
     this.productionsFilterForm.controls["yearTo"].setValue(parseInt(valueEmitted['right']));
   }
 
-  getImbdSliderValues(valueEmitted){
+  getImbdSliderValues(valueEmitted) {
     this.productionsFilterForm.controls["ratingFrom"].setValue(parseInt(valueEmitted['left']));
     this.productionsFilterForm.controls["ratingTo"].setValue(parseInt(valueEmitted['right']));
   }
 
-  checkBtn(e){
+  checkBtn(e) {
     const target = e.currentTarget;
-    if(target.id ==="hbo-btn"){
-      if(this.hboClicked){
+    if (target.id === "hbo-btn") {
+      if (this.hboClicked) {
         target.classList.add("vod-gray");
         target.classList.remove("hbo-btn");
         this.hboClicked = false;
         this.productionsFilterForm.controls["isHbo"].setValue(false);
-      }else{
+      } else {
         target.classList.remove("vod-gray");
         target.classList.add("hbo-btn");
         this.hboClicked = true;
         this.productionsFilterForm.controls["isHbo"].setValue(null);
       }
-    }else if(target.id === "netflix-btn"){
-      if(this.netflixClicked){
+    } else if (target.id === "netflix-btn") {
+      if (this.netflixClicked) {
         target.classList.add("vod-gray");
         target.classList.remove("netflix-btn");
         this.netflixClicked = false;
         this.productionsFilterForm.controls["isNetflix"].setValue(false);
-      }else{
+      } else {
         target.classList.remove("vod-gray");
         target.classList.add("netflix-btn");
         this.netflixClicked = true;
@@ -115,7 +125,7 @@ export class HomeComponent implements OnInit {
       }
     }
     // At least one element must be clicked
-    if(!this.hboClicked && !this.netflixClicked){
+    if (!this.hboClicked && !this.netflixClicked) {
       this.resetVodButtons();
       this.productionsFilterForm.controls["isNetflix"].setValue(null);
       this.productionsFilterForm.controls["isHbo"].setValue(null);
@@ -139,20 +149,26 @@ export class HomeComponent implements OnInit {
 
   applyFilters() {
     // Apply additional filters to query params
-    if(this.productionsFilterForm.controls["searchQuery"].value) {
+    if (this.productionsFilterForm.controls["searchQuery"].value) {
       this.postQueryFilters["searchQuery"] = this.productionsFilterForm.controls["searchQuery"].value;
     }
-    if(this.productionsFilterForm.controls["yearFrom"].value > 1900 || this.productionsFilterForm.controls["yearTo"].value < new Date().getFullYear()){
+    if (this.productionsFilterForm.controls["yearFrom"].value > 1900 || this.productionsFilterForm.controls["yearTo"].value < new Date().getFullYear()) {
       this.postQueryFilters["yearFrom"] = this.productionsFilterForm.controls["yearFrom"].value;
       this.postQueryFilters["yearTo"] = this.productionsFilterForm.controls["yearTo"].value;
     }
-    if(this.productionsFilterForm.controls["ratingFrom"].value > 0 || this.productionsFilterForm.controls["ratingTo"].value < 10){
+    if (this.productionsFilterForm.controls["ratingFrom"].value > 0 || this.productionsFilterForm.controls["ratingTo"].value < 10) {
       this.postQueryFilters["ratingFrom"] = this.productionsFilterForm.controls["ratingFrom"].value;
       this.postQueryFilters["ratingTo"] = this.productionsFilterForm.controls["ratingTo"].value;
     }
-    if(this.productionsFilterForm.controls["isHbo"].value == false || this.productionsFilterForm.controls["isNetflix"].value == false){
+    if (this.productionsFilterForm.controls["isHbo"].value == false || this.productionsFilterForm.controls["isNetflix"].value == false) {
       this.postQueryFilters["isHbo"] = this.productionsFilterForm.controls["isHbo"].value;
       this.postQueryFilters["isNetflix"] = this.productionsFilterForm.controls["isNetflix"].value;
+    }
+    if (this.productionsFilterForm.controls["categories"].value) {
+      const categories = this.productionsFilterForm.controls["categories"].value.map(el =>
+        this.categoryList.find(x => x.categoryName === el).categoryId
+      );
+      this.postQueryFilters["categories"] = categories;
     }
     console.log(this.postQueryFilters)
     // Change params to default
@@ -181,18 +197,19 @@ export class HomeComponent implements OnInit {
       ratingFrom: null,
       ratingTo: null,
       pageNumber: 1,
-      pageSize: 25
+      pageSize: 25,
+      categories: null
     };
   }
 
-  clearFilters(){
+  clearFilters() {
     this.productionsFilterForm.reset();
     this.resetVodButtons();
     this.ratingSlider.resetValues();
     this.yearSlider.resetValues();
   }
 
-  resetVodButtons(){
+  resetVodButtons() {
     this.hboClicked = true;
     this.netflixClicked = true;
     let hboBtn = document.getElementById('hbo-btn');
