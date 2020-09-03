@@ -22,7 +22,8 @@ namespace Checkflix.Mapping
 
             CreateMap<Vod, VodViewModel>()
                 .ReverseMap();
-
+            CreateMap<ApplicationUserProduction, ApplicationUserProductionViewModel>()
+                .ReverseMap();
         }
     }
 }

@@ -15,7 +15,5 @@ namespace Checkflix.Models
         public bool Favourites { get; set; } = false;
         public bool ToWatch { get; set; } = false;
         public bool Watched { get; set; } = false;
-
-
     }
 }

@@ -202,6 +202,18 @@ namespace Checkflix.Data.Persistance
         }
 
         #endregion
+
+        #region UserProductions
+        public async Task<ApplicationUserProduction> GetUserProduction(string userId, int productionId)
+        {
+            return await _context.ApplicationUserProductions.Where(m => m.ApplicationUserId.Equals(userId) && m.ProductionId.Equals(productionId)).FirstOrDefaultAsync();
+        }
+        public void AddUserProduction(ApplicationUserProduction userProduction)
+        {
+            _context.ApplicationUserProductions.Add(userProduction);
+        }
+        #endregion
+
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;
