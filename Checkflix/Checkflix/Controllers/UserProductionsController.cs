@@ -55,35 +55,51 @@ namespace Checkflix.Controllers
                     var userProduction = await _repository.GetUserProduction(user.Id, productionId);
                     if (userProduction != null)
                     {
-                        userProduction.ToWatch = userProductionVM.ToWatch;
-                        userProduction.Watched = userProductionVM.Watched;
-                        userProduction.Favourites = userProductionVM.Favourites;
+                        if (userProductionVM.ToWatch != null)
+                        {
+                            userProduction.ToWatch = userProductionVM.ToWatch;
+                        }
+                        if (userProductionVM.Watched != null)
+                        {
+                            userProduction.Watched = userProductionVM.Watched;
+                        }
+                        if (userProductionVM.Favourites != null)
+                        {
+                            userProduction.Favourites = userProductionVM.Favourites;
+                        }
                         validationResponse.Data = (ApplicationUserProductionViewModel)_mapper.Map<ApplicationUserProduction, ApplicationUserProductionViewModel>(userProduction);
                     }
                     else if (userProduction == null)
                     {
                         var production = await _repository.GetProduction(productionId);
-                        var newUserProduction = new ApplicationUserProduction
+                        if (production != null)
                         {
-                            Production = production,
-                            ApplicationUser = user,
-                            ToWatch = userProductionVM.ToWatch,
-                            Watched = userProductionVM.Watched,
-                            Favourites = userProductionVM.Favourites
-                        };
-                        _repository.AddUserProduction(newUserProduction);
-                        validationResponse.Data = (ApplicationUserProductionViewModel)_mapper.Map<ApplicationUserProduction, ApplicationUserProductionViewModel>(newUserProduction);
+                            var newUserProduction = new ApplicationUserProduction
+                            {
+                                Production = production,
+                                ApplicationUser = user,
+                                ToWatch = userProductionVM.ToWatch,
+                                Watched = userProductionVM.Watched,
+                                Favourites = userProductionVM.Favourites
+                            };
+                            _repository.AddUserProduction(newUserProduction);
+                            validationResponse.Data = (ApplicationUserProductionViewModel)_mapper.Map<ApplicationUserProduction, ApplicationUserProductionViewModel>(newUserProduction);
+                        }
+                        else
+                        {
+                            validationResponse.Messages.Add("Produkcja nie została znaleziona");
+                        }
                     }
                     if (await _repository.SaveAll())
                     {
-                        validationResponse.Messages.Add("Produkcja została dodana");
-                        return CreatedAtAction("GetProduction", validationResponse);
+                        validationResponse.Messages.Add("Produkcja została dodana do kolekcji");
+                        return CreatedAtAction("PostUserProduction", validationResponse);
                     }
                     else
                     {
-                        validationResponse.Messages.Add("Produkcja nie została dodana");
+                        validationResponse.Messages.Add("Nie udało się dodać produkcji do kolekcji");
                         validationResponse.Status = ResponseStatus.Error;
-                        return validationResponse;
+                        return BadRequest(validationResponse);
                     }
                 }
                 return BadRequest("Nie udało się dodać produkcji do kolekcji");

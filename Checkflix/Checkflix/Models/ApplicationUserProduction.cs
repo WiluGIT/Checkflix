@@ -12,8 +12,8 @@ namespace Checkflix.Models
         public int ProductionId { get; set; }
         public Production Production { get; set; }
 
-        public bool Favourites { get; set; } = false;
-        public bool ToWatch { get; set; } = false;
-        public bool Watched { get; set; } = false;
+        public bool? Favourites { get; set; }
+        public bool? ToWatch { get; set; }
+        public bool? Watched { get; set; }
     }
 }

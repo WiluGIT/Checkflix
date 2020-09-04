@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Checkflix.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200710171538_InitialSqlite")]
-    partial class InitialSqlite
+    [Migration("20200904191922_InitiaLSqlite")]
+    partial class InitiaLSqlite
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -105,17 +105,17 @@ namespace Checkflix.Migrations
                     b.Property<int>("ProductionId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Favourites")
+                    b.Property<bool?>("Favourites")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
-                    b.Property<bool>("ToWatch")
+                    b.Property<bool?>("ToWatch")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
-                    b.Property<bool>("Watched")
+                    b.Property<bool?>("Watched")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
