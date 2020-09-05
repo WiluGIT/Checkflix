@@ -216,4 +216,8 @@ export class HomeComponent implements OnInit {
     hboBtn.classList.add("hbo-btn");
     netflixBtn.classList.add("netflix-btn");
   }
+
+  siema(productionId){
+    console.log(productionId)
+  }
 }
