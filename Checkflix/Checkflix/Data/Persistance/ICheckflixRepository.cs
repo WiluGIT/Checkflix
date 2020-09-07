@@ -23,6 +23,7 @@ namespace Checkflix.Data.Persistance
         Task<Production> GetProduction(int id);
         Task<ProductionCategory> GetProductionCategory(int categoryId, int productionId);
         Task<ApplicationUserProduction> GetUserProduction(string userId, int productionId);
+        Task<List<ApplicationUserProduction>> GetUserProductionsIds(string userId);
         Task<Vod> GetVod(int id);
         Task<VodCountViewModel> GetVodCount();
         Task<VodProduction> GetVodProduction(int vodId, int productionId);

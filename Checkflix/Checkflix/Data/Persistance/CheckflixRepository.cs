@@ -32,15 +32,19 @@ namespace Checkflix.Data.Persistance
                                 .Contains(x.CategoryId))
                                 .Select(x => x.Production)
                                 .Distinct()
+                                // .Include(m => m.VodProductions)
+                                // .ThenInclude(m => m.Vod)
+                                // .Include(m => m.ProductionCategories)
+                                // .ThenInclude(m => m.Category)
                                 .ToListAsync();
             }
             else
             {
                 productions = await _context.Productions
-                               .Include(m => m.VodProductions)
-                               .ThenInclude(m => m.Vod)
-                               .Include(m => m.ProductionCategories)
-                               .ThenInclude(m => m.Category)
+                            //    .Include(m => m.VodProductions)
+                            //    .ThenInclude(m => m.Vod)
+                            //    .Include(m => m.ProductionCategories)
+                            //    .ThenInclude(m => m.Category)
                                .ToListAsync();
             }
             // Here in if condition implement filter logic for each patameter in PostQueryFilters class
@@ -72,7 +76,7 @@ namespace Checkflix.Data.Persistance
             {
                 productions = productions.Where(x => x.ImbdRating >= filters.RatingFrom && x.ImbdRating <= filters.RatingTo).ToList();
             }
-
+            
             var pagedProductions = PagedList<Production>.Create(productions, filters.PageNumber, filters.PageSize);
 
             return pagedProductions;
@@ -207,6 +211,10 @@ namespace Checkflix.Data.Persistance
         public async Task<ApplicationUserProduction> GetUserProduction(string userId, int productionId)
         {
             return await _context.ApplicationUserProductions.Where(m => m.ApplicationUserId.Equals(userId) && m.ProductionId.Equals(productionId)).FirstOrDefaultAsync();
+        }
+        public async Task<List<ApplicationUserProduction>> GetUserProductionsIds(string userId)
+        {
+            return await _context.ApplicationUserProductions.Where(m => m.ApplicationUserId.Equals(userId)).ToListAsync();
         }
         public void AddUserProduction(ApplicationUserProduction userProduction)
         {

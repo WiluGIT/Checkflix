@@ -111,5 +111,39 @@ namespace Checkflix.Controllers
             }
 
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<ResponseViewModel>> GetUserProductions()
+        {
+            try
+            {
+                var validationResponse = new ResponseViewModel
+                {
+                    Status = ResponseStatus.Success,
+                    Messages = new List<string>()
+                };
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    var userProductions = await _repository.GetUserProductionsIds(user.Id);
+                    if (userProductions != null)
+                    {
+                        validationResponse.Messages.Add("Udało się pobrać produkcje");
+                        validationResponse.Data = _mapper.Map<IEnumerable<ApplicationUserProduction>, IEnumerable<ApplicationUserProductionViewModel>>(userProductions);
+                        return Ok(validationResponse);
+                    }
+                }
+                validationResponse.Messages.Add("Nie udało się pobrać produkcji");
+                validationResponse.Status = ResponseStatus.Error;
+                return BadRequest(validationResponse);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to add production to collection{ex}");
+                return BadRequest("Bad request");
+            }
+        }
     }
 }

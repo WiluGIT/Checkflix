@@ -110,10 +110,11 @@ th.mat-header-cell {
 .tmpBtn{
     margin: 0 0 5px 5px;
     top: 5px;
+    right: 5px;
     width: 24px;
     height: 24px;
     display: block;
-    position: relative;
+    position: absolute;
     border: 1px solid;
     border-radius: 16px;
     background-size: 11px;
@@ -131,7 +132,6 @@ th.mat-header-cell {
     z-index: 2;
     background-color: rgba(8,17,24,0.7);
     border-color: #9d9fa2;
-    background-image: url(https://assets.reelgood.com/p/aeb2c1c…/6e2e62cb.svg);
     background-position: 5px;
 }
 
