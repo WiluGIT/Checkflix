@@ -1,3 +1,4 @@
+import { UserProducionService } from './../../services/user-producion.service';
 import { CategoryService } from './../../services/category.service';
 import { MultiSliderComponent } from './../multi-slider/multi-slider.component';
 import { FormGroup, FormBuilder, NumberValueAccessor } from '@angular/forms';
@@ -8,6 +9,7 @@ import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
 import { MatPaginator } from '@angular/material';
 import { DOCUMENT } from '@angular/common';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
+import { IApplicationUserProductionViewModel } from '../ClientViewModels/IApplicationUserProductionViewModel';
 
 @Component({
   selector: 'app-home',
@@ -50,6 +52,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private productionService: ProductionService,
     private categoryService: CategoryService,
+    private userProductionService: UserProducionService,
     private fb: FormBuilder,
     @Inject(DOCUMENT) document) {
   }
@@ -215,5 +218,17 @@ export class HomeComponent implements OnInit {
     netflixBtn.classList.remove("vod-gray");
     hboBtn.classList.add("hbo-btn");
     netflixBtn.classList.add("netflix-btn");
+  }
+
+  addToWatch(productionId){
+    const userProduction: IApplicationUserProductionViewModel = {
+      productionId: productionId,
+      toWatch: true,
+      favourites: null,
+      watched: null
+    };
+    this.userProductionService.addUserProduction(userProduction)
+    .subscribe(response => console.log(response));
+
   }
 }

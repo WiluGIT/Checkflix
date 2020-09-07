@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Checkflix.Migrations
 {
-    public partial class InitialSqlite : Migration
+    public partial class InitiaLSqlite : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -263,9 +263,9 @@ namespace Checkflix.Migrations
                 {
                     ApplicationUserId = table.Column<string>(nullable: false),
                     ProductionId = table.Column<int>(nullable: false),
-                    Favourites = table.Column<bool>(nullable: false, defaultValue: false),
-                    ToWatch = table.Column<bool>(nullable: false, defaultValue: false),
-                    Watched = table.Column<bool>(nullable: false, defaultValue: false)
+                    Favourites = table.Column<bool>(nullable: true, defaultValue: false),
+                    ToWatch = table.Column<bool>(nullable: true, defaultValue: false),
+                    Watched = table.Column<bool>(nullable: true, defaultValue: false)
                 },
                 constraints: table =>
                 {

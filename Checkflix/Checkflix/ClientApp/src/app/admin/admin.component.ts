@@ -200,8 +200,8 @@ export class AdminComponent implements OnInit {
     if (productionCount) {
       // calculate real count
       const realCount = parseInt(productionCount['COUNT'])
-      const pageCount = Math.ceil(realCount / 100);
-      // TMP var PAGECOUNT -> 3
+      const pageCount = Math.ceil(realCount / 100) / 2; // PODZIELILEM ZEBY MNIEJ CIAGNAC
+      console.log(pageCount)
       for (let i = 0; i < pageCount; i++) {
         const currentPage = i + 1;
         // TODO currentPage in URL IS NOT INCREMENTING

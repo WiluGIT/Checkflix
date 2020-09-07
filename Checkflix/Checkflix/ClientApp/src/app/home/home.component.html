@@ -1,39 +1,49 @@
 <div class="row form-wrapper">
   <div class="mb-3 card .mx-auto">
-      <form [formGroup]="productionsFilterForm" (ngSubmit)="applyFilters()">
-          <mat-form-field class="example-full-width text-center">
-              <mat-label>Szukaj po tytule</mat-label>
-              <input matInput formControlName="searchQuery" placeholder="Np. Stranger Things">
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Wybierz kategorie</mat-label>
-            <mat-select formControlName="categories" multiple>
-              <mat-select-trigger>
-                {{this.productionsFilterForm.controls.categories.value ? this.productionsFilterForm.controls['categories']?.value[0]: ''}}
-                <span *ngIf="productionsFilterForm.controls.categories.value?.length > 1" class="example-additional-selection">
-                  (+{{productionsFilterForm.controls.categories.value.length - 1}} {{productionsFilterForm.controls.categories.value?.length === 2 ? 'inny' : 'inne'}})
-                </span>
-              </mat-select-trigger>
-              <mat-option *ngFor="let category of categoryList" [value]="category.categoryName">{{category.categoryName}}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="productionsFilterForm.controls.categories.errors?.required">Kategoria musi być podana</mat-error>
-          </mat-form-field>
-          <app-multi-slider #yearSlider (sliderValues)="getYearSliderValues($event)" [sliderTitle]="'Rok produkcji'" [minValue]="minValueYear" [maxValue]="maxValueYear"></app-multi-slider>
-          <app-multi-slider #ratingSlider (sliderValues)="getImbdSliderValues($event)" [sliderTitle]="'Oceny IMBd'" [minValue]="minImbdRating" [maxValue]="maxImbdRating"></app-multi-slider>
-          <div class="logo-checkboxes">
-            <div (click)="checkBtn($event)" id="hbo-btn" class="icon-btn hbo-btn"><span class="iconify vod-logo" data-icon="simple-icons:hbo" data-inline="false"></span></div>
-            <div (click)="checkBtn($event)" id="netflix-btn" class="icon-btn netflix-btn"><span class="iconify vod-logo" data-icon="mdi:netflix" data-inline="false"></span></div>
-          </div>
-          <div>
-            <div class="clear-btn">
-              <button class="transparent-btn" type="button" (click)="clearFilters()"><span class="material-icons">close</span></button>
-            </div>
-            <div class="text-center">
-                <button type="submit" [disabled]="productionsFilterForm.invalid" class="btn btn-outline-primary">Filtruj</button>
-            </div>   
-          </div>
-    
-      </form>
+    <form [formGroup]="productionsFilterForm" (ngSubmit)="applyFilters()">
+      <mat-form-field class="example-full-width text-center">
+        <mat-label>Szukaj po tytule</mat-label>
+        <input matInput formControlName="searchQuery" placeholder="Np. Stranger Things">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Wybierz kategorie</mat-label>
+        <mat-select formControlName="categories" multiple>
+          <mat-select-trigger>
+            {{this.productionsFilterForm.controls.categories.value ? this.productionsFilterForm.controls['categories']?.value[0]: ''}}
+            <span *ngIf="productionsFilterForm.controls.categories.value?.length > 1"
+              class="example-additional-selection">
+              (+{{productionsFilterForm.controls.categories.value.length - 1}}
+              {{productionsFilterForm.controls.categories.value?.length === 2 ? 'inny' : 'inne'}})
+            </span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let category of categoryList" [value]="category.categoryName">{{category.categoryName}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="productionsFilterForm.controls.categories.errors?.required">Kategoria musi być podana
+        </mat-error>
+      </mat-form-field>
+      <app-multi-slider #yearSlider (sliderValues)="getYearSliderValues($event)" [sliderTitle]="'Rok produkcji'"
+        [minValue]="minValueYear" [maxValue]="maxValueYear"></app-multi-slider>
+      <app-multi-slider #ratingSlider (sliderValues)="getImbdSliderValues($event)" [sliderTitle]="'Oceny IMBd'"
+        [minValue]="minImbdRating" [maxValue]="maxImbdRating"></app-multi-slider>
+      <div class="logo-checkboxes">
+        <div (click)="checkBtn($event)" id="hbo-btn" class="icon-btn hbo-btn"><span class="iconify vod-logo"
+            data-icon="simple-icons:hbo" data-inline="false"></span></div>
+        <div (click)="checkBtn($event)" id="netflix-btn" class="icon-btn netflix-btn"><span class="iconify vod-logo"
+            data-icon="mdi:netflix" data-inline="false"></span></div>
+      </div>
+      <div>
+        <div class="clear-btn">
+          <button class="transparent-btn" type="button" (click)="clearFilters()"><span
+              class="material-icons">close</span></button>
+        </div>
+        <div class="text-center">
+          <button type="submit" [disabled]="productionsFilterForm.invalid"
+            class="btn btn-outline-primary">Filtruj</button>
+        </div>
+      </div>
+
+    </form>
 
   </div>
 </div>
@@ -43,35 +53,39 @@
 <div class="well full-width">
   <div class="curved">
     <svg class="skew-r" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <polygon fill="white" points="0,0 100,0 100,100"/>
+      <polygon fill="white" points="0,0 100,0 100,100" />
     </svg>
     <svg class="circle-b" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" preserveAspectRatio="none">
-      <circle fill="white" cx="0" cy="100" r="100"/>
-      <circle fill="white" cx="200" cy="100" r="100"/>
+      <circle fill="white" cx="0" cy="100" r="100" />
+      <circle fill="white" cx="200" cy="100" r="100" />
     </svg>
-    <div class="row" >
+    <div class="row">
       <section class="prod-section">
-        <div class="col-xl-2 col-md-3 col-sm-4 col-6 default-wdh" *ngFor="let production of activePageDataChunk">
-          <a [routerLink]="'/production/'+production.productionId">
-            <div class="card-prod" >
-              <div>
-                <img src="{{production.poster}}" class="img-thumbnail-prod"/>    
+        <div class="col-xl-2 col-md-3 col-sm-4 col-6 default-wdh" *ngFor="let production of activePageDataChunk">      
+          <div class="card-prod">
+            <a [routerLink]="'/production/'+production.productionId">
+              <div class="card-container">
+                <picture>
+                  <img src="{{production.poster}}" class="img-thumbnail-prod" />
+                </picture>
                 <div class="text-center">
-                  <span *ngIf="production.title.length>48;else short_title" class="title text-center">{{production.title.substr(0,48)}}... ({{production.releaseDate.substr(0,4)}})</span> 
-                  <ng-template #short_title><span class="title text-center">{{production.title}} ({{production.releaseDate.substr(0,4)}})</span></ng-template>             
+                  <span *ngIf="production.title.length>48;else short_title"
+                    class="title text-center">{{production.title.substr(0,48)}}...
+                    ({{production.releaseDate.substr(0,4)}})</span>
+                  <ng-template #short_title><span class="title text-center">{{production.title}}
+                      ({{production.releaseDate.substr(0,4)}})</span></ng-template>
                 </div>
-              </div>     
-            </div>
-          </a>
+              </div>       
+            </a>
+            <div>
+              <button (click)="addToWatch(production.productionId)" class="tmpBtn"><span class="iconify to-watch" data-icon="bx:bxs-camera-movie" data-inline="false"></span><span class="tmpSpan">essssssa</span></button>
+            </div>   
+          </div> 
         </div>
       </section>
-    </div>  
+    </div>
   </div>
 </div>
-<mat-paginator #homePaginator [length]="productionsCount"
-[pageSize]="postQueryFilters.pageSize"
-(page)="onPageChanged($event,target)"
-[hidePageSize]="true">
+<mat-paginator #homePaginator [length]="productionsCount" [pageSize]="postQueryFilters.pageSize"
+  (page)="onPageChanged($event,target)" [hidePageSize]="true">
 </mat-paginator>
-
-
