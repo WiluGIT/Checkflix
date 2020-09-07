@@ -108,10 +108,11 @@ th.mat-header-cell {
   max-width: 100%;
 }
 .tmpBtn{
-    margin: 0 0 5px 5px;
+    margin: 0 0 5px 20px;
     top: 5px;
     right: 5px;
-    width: 24px;
+    width: auto;
+    max-width: 24px;
     height: 24px;
     display: block;
     position: absolute;
@@ -122,33 +123,36 @@ th.mat-header-cell {
     background-position: 6px center;
     text-align: left;
     white-space: nowrap;
-    -webkit-transition: background-color 110ms,opacity 110ms,width 110ms;
-    transition: background-color 110ms,opacity 110ms,width 110ms;
+    -webkit-transition: background-color 110ms,opacity 110ms,max-width 300ms;
+    transition: background-color 110ms,opacity 110ms,max-width 300ms;
     overflow: hidden;
     outline: none;
     cursor: pointer;
-    color: #fff;
+    color: #000;
     will-change: width;
     z-index: 2;
-    background-color: rgba(8,17,24,0.7);
-    border-color: #9d9fa2;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-color: #ffffff;
+    /* background: url('https://api.iconify.design/mdi:movie-open-outline.svg') no-repeat; */
     background-position: 5px;
 }
 
 .tmpBtn:hover {
   background-color: #00f699;
   border-color: #00f699;
+  max-width: 100%;
+  opacity: 1;
 }
 
-.tmpBtn span {
-  margin-left: 19px;
-  opacity: 0;
+.tmpSpan{
+  margin: 0 0 5px 5px;
   -webkit-transition: opacity ease-in-out 100ms;
   transition: opacity ease-in-out 100ms;
   display: inline-block;
   vertical-align: middle;
   font-size: 13px;
 }
+
 .card-container{
   contain: strict;
   position: absolute;
@@ -164,6 +168,14 @@ th.mat-header-cell {
   transition: opacity 370ms cubic-bezier(0.4,0,0.2,1);
   object-fit: cover;  
 }
+.card-container:hover{
+  opacity: 1;
+}
+
+.to-watch{
+  margin: 0 0 5px -2px;
+}
+
 
 
 
