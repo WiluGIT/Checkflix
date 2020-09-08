@@ -234,16 +234,29 @@ export class HomeComponent implements OnInit {
     netflixBtn.classList.add("netflix-btn");
   }
 
-  addToWatch(productionId){
-    const userProduction: IApplicationUserProductionViewModel = {
-      productionId: productionId,
-      toWatch: true,
-      favourites: null,
-      watched: null
-    };
+  addToWatch(productionId,e){
+    const toWatchButton = e.currentTarget;
+    let userProduction: IApplicationUserProductionViewModel;
+    if (toWatchButton.classList.contains('to-watch-y')) {
+      userProduction = {
+        productionId: productionId,
+        toWatch: false,
+        favourites: null,
+        watched: null
+      };
+      toWatchButton.classList.remove("to-watch-y");
+    }
+    else {
+      userProduction = {
+        productionId: productionId,
+        toWatch: true,
+        favourites: null,
+        watched: null
+      };
+      toWatchButton.classList.add("to-watch-y");
+    }
     this.userProductionService.addUserProduction(userProduction)
     .subscribe(response => {
-      console.log(response)
       if (response['status'] == 1) {
         this.openSnackBar(response['messages'], 'Zamknij', 'red-snackbar');
       } else {
@@ -252,8 +265,12 @@ export class HomeComponent implements OnInit {
     },(err => {
       this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
     }));
-    console.log(this.userProductionsList)
+  }
 
+  checkIfExists(productionId) {
+    if (this.userProductionsList) {
+      return this.userProductionsList.some(el => el.productionId == productionId && el.toWatch == true)
+    }
   }
 
   openSnackBar(message: string, action: string, className: string) {
