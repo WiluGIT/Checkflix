@@ -278,7 +278,4 @@ export class ProductionFormComponent implements OnInit {
       panelClass: [className]
     });
   }
-
-
-
 }
