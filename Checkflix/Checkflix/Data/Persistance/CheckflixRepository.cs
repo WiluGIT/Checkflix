@@ -220,6 +220,10 @@ namespace Checkflix.Data.Persistance
         {
             _context.ApplicationUserProductions.Add(userProduction);
         }
+        public void RemoveUserProduction(ApplicationUserProduction userProduction)
+        {
+            _context.ApplicationUserProductions.Remove(userProduction);
+        }
         #endregion
 
         public async Task<bool> SaveAll()

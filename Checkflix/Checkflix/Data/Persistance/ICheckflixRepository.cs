@@ -30,6 +30,7 @@ namespace Checkflix.Data.Persistance
         bool ProductionsExists(int id);
         void RemoveAllProductions();
         void RemoveProduction(Production production);
+        void RemoveUserProduction(ApplicationUserProduction userProduction);
         Task<bool> SaveAll();
         void UpdateCategories(IEnumerable<Category> categories);
         void UpdateProduction(Production production);

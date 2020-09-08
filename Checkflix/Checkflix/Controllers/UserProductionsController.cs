@@ -57,17 +57,48 @@ namespace Checkflix.Controllers
                     {
                         if (userProductionVM.ToWatch != null)
                         {
+                            if (userProductionVM.ToWatch == true)
+                            {
+                                validationResponse.Messages.Add("Dodano do 'Do obejrzenia'");
+                            }
+                            else if (userProductionVM.ToWatch == false)
+                            {
+                                validationResponse.Messages.Add("Usunięto z 'Do obejrzenia'");
+                            }
                             userProduction.ToWatch = userProductionVM.ToWatch;
                         }
-                        if (userProductionVM.Watched != null)
+                        else if (userProductionVM.Watched != null)
                         {
+                            if (userProductionVM.Watched == true)
+                            {
+                                validationResponse.Messages.Add("Dodano do 'Obejrzane'");
+                            }
+                            else if (userProductionVM.Watched == false)
+                            {
+                                validationResponse.Messages.Add("Usunięto z 'Obejrzane'");
+                            }
                             userProduction.Watched = userProductionVM.Watched;
                         }
-                        if (userProductionVM.Favourites != null)
+                        else if (userProductionVM.Favourites != null)
                         {
+                            if (userProductionVM.Favourites == true)
+                            {
+                                validationResponse.Messages.Add("Dodano do 'Ulubione'");
+                            }
+                            else if (userProductionVM.Favourites == false)
+                            {
+                                validationResponse.Messages.Add("Usunięto z 'Ulubione'");
+                            }
                             userProduction.Favourites = userProductionVM.Favourites;
                         }
-                        validationResponse.Data = (ApplicationUserProductionViewModel)_mapper.Map<ApplicationUserProduction, ApplicationUserProductionViewModel>(userProduction);
+                        if (userProduction.ToWatch == false && userProduction.Watched == false && userProduction.Favourites == false)
+                        {
+                            _repository.RemoveUserProduction(userProduction);
+                        }
+                        else
+                        {
+                            validationResponse.Data = (ApplicationUserProductionViewModel)_mapper.Map<ApplicationUserProduction, ApplicationUserProductionViewModel>(userProduction);
+                        }
                     }
                     else if (userProduction == null)
                     {
@@ -78,10 +109,43 @@ namespace Checkflix.Controllers
                             {
                                 Production = production,
                                 ApplicationUser = user,
-                                ToWatch = userProductionVM.ToWatch,
-                                Watched = userProductionVM.Watched,
-                                Favourites = userProductionVM.Favourites
                             };
+                            if (userProductionVM.ToWatch != null)
+                            {
+                                if (userProductionVM.ToWatch == true)
+                                {
+                                    validationResponse.Messages.Add("Dodano do 'Do obejrzenia'");
+                                }
+                                else if (userProductionVM.ToWatch == false)
+                                {
+                                    validationResponse.Messages.Add("Usunięto z 'Do obejrzenia'");
+                                }
+                                newUserProduction.ToWatch = userProductionVM.ToWatch;
+                            }
+                            else if (userProductionVM.Watched != null)
+                            {
+                                if (userProductionVM.Watched == true)
+                                {
+                                    validationResponse.Messages.Add("Dodano do 'Obejrzane'");
+                                }
+                                else if (userProductionVM.Watched == false)
+                                {
+                                    validationResponse.Messages.Add("Usunięto z 'Obejrzane'");
+                                }
+                                newUserProduction.Watched = userProductionVM.Watched;
+                            }
+                            else if (userProductionVM.Favourites != null)
+                            {
+                                if (userProductionVM.Favourites == true)
+                                {
+                                    validationResponse.Messages.Add("Dodano do 'Ulubione'");
+                                }
+                                else if (userProductionVM.Favourites == false)
+                                {
+                                    validationResponse.Messages.Add("Usunięto z 'Ulubione'");
+                                }
+                                newUserProduction.Favourites = userProductionVM.Favourites;
+                            }
                             _repository.AddUserProduction(newUserProduction);
                             validationResponse.Data = (ApplicationUserProductionViewModel)_mapper.Map<ApplicationUserProduction, ApplicationUserProductionViewModel>(newUserProduction);
                         }
@@ -92,7 +156,6 @@ namespace Checkflix.Controllers
                     }
                     if (await _repository.SaveAll())
                     {
-                        validationResponse.Messages.Add("Produkcja została dodana do kolekcji");
                         return CreatedAtAction("PostUserProduction", validationResponse);
                     }
                     else
