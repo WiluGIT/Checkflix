@@ -78,7 +78,7 @@
               </div>       
             </a>
             <div>
-              <button (click)="addToWatch(production.productionId)" class="tmpBtn"><span class="iconify to-watch" data-icon="bx:bxs-camera-movie" data-inline="false"></span><span class="tmpSpan">essssssa</span></button>
+              <button id="btn-prod-{{production.productionId}}" (click)="addToWatch(production.productionId,$event)" [class.to-watch-y]="checkIfExists(production.productionId)"  class="tmpBtn"><span class="iconify to-watch" data-icon="bx:bxs-camera-movie" data-inline="false"></span><span class="tmpSpan">Do obejrzenia</span></button>
             </div>   
           </div> 
         </div>

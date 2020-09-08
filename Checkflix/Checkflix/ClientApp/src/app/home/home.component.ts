@@ -1,3 +1,4 @@
+import { AuthorizeService } from './../../api-authorization/authorize.service';
 import { UserProducionService } from './../../services/user-producion.service';
 import { CategoryService } from './../../services/category.service';
 import { MultiSliderComponent } from './../multi-slider/multi-slider.component';
@@ -6,7 +7,7 @@ import { IPostQueryFilters } from './../ClientViewModels/IPostQueryFilters';
 import { ProductionService } from './../../services/production.service';
 import { Component, OnInit, ViewChild, AfterViewInit, Inject } from '@angular/core';
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
-import { MatPaginator } from '@angular/material';
+import { MatPaginator, MatSnackBar } from '@angular/material';
 import { DOCUMENT } from '@angular/common';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { IApplicationUserProductionViewModel } from '../ClientViewModels/IApplicationUserProductionViewModel';
@@ -19,6 +20,7 @@ import { IApplicationUserProductionViewModel } from '../ClientViewModels/IApplic
 
 export class HomeComponent implements OnInit {
   productionList: Array<IProductionViewModel>;
+  userProductionsList: Array<IApplicationUserProductionViewModel>;
   productionsCount: number;
   postQueryFilters: IPostQueryFilters = {
     pageNumber: 1,
@@ -53,6 +55,8 @@ export class HomeComponent implements OnInit {
     private productionService: ProductionService,
     private categoryService: CategoryService,
     private userProductionService: UserProducionService,
+    private authorizeService: AuthorizeService,
+    public snackBar: MatSnackBar,
     private fb: FormBuilder,
     @Inject(DOCUMENT) document) {
   }
@@ -71,6 +75,16 @@ export class HomeComponent implements OnInit {
     this.categoryService
       .getCategories()
       .subscribe(categories => this.categoryList = categories)
+    
+      this.authorizeService.isAuthenticated()
+      .subscribe(authenticated => {
+        if (authenticated) {
+          this.userProductionService.getUserProductions()
+          .subscribe(responseData => {
+            this.userProductionsList = responseData["data"];
+          });
+        }
+      });
 
     this.productionsFilterForm = this.fb.group({
       searchQuery: null,
@@ -220,15 +234,49 @@ export class HomeComponent implements OnInit {
     netflixBtn.classList.add("netflix-btn");
   }
 
-  addToWatch(productionId){
-    const userProduction: IApplicationUserProductionViewModel = {
-      productionId: productionId,
-      toWatch: true,
-      favourites: null,
-      watched: null
-    };
+  addToWatch(productionId,e){
+    const toWatchButton = e.currentTarget;
+    let userProduction: IApplicationUserProductionViewModel;
+    if (toWatchButton.classList.contains('to-watch-y')) {
+      userProduction = {
+        productionId: productionId,
+        toWatch: false,
+        favourites: null,
+        watched: null
+      };
+      toWatchButton.classList.remove("to-watch-y");
+    }
+    else {
+      userProduction = {
+        productionId: productionId,
+        toWatch: true,
+        favourites: null,
+        watched: null
+      };
+      toWatchButton.classList.add("to-watch-y");
+    }
     this.userProductionService.addUserProduction(userProduction)
-    .subscribe(response => console.log(response));
+    .subscribe(response => {
+      if (response['status'] == 1) {
+        this.openSnackBar(response['messages'], 'Zamknij', 'red-snackbar');
+      } else {
+        this.openSnackBar(response['messages'], 'Zamknij', 'green-snackbar');
+      }
+    },(err => {
+      this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+    }));
+  }
 
+  checkIfExists(productionId) {
+    if (this.userProductionsList) {
+      return this.userProductionsList.some(el => el.productionId == productionId && el.toWatch == true)
+    }
+  }
+
+  openSnackBar(message: string, action: string, className: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+      panelClass: [className]
+    });
   }
 }
