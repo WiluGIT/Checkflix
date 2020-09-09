@@ -244,7 +244,6 @@ export class HomeComponent implements OnInit {
         favourites: null,
         watched: null
       };
-      toWatchButton.classList.remove("to-watch-y");
     }
     else {
       userProduction = {
@@ -253,17 +252,23 @@ export class HomeComponent implements OnInit {
         favourites: null,
         watched: null
       };
-      toWatchButton.classList.add("to-watch-y");
     }
     this.userProductionService.addUserProduction(userProduction)
     .subscribe(response => {
       if (response['status'] == 1) {
         this.openSnackBar(response['messages'], 'Zamknij', 'red-snackbar');
+        toWatchButton.classList.remove("to-watch-y");
       } else {
         this.openSnackBar(response['messages'], 'Zamknij', 'green-snackbar');
+        toWatchButton.classList.add("to-watch-y");
       }
     },(err => {
-      this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+      if(err.status == 401) {
+        console.log("Przenies do logowania")
+      }
+      else {
+        this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+      }
     }));
   }
 

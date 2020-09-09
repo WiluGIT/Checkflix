@@ -55,42 +55,7 @@ namespace Checkflix.Controllers
                     var userProduction = await _repository.GetUserProduction(user.Id, productionId);
                     if (userProduction != null)
                     {
-                        if (userProductionVM.ToWatch != null)
-                        {
-                            if (userProductionVM.ToWatch == true)
-                            {
-                                validationResponse.Messages.Add("Dodano do 'Do obejrzenia'");
-                            }
-                            else if (userProductionVM.ToWatch == false)
-                            {
-                                validationResponse.Messages.Add("Usunięto z 'Do obejrzenia'");
-                            }
-                            userProduction.ToWatch = userProductionVM.ToWatch;
-                        }
-                        else if (userProductionVM.Watched != null)
-                        {
-                            if (userProductionVM.Watched == true)
-                            {
-                                validationResponse.Messages.Add("Dodano do 'Obejrzane'");
-                            }
-                            else if (userProductionVM.Watched == false)
-                            {
-                                validationResponse.Messages.Add("Usunięto z 'Obejrzane'");
-                            }
-                            userProduction.Watched = userProductionVM.Watched;
-                        }
-                        else if (userProductionVM.Favourites != null)
-                        {
-                            if (userProductionVM.Favourites == true)
-                            {
-                                validationResponse.Messages.Add("Dodano do 'Ulubione'");
-                            }
-                            else if (userProductionVM.Favourites == false)
-                            {
-                                validationResponse.Messages.Add("Usunięto z 'Ulubione'");
-                            }
-                            userProduction.Favourites = userProductionVM.Favourites;
-                        }
+                        updateUserProduction(userProductionVM, ref userProduction, ref validationResponse);
                         if (userProduction.ToWatch == false && userProduction.Watched == false && userProduction.Favourites == false)
                         {
                             _repository.RemoveUserProduction(userProduction);
@@ -110,42 +75,7 @@ namespace Checkflix.Controllers
                                 Production = production,
                                 ApplicationUser = user,
                             };
-                            if (userProductionVM.ToWatch != null)
-                            {
-                                if (userProductionVM.ToWatch == true)
-                                {
-                                    validationResponse.Messages.Add("Dodano do 'Do obejrzenia'");
-                                }
-                                else if (userProductionVM.ToWatch == false)
-                                {
-                                    validationResponse.Messages.Add("Usunięto z 'Do obejrzenia'");
-                                }
-                                newUserProduction.ToWatch = userProductionVM.ToWatch;
-                            }
-                            else if (userProductionVM.Watched != null)
-                            {
-                                if (userProductionVM.Watched == true)
-                                {
-                                    validationResponse.Messages.Add("Dodano do 'Obejrzane'");
-                                }
-                                else if (userProductionVM.Watched == false)
-                                {
-                                    validationResponse.Messages.Add("Usunięto z 'Obejrzane'");
-                                }
-                                newUserProduction.Watched = userProductionVM.Watched;
-                            }
-                            else if (userProductionVM.Favourites != null)
-                            {
-                                if (userProductionVM.Favourites == true)
-                                {
-                                    validationResponse.Messages.Add("Dodano do 'Ulubione'");
-                                }
-                                else if (userProductionVM.Favourites == false)
-                                {
-                                    validationResponse.Messages.Add("Usunięto z 'Ulubione'");
-                                }
-                                newUserProduction.Favourites = userProductionVM.Favourites;
-                            }
+                            updateUserProduction(userProductionVM, ref newUserProduction, ref validationResponse);
                             _repository.AddUserProduction(newUserProduction);
                             validationResponse.Data = (ApplicationUserProductionViewModel)_mapper.Map<ApplicationUserProduction, ApplicationUserProductionViewModel>(newUserProduction);
                         }
@@ -156,7 +86,7 @@ namespace Checkflix.Controllers
                     }
                     if (await _repository.SaveAll())
                     {
-                        return CreatedAtAction("PostUserProduction", validationResponse);
+                        return Ok(validationResponse);
                     }
                     else
                     {
@@ -207,6 +137,49 @@ namespace Checkflix.Controllers
                 _logger.LogError($"Failed to add production to collection{ex}");
                 return BadRequest("Bad request");
             }
+        }
+
+        private void updateUserProduction(ApplicationUserProductionViewModel userProductionVM, ref ApplicationUserProduction userProduction, ref ResponseViewModel validationResponse)
+        {
+            if (userProductionVM.ToWatch != null)
+                        {
+                            if (userProductionVM.ToWatch == true)
+                            {
+                                validationResponse.Messages.Add("Dodano do 'Do obejrzenia'");
+                            }
+                            else if (userProductionVM.ToWatch == false)
+                            {
+                                validationResponse.Messages.Add("Usunięto z 'Do obejrzenia'");
+                                validationResponse.Status = ResponseStatus.Error;
+                            }
+                            userProduction.ToWatch = userProductionVM.ToWatch;
+                        }
+                        else if (userProductionVM.Watched != null)
+                        {
+                            if (userProductionVM.Watched == true)
+                            {
+                                validationResponse.Messages.Add("Dodano do 'Obejrzane'");
+                            }
+                            else if (userProductionVM.Watched == false)
+                            {
+                                validationResponse.Messages.Add("Usunięto z 'Obejrzane'");
+                                validationResponse.Status = ResponseStatus.Error;
+                            }
+                            userProduction.Watched = userProductionVM.Watched;
+                        }
+                        else if (userProductionVM.Favourites != null)
+                        {
+                            if (userProductionVM.Favourites == true)
+                            {
+                                validationResponse.Messages.Add("Dodano do 'Ulubione'");
+                            }
+                            else if (userProductionVM.Favourites == false)
+                            {
+                                validationResponse.Messages.Add("Usunięto z 'Ulubione'");
+                                validationResponse.Status = ResponseStatus.Error;
+                            }
+                            userProduction.Favourites = userProductionVM.Favourites;
+                        }
         }
     }
 }
