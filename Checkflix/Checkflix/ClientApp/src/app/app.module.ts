@@ -61,9 +61,7 @@ import { CollectionListComponent } from './collection-list/collection-list.compo
       { path: 'production-form/:id', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production/:id', component: ProductionComponent },
       { path: 'collections', component: CollectionsComponent, canActivate: [AuthorizeGuard]},
-      { path: 'collections/favourites', component:CollectionListComponent, canActivate: [AuthorizeGuard]},
-      { path: 'collections/to-watch', component:CollectionListComponent, canActivate: [AuthorizeGuard]},
-      { path: 'collections/watched', component:CollectionListComponent, canActivate: [AuthorizeGuard]}
+      { path: 'collections/:collectionName', component:CollectionListComponent, canActivate: [AuthorizeGuard]}
     ], { anchorScrolling: 'enabled'}),
     BrowserAnimationsModule,
     MatTabsModule,

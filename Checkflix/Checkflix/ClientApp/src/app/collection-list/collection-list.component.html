@@ -1,3 +1,4 @@
+<h1 #target>{{collectionType}}</h1>
 <div class="row">
     <div class="col-12" *ngFor="let production of activePageDataChunk">
         <div class="item-container">
@@ -22,3 +23,6 @@
         </div>
     </div>
 </div>
+<mat-paginator #collectionPaginator [length]="productionsCount" [pageSize]="postQueryFilters.pageSize"
+  (page)="onPageChanged($event,target)" [hidePageSize]="true">
+</mat-paginator>
