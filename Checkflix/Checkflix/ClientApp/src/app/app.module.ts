@@ -35,6 +35,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MultiSliderComponent } from './multi-slider/multi-slider.component';
 import { ProductionComponent } from './production/production.component';
 import { CollectionsComponent } from './collections/collections.component';
+import { CollectionListComponent } from './collection-list/collection-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +46,8 @@ import { CollectionsComponent } from './collections/collections.component';
     PaginatorCustomComponent,
     MultiSliderComponent,
     ProductionComponent,
-    CollectionsComponent
+    CollectionsComponent,
+    CollectionListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -58,7 +60,10 @@ import { CollectionsComponent } from './collections/collections.component';
       { path: 'production-form', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production-form/:id', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production/:id', component: ProductionComponent },
-      { path: 'collections', component: CollectionsComponent, canActivate: [AuthorizeGuard]}
+      { path: 'collections', component: CollectionsComponent, canActivate: [AuthorizeGuard]},
+      { path: 'collections/favourites', component:CollectionListComponent, canActivate: [AuthorizeGuard]},
+      { path: 'collections/to-watch', component:CollectionListComponent, canActivate: [AuthorizeGuard]},
+      { path: 'collections/watched', component:CollectionListComponent, canActivate: [AuthorizeGuard]}
     ], { anchorScrolling: 'enabled'}),
     BrowserAnimationsModule,
     MatTabsModule,

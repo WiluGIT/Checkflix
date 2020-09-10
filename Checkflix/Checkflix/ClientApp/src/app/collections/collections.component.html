@@ -1,7 +1,7 @@
 <div class="row collections-row">
     <span class="collections-header">Moje kolekcje</span>
     <div class="col-12">
-        <a class="box-wrap" style="text-decoration:none;">
+        <a [routerLink]="['/collections/favourites']" class="box-wrap" style="text-decoration:none;">
             <div class="tile">
                 <span class="iconify collections-ico" data-icon="ant-design:star-filled" data-inline="false"></span>
                 <br />
@@ -11,7 +11,7 @@
 
     </div>
     <div class="col-12">
-        <a class="box-wrap" style="text-decoration:none;">
+        <a [routerLink]="['/collections/to-watch']" class="box-wrap" style="text-decoration:none;">
             <div class="tile">
                 <span class="iconify collections-ico" data-icon="bx:bxs-camera-movie" data-inline="false"></span>
                 <br />
@@ -20,7 +20,7 @@
         </a>
     </div>
     <div class="col-12">
-        <a class="box-wrap" style="text-decoration:none;">
+        <a [routerLink]="['/collections/watched']" class="box-wrap" style="text-decoration:none;">
             <div class="tile">
                 <span class="iconify collections-ico" data-icon="ant-design:check-square-outlined" data-inline="false"></span>
                 <br />
