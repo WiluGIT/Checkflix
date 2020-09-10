@@ -1,3 +1,4 @@
+
 namespace Checkflix.Data.QueryExtensions
 {
     public class PostQueryFilters

@@ -216,6 +216,24 @@ namespace Checkflix.Data.Persistance
         {
             return await _context.ApplicationUserProductions.Where(m => m.ApplicationUserId.Equals(userId)).ToListAsync();
         }
+        public async Task<PagedList<Production>> GetUserCollection(string userId, UserCollectionFilter userCollectionVM)
+        {
+            var userCollection = new List<Production>();
+            if (userCollectionVM.Favourites == true)
+            {
+                userCollection = await _context.ApplicationUserProductions.Where(m => m.ApplicationUserId.Equals(userId) && m.Favourites == true).Select(m => m.Production).ToListAsync();
+            }
+            else if (userCollectionVM.ToWatch == true)
+            {
+                userCollection = await _context.ApplicationUserProductions.Where(m => m.ApplicationUserId.Equals(userId) && m.ToWatch == true).Select(m => m.Production).ToListAsync();
+            }
+            else if (userCollectionVM.Watched == true)
+            {
+                userCollection = await _context.ApplicationUserProductions.Where(m => m.ApplicationUserId.Equals(userId) && m.Watched == true).Select(m => m.Production).ToListAsync();
+            }
+            var pagedCollection = PagedList<Production>.Create(userCollection, userCollectionVM.PageNumber, userCollectionVM.PageSize);
+            return pagedCollection;
+        }
         public void AddUserProduction(ApplicationUserProduction userProduction)
         {
             _context.ApplicationUserProductions.Add(userProduction);

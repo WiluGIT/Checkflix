@@ -23,6 +23,6 @@
         </div>
     </div>
 </div>
-<mat-paginator #collectionPaginator [length]="productionsCount" [pageSize]="postQueryFilters.pageSize"
+<mat-paginator #collectionPaginator [length]="productionsCount" [pageSize]="postQueryFilters?.pageSize"
   (page)="onPageChanged($event,target)" [hidePageSize]="true">
 </mat-paginator>

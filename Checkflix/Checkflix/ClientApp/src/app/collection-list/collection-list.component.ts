@@ -1,5 +1,6 @@
+import { UserProducionService } from './../../services/user-producion.service';
+import { IUserCollectionFilter } from './../ClientViewModels/IUserCollectionFilter';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductionService } from './../../services/production.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IPostQueryFilters } from '../ClientViewModels/IPostQueryFilters';
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
@@ -11,17 +12,12 @@ import { MatPaginator } from '@angular/material';
   styleUrls: ['./collection-list.component.css']
 })
 export class CollectionListComponent implements OnInit {
-  postQueryFilters: IPostQueryFilters = {
+  userQueryFilters: IUserCollectionFilter = {
     pageNumber: 1,
-    pageSize: 25,
-    searchQuery: null,
-    isNetflix: null,
-    isHbo: null,
-    yearFrom: null,
-    yearTo: null,
-    ratingFrom: null,
-    ratingTo: null,
-    categories: null
+    pageSize: 60,
+    favourites: null,
+    toWatch: null,
+    watched: null
   };
   productionList: Array<IProductionViewModel>;
   productionsCount: number;
@@ -30,19 +26,22 @@ export class CollectionListComponent implements OnInit {
 
   @ViewChild('collectionPaginator', { static: false }) paginator: MatPaginator;
   constructor(
-    private productionService: ProductionService,
+    private userProductionService: UserProducionService,
     route: ActivatedRoute,
     private router: Router) {
     route.params.subscribe(p => {
       let collectionName = p['collectionName'];
       if (collectionName === "favourites") {
         this.collectionType = "Ulubione";
+        this.userQueryFilters.favourites = true;
       }
       else if (collectionName === "to-watch") {
         this.collectionType = "Do obejrzenia";
+        this.userQueryFilters.toWatch = true;
       }
       else if (collectionName === "watched") {
         this.collectionType = "Obejrzane";
+        this.userQueryFilters.watched = true;
       }
       else {
         this.router.navigate(['/']);
@@ -51,28 +50,30 @@ export class CollectionListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.productionService.getProductions(this.postQueryFilters)
+    console.log(this.userQueryFilters)
+    this.userProductionService.getUserCollection(this.userQueryFilters)
       .subscribe(response => {
         const headers = JSON.parse(response.headers.get('X-Pagination'));
-
-        this.productionList = response.body;
+        console.log(response)
+        this.productionList = response.body.data;
         this.productionsCount = headers["TotalCount"];
         this.activePageDataChunk = this.productionList;
       });
+      //debugger;
+
   }
 
   onPageChanged(e, htmlTarget: HTMLElement) {
     // Update current page index
-    this.postQueryFilters.pageNumber = e.pageIndex + 1;
+    this.userQueryFilters.pageNumber = e.pageIndex + 1;
     // Call endpoint
-    this.productionService.getProductions(this.postQueryFilters)
+    this.userProductionService.getUserCollection(this.userQueryFilters)
       .subscribe(response => {
-        this.productionList = response.body;
+        this.productionList = response.body.data;
         this.activePageDataChunk = this.productionList;
       });
 
     // Scroll to target
     htmlTarget.scrollIntoView({ behavior: "smooth" });
   }
-
 }
