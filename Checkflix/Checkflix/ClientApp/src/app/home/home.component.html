@@ -78,7 +78,8 @@
               </div>       
             </a>
             <div>
-              <button id="btn-prod-{{production.productionId}}" (click)="addToWatch(production.productionId,$event)" [class.to-watch-y]="checkIfExists(production.productionId)"  class="tmpBtn"><span class="iconify to-watch" data-icon="bx:bxs-camera-movie" data-inline="false"></span><span class="tmpSpan">Do obejrzenia</span></button>
+              <button (click)="addToWatch(production.productionId,$event)" [class.to-watch-y]="checkIfExistsToWatch(production.productionId)"  class="to-watch-btn"><span class="iconify camera-ico" data-icon="bx:bxs-camera-movie" data-inline="false"></span><span class="watch-span">Do obejrzenia</span></button>
+              <button (click)="addToFavourites(production.productionId,$event)" [class.to-watch-y]="checkIfExistsFavourites(production.productionId)"  class="favourites-btn"><span class="iconify star-ico" data-icon="ant-design:star-filled" data-inline="false"></span><span class="favourites-span">Ulubione</span></button>
             </div>   
           </div> 
         </div>

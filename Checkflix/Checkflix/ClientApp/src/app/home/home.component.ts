@@ -234,7 +234,7 @@ export class HomeComponent implements OnInit {
     netflixBtn.classList.add("netflix-btn");
   }
 
-  addToWatch(productionId,e){
+  addToWatch(productionId,e) {
     const toWatchButton = e.currentTarget;
     let userProduction: IApplicationUserProductionViewModel;
     if (toWatchButton.classList.contains('to-watch-y')) {
@@ -256,7 +256,7 @@ export class HomeComponent implements OnInit {
     this.userProductionService.addUserProduction(userProduction)
     .subscribe(response => {
       if (response['status'] == 1) {
-        this.openSnackBar(response['messages'], 'Zamknij', 'red-snackbar');
+        this.openSnackBar(response['messages'], 'Zamknij', 'blue-snackbar');
         toWatchButton.classList.remove("to-watch-y");
       } else {
         this.openSnackBar(response['messages'], 'Zamknij', 'green-snackbar');
@@ -272,9 +272,53 @@ export class HomeComponent implements OnInit {
     }));
   }
 
-  checkIfExists(productionId) {
+  addToFavourites(productionId,e) {
+    const toWatchButton = e.currentTarget;
+    let userProduction: IApplicationUserProductionViewModel;
+    if (toWatchButton.classList.contains('to-watch-y')) {
+      userProduction = {
+        productionId: productionId,
+        toWatch: null,
+        favourites: false,
+        watched: null
+      };
+    }
+    else {
+      userProduction = {
+        productionId: productionId,
+        toWatch: null,
+        favourites: true,
+        watched: null
+      };
+    }
+    this.userProductionService.addUserProduction(userProduction)
+    .subscribe(response => {
+      if (response['status'] == 1) {
+        this.openSnackBar(response['messages'], 'Zamknij', 'blue-snackbar');
+        toWatchButton.classList.remove("to-watch-y");
+      } else {
+        this.openSnackBar(response['messages'], 'Zamknij', 'green-snackbar');
+        toWatchButton.classList.add("to-watch-y");
+      }
+    },(err => {
+      if(err.status == 401) {
+        console.log("Przenies do logowania")
+      }
+      else {
+        this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+      }
+    }));
+  }
+
+  checkIfExistsToWatch(productionId) {
     if (this.userProductionsList) {
       return this.userProductionsList.some(el => el.productionId == productionId && el.toWatch == true)
+    }
+  }
+
+  checkIfExistsFavourites(productionId) {
+    if (this.userProductionsList) {
+      return this.userProductionsList.some(el => el.productionId == productionId && el.favourites == true)
     }
   }
 

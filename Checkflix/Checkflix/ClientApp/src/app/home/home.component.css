@@ -107,7 +107,7 @@ th.mat-header-cell {
 .default-wdh{
   max-width: 100%;
 }
-.tmpBtn{
+.to-watch-btn{
     margin: 0 0 5px 20px;
     top: 5px;
     right: 5px;
@@ -137,14 +137,72 @@ th.mat-header-cell {
     background-position: 5px;
 }
 
-.tmpBtn:hover {
+.to-watch-btn:hover {
   background-color: #00f699;
   border-color: #00f699;
   max-width: 100%;
   opacity: 1;
 }
 
-.tmpSpan{
+.favourites-btn{
+  margin: 0 0 5px 20px;
+  top: 32px;
+  right: 5px;
+  width: auto;
+  max-width: 24px;
+  height: 24px;
+  display: block;
+  position: absolute;
+  border: 1px solid;
+  border-radius: 16px;
+  background-size: 11px;
+  background-repeat: no-repeat;
+  background-position: 6px center;
+  text-align: left;
+  white-space: nowrap;
+  -webkit-transition: background-color 110ms,opacity 110ms,max-width 300ms;
+  transition: background-color 110ms,opacity 110ms,max-width 300ms;
+  overflow: hidden;
+  outline: none;
+  cursor: pointer;
+  color: #000;
+  will-change: width;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-color: #ffffff;
+  /* background: url('https://api.iconify.design/mdi:movie-open-outline.svg') no-repeat; */
+  background-position: 5px;
+}
+
+.favourites-btn:hover {
+  background-color: #00f699;
+  border-color: #00f699;
+  max-width: 100%;
+  opacity: 1;
+}
+
+.camera-ico{
+  margin: 0 0 5px -2px;
+}
+
+.star-ico{
+  margin: 0 0 5px -3px;
+}
+
+.to-watch-y{
+ background-color: #00f699;
+}
+
+.watch-span{
+  margin: 0 0 5px 5px;
+  -webkit-transition: opacity ease-in-out 100ms;
+  transition: opacity ease-in-out 100ms;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 13px;
+}
+
+.favourites-span{
   margin: 0 0 5px 5px;
   -webkit-transition: opacity ease-in-out 100ms;
   transition: opacity ease-in-out 100ms;
@@ -170,14 +228,6 @@ th.mat-header-cell {
 }
 .card-container:hover{
   opacity: 1;
-}
-
-.to-watch{
-  margin: 0 0 5px -2px;
-}
-
-.to-watch-y{
- background-color: #00f699;
 }
 
 
