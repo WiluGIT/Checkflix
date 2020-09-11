@@ -14,7 +14,7 @@ import { MatPaginator } from '@angular/material';
 export class CollectionListComponent implements OnInit {
   userQueryFilters: IUserCollectionFilter = {
     pageNumber: 1,
-    pageSize: 60,
+    pageSize: 25,
     favourites: null,
     toWatch: null,
     watched: null
@@ -50,17 +50,14 @@ export class CollectionListComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.userQueryFilters)
     this.userProductionService.getUserCollection(this.userQueryFilters)
       .subscribe(response => {
         const headers = JSON.parse(response.headers.get('X-Pagination'));
-        console.log(response)
+
         this.productionList = response.body.data;
         this.productionsCount = headers["TotalCount"];
         this.activePageDataChunk = this.productionList;
       });
-      //debugger;
-
   }
 
   onPageChanged(e, htmlTarget: HTMLElement) {

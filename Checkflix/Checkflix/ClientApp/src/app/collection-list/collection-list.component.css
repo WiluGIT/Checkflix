@@ -7,6 +7,7 @@
     overflow: hidden;
     margin: 15px;
     box-shadow: 0 2px 3px rgba(0,0,0,.5), 0 5px 15px rgba(0,0,0,.4);
+    font-size: 1.2em;
 }
 .item-container>.rating-column, .type-column, .actions-column {
     display: flex;
@@ -30,7 +31,21 @@
     justify-content: center;
 }
 .rating-column {
-    color: #fa0;
-    font-weight: 500;
-    font-size: 2.2em;
+    color: #ffc106;
+    
+}
+.action-del-btn{
+    font-size: 1.3em;
+}
+
+.action-del-btn:hover{
+    color: red;
+    cursor: pointer;
+}
+
+.subtitle-spn{
+    font-size: 0.7em;
+}
+.title-spn {
+    cursor: pointer;
 }

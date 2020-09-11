@@ -8,7 +8,8 @@
                   </picture>
             </div>
             <div class="title-column">
-                <span>{{production?.title}} ({{production?.releaseDate.substr(0,4)}})</span>
+                <span [routerLink]="'/production/'+production?.productionId" class="title-spn">{{production?.title}} ({{production?.releaseDate.substr(0,4)}})</span>
+                <span class="subtitle-spn">{{production?.subtitle}}</span>
             </div>
             <div class="type-column">
                 <span *ngIf="production?.type == 1">Serial</span>
@@ -18,11 +19,11 @@
                 <span>{{production?.imbdRating}}</span>
             </div>
             <div class="actions-column">
-                <button>dsad</button>
+                <span class="iconify action-del-btn" data-icon="bi:trash" data-inline="false"></span>
             </div>
         </div>
     </div>
 </div>
-<mat-paginator #collectionPaginator [length]="productionsCount" [pageSize]="postQueryFilters?.pageSize"
+<mat-paginator #collectionPaginator [length]="productionsCount" [pageSize]="userQueryFilters?.pageSize"
   (page)="onPageChanged($event,target)" [hidePageSize]="true">
 </mat-paginator>
