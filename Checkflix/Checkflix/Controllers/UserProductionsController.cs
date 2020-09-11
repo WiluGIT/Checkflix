@@ -55,42 +55,7 @@ namespace Checkflix.Controllers
                     var userProduction = await _repository.GetUserProduction(user.Id, productionId);
                     if (userProduction != null)
                     {
-                        if (userProductionVM.ToWatch != null)
-                        {
-                            if (userProductionVM.ToWatch == true)
-                            {
-                                validationResponse.Messages.Add("Dodano do 'Do obejrzenia'");
-                            }
-                            else if (userProductionVM.ToWatch == false)
-                            {
-                                validationResponse.Messages.Add("Usunięto z 'Do obejrzenia'");
-                            }
-                            userProduction.ToWatch = userProductionVM.ToWatch;
-                        }
-                        else if (userProductionVM.Watched != null)
-                        {
-                            if (userProductionVM.Watched == true)
-                            {
-                                validationResponse.Messages.Add("Dodano do 'Obejrzane'");
-                            }
-                            else if (userProductionVM.Watched == false)
-                            {
-                                validationResponse.Messages.Add("Usunięto z 'Obejrzane'");
-                            }
-                            userProduction.Watched = userProductionVM.Watched;
-                        }
-                        else if (userProductionVM.Favourites != null)
-                        {
-                            if (userProductionVM.Favourites == true)
-                            {
-                                validationResponse.Messages.Add("Dodano do 'Ulubione'");
-                            }
-                            else if (userProductionVM.Favourites == false)
-                            {
-                                validationResponse.Messages.Add("Usunięto z 'Ulubione'");
-                            }
-                            userProduction.Favourites = userProductionVM.Favourites;
-                        }
+                        updateUserProduction(userProductionVM, ref userProduction, ref validationResponse);
                         if (userProduction.ToWatch == false && userProduction.Watched == false && userProduction.Favourites == false)
                         {
                             _repository.RemoveUserProduction(userProduction);
@@ -110,42 +75,7 @@ namespace Checkflix.Controllers
                                 Production = production,
                                 ApplicationUser = user,
                             };
-                            if (userProductionVM.ToWatch != null)
-                            {
-                                if (userProductionVM.ToWatch == true)
-                                {
-                                    validationResponse.Messages.Add("Dodano do 'Do obejrzenia'");
-                                }
-                                else if (userProductionVM.ToWatch == false)
-                                {
-                                    validationResponse.Messages.Add("Usunięto z 'Do obejrzenia'");
-                                }
-                                newUserProduction.ToWatch = userProductionVM.ToWatch;
-                            }
-                            else if (userProductionVM.Watched != null)
-                            {
-                                if (userProductionVM.Watched == true)
-                                {
-                                    validationResponse.Messages.Add("Dodano do 'Obejrzane'");
-                                }
-                                else if (userProductionVM.Watched == false)
-                                {
-                                    validationResponse.Messages.Add("Usunięto z 'Obejrzane'");
-                                }
-                                newUserProduction.Watched = userProductionVM.Watched;
-                            }
-                            else if (userProductionVM.Favourites != null)
-                            {
-                                if (userProductionVM.Favourites == true)
-                                {
-                                    validationResponse.Messages.Add("Dodano do 'Ulubione'");
-                                }
-                                else if (userProductionVM.Favourites == false)
-                                {
-                                    validationResponse.Messages.Add("Usunięto z 'Ulubione'");
-                                }
-                                newUserProduction.Favourites = userProductionVM.Favourites;
-                            }
+                            updateUserProduction(userProductionVM, ref newUserProduction, ref validationResponse);
                             _repository.AddUserProduction(newUserProduction);
                             validationResponse.Data = (ApplicationUserProductionViewModel)_mapper.Map<ApplicationUserProduction, ApplicationUserProductionViewModel>(newUserProduction);
                         }
@@ -156,7 +86,7 @@ namespace Checkflix.Controllers
                     }
                     if (await _repository.SaveAll())
                     {
-                        return CreatedAtAction("PostUserProduction", validationResponse);
+                        return Ok(validationResponse);
                     }
                     else
                     {
@@ -206,6 +136,94 @@ namespace Checkflix.Controllers
             {
                 _logger.LogError($"Failed to add production to collection{ex}");
                 return BadRequest("Bad request");
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<ResponseViewModel>> GetUserCollection([FromQuery]UserCollectionFilter userProductionVM)
+        {
+            try
+            {
+                var validationResponse = new ResponseViewModel
+                {
+                    Status = ResponseStatus.Success,
+                    Messages = new List<string>()
+                };
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    var userCollection = await _repository.GetUserCollection(user.Id, userProductionVM);
+                    if (userCollection != null)
+                    {
+                        var metadata = new
+                        {
+                            userCollection.TotalCount,
+                            userCollection.PageSize,
+                            userCollection.CurrentPage,
+                            userCollection.TotalPages,
+                            userCollection.HasNextPage,
+                            userCollection.HasPreviousPage
+                        };
+                        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+                        validationResponse.Messages.Add("Udało się pobrać produkcje");
+                        validationResponse.Data = _mapper.Map<IEnumerable<Production>, IEnumerable<ProductionViewModel>>(userCollection);
+                        return Ok(validationResponse);
+                    }
+                }
+                validationResponse.Messages.Add("Nie udało się pobrać produkcji");
+                validationResponse.Status = ResponseStatus.Error;
+                return BadRequest(validationResponse);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to add production to collection{ex}");
+                return BadRequest("Bad request");
+            }
+        }
+
+        private void updateUserProduction(ApplicationUserProductionViewModel userProductionVM, ref ApplicationUserProduction userProduction, ref ResponseViewModel validationResponse)
+        {
+            if (userProductionVM.ToWatch != null)
+            {
+                if (userProductionVM.ToWatch == true)
+                {
+                    validationResponse.Messages.Add("Dodano do 'Do obejrzenia'");
+                }
+                else if (userProductionVM.ToWatch == false)
+                {
+                    validationResponse.Messages.Add("Usunięto z 'Do obejrzenia'");
+                    validationResponse.Status = ResponseStatus.Error;
+                }
+                userProduction.ToWatch = userProductionVM.ToWatch;
+            }
+            else if (userProductionVM.Watched != null)
+            {
+                if (userProductionVM.Watched == true)
+                {
+                    validationResponse.Messages.Add("Dodano do 'Obejrzane'");
+                }
+                else if (userProductionVM.Watched == false)
+                {
+                    validationResponse.Messages.Add("Usunięto z 'Obejrzane'");
+                    validationResponse.Status = ResponseStatus.Error;
+                }
+                userProduction.Watched = userProductionVM.Watched;
+            }
+            else if (userProductionVM.Favourites != null)
+            {
+                if (userProductionVM.Favourites == true)
+                {
+                    validationResponse.Messages.Add("Dodano do 'Ulubione'");
+                }
+                else if (userProductionVM.Favourites == false)
+                {
+                    validationResponse.Messages.Add("Usunięto z 'Ulubione'");
+                    validationResponse.Status = ResponseStatus.Error;
+                }
+                userProduction.Favourites = userProductionVM.Favourites;
             }
         }
     }

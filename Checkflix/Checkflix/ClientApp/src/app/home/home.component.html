@@ -63,22 +63,23 @@
       <section class="prod-section">
         <div class="col-xl-2 col-md-3 col-sm-4 col-6 default-wdh" *ngFor="let production of activePageDataChunk">      
           <div class="card-prod">
-            <a [routerLink]="'/production/'+production.productionId">
+            <a [routerLink]="'/production/'+production?.productionId">
               <div class="card-container">
                 <picture>
-                  <img src="{{production.poster}}" class="img-thumbnail-prod" />
+                  <img src="{{production?.poster}}" class="img-thumbnail-prod" />
                 </picture>
                 <div class="text-center">
-                  <span *ngIf="production.title.length>48;else short_title"
-                    class="title text-center">{{production.title.substr(0,48)}}...
-                    ({{production.releaseDate.substr(0,4)}})</span>
-                  <ng-template #short_title><span class="title text-center">{{production.title}}
-                      ({{production.releaseDate.substr(0,4)}})</span></ng-template>
+                  <span *ngIf="production?.title.length>48;else short_title"
+                    class="title text-center">{{production?.title.substr(0,48)}}...
+                    ({{production?.releaseDate.substr(0,4)}})</span>
+                  <ng-template #short_title><span class="title text-center">{{production?.title}}
+                      ({{production?.releaseDate.substr(0,4)}})</span></ng-template>
                 </div>
               </div>       
             </a>
             <div>
-              <button id="btn-prod-{{production.productionId}}" (click)="addToWatch(production.productionId,$event)" [class.to-watch-y]="checkIfExists(production.productionId)"  class="tmpBtn"><span class="iconify to-watch" data-icon="bx:bxs-camera-movie" data-inline="false"></span><span class="tmpSpan">Do obejrzenia</span></button>
+              <button (click)="addToWatch(production?.productionId,$event)" [class.to-watch-y]="checkIfExistsToWatch(production?.productionId)"  class="to-watch-btn"><span class="iconify camera-ico" data-icon="bx:bxs-camera-movie" data-inline="false"></span><span class="watch-span">Do obejrzenia</span></button>
+              <button (click)="addToFavourites(production?.productionId,$event)" [class.to-watch-y]="checkIfExistsFavourites(production?.productionId)"  class="favourites-btn"><span class="iconify star-ico" data-icon="ant-design:star-filled" data-inline="false"></span><span class="favourites-span">Ulubione</span></button>
             </div>   
           </div> 
         </div>
@@ -86,6 +87,6 @@
     </div>
   </div>
 </div>
-<mat-paginator #homePaginator [length]="productionsCount" [pageSize]="postQueryFilters.pageSize"
+<mat-paginator #homePaginator [length]="productionsCount" [pageSize]="postQueryFilters?.pageSize"
   (page)="onPageChanged($event,target)" [hidePageSize]="true">
 </mat-paginator>

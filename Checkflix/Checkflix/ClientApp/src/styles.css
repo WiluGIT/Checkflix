@@ -161,11 +161,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .red-snackbar {
-  background: #F44336;
+  background: rgba(197, 14, 1, 0.96);
 }
 
 .green-snackbar {
-  background: #339933;
+  background: rgba(35, 134, 35, 0.96);
+}
+
+.blue-snackbar {
+  background: rgba(121, 121, 121, 0.96);
 }
 
 /* Bootstrap ovverides */
