@@ -1,6 +1,6 @@
 .item-container {
     display: grid;
-    grid-template-columns: 100px 1fr 60px 60px 100px;
+    grid-template-columns: 100px 1fr 60px 80px 80px;
     background-color: #561011;
     border-radius: 8px;
     color: #fff;

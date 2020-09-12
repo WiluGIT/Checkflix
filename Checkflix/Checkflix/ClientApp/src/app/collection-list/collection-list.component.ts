@@ -1,10 +1,11 @@
+import { IApplicationUserProductionViewModel } from './../ClientViewModels/IApplicationUserProductionViewModel';
 import { UserProducionService } from './../../services/user-producion.service';
 import { IUserCollectionFilter } from './../ClientViewModels/IUserCollectionFilter';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IPostQueryFilters } from '../ClientViewModels/IPostQueryFilters';
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
-import { MatPaginator } from '@angular/material';
+import { MatPaginator, MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-collection-list',
@@ -14,7 +15,7 @@ import { MatPaginator } from '@angular/material';
 export class CollectionListComponent implements OnInit {
   userQueryFilters: IUserCollectionFilter = {
     pageNumber: 1,
-    pageSize: 25,
+    pageSize: 10,
     favourites: null,
     toWatch: null,
     watched: null
@@ -22,13 +23,14 @@ export class CollectionListComponent implements OnInit {
   productionList: Array<IProductionViewModel>;
   productionsCount: number;
   activePageDataChunk: Array<IProductionViewModel>;
-  collectionType:string;
+  collectionType: string;
 
   @ViewChild('collectionPaginator', { static: false }) paginator: MatPaginator;
   constructor(
     private userProductionService: UserProducionService,
     route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    public snackBar: MatSnackBar) {
     route.params.subscribe(p => {
       let collectionName = p['collectionName'];
       if (collectionName === "favourites") {
@@ -66,11 +68,74 @@ export class CollectionListComponent implements OnInit {
     // Call endpoint
     this.userProductionService.getUserCollection(this.userQueryFilters)
       .subscribe(response => {
+        const headers = JSON.parse(response.headers.get('X-Pagination'));
+
         this.productionList = response.body.data;
         this.activePageDataChunk = this.productionList;
       });
 
     // Scroll to target
     htmlTarget.scrollIntoView({ behavior: "smooth" });
+  }
+
+  deleteFromCollection(productionId) {
+    let userProduction:IApplicationUserProductionViewModel;
+    
+    if (this.collectionType === "Ulubione") {
+      userProduction = {
+        productionId: productionId,
+        toWatch: null,
+        favourites: false,
+        watched: null
+      };
+    }
+    else if (this.collectionType === "Do obejrzenia") {
+      userProduction = {
+        productionId: productionId,
+        toWatch: false,
+        favourites: null,
+        watched: null
+      };
+    }
+    else if (this.collectionType === "Obejrzane") {
+      userProduction = {
+        productionId: productionId,
+        toWatch: null,
+        favourites: null,
+        watched: false
+      };
+    }
+
+    this.userProductionService.addUserProduction(userProduction)
+    .subscribe(response => {
+      if (response['status'] == 1) {
+        this.openSnackBar(response['messages'], 'Zamknij', 'blue-snackbar');
+      
+        this.userProductionService.getUserCollection(this.userQueryFilters)
+        .subscribe(response => {
+          const headers = JSON.parse(response.headers.get('X-Pagination'));
+
+          this.productionsCount = headers["TotalCount"];
+          this.productionList = response.body.data;
+          this.activePageDataChunk = this.productionList;
+        });
+      } else {
+        this.openSnackBar(response['messages'], 'Zamknij', 'red-snackbar');
+      }
+    },(err => {
+      if(err.status == 401) {
+        this.router.navigate(['/']);
+      }
+      else {
+        this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+      }
+    }));
+  }
+
+  openSnackBar(message: string, action: string, className: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+      panelClass: [className]
+    });
   }
 }

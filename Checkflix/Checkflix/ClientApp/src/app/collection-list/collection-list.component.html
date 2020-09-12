@@ -1,5 +1,6 @@
 <h1 #target>{{collectionType}}</h1>
 <div class="row">
+    <span class="mx-auto" *ngIf="activePageDataChunk.length == 0">Brak produkcji w kolekcji <b>{{collectionType}}</b></span>
     <div class="col-12" *ngFor="let production of activePageDataChunk">
         <div class="item-container">
             <div class="image-column">
@@ -16,10 +17,10 @@
                 <span *ngIf="production?.type == 0">Film</span>
             </div>
             <div class="rating-column">
-                <span>{{production?.imbdRating}}</span>
+                <span>{{production?.imbdRating}}/10</span>
             </div>
             <div class="actions-column">
-                <span class="iconify action-del-btn" data-icon="bi:trash" data-inline="false"></span>
+                <div (click)="deleteFromCollection(production?.productionId)" ><span class="iconify action-del-btn" data-icon="bi:trash" data-inline="false"></span></div>
             </div>
         </div>
     </div>
