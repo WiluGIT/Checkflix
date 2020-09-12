@@ -37,9 +37,15 @@
 .action-del-btn{
     font-size: 1.3em;
 }
-
+.action-seen-btn{
+    font-size: 1.3em;
+}
+.action-seen-btn:hover{
+    color: rgb(0, 185, 9);
+    cursor: pointer;
+}
 .action-del-btn:hover{
-    color: red;
+    color: rgb(202, 0, 0);
     cursor: pointer;
 }
 

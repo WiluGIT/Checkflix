@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
     categories: null
   };
   categoryList: ICategoryViewModel[];
-  activePageDataChunk: Array<IProductionViewModel> = [];
+  activePageDataChunk: Array<IProductionViewModel>;
   // Filter form
   productionsFilterForm: FormGroup;
 
@@ -47,6 +47,7 @@ export class HomeComponent implements OnInit {
   //Vods icons
   netflixClicked: boolean = true;
   hboClicked: boolean = true;
+  contentloaded:boolean = false;
 
   @ViewChild('homePaginator', { static: false }) paginator: MatPaginator;
   @ViewChild('ratingSlider', { static: false }) ratingSlider: MultiSliderComponent;
@@ -60,13 +61,14 @@ export class HomeComponent implements OnInit {
     private fb: FormBuilder,
     @Inject(DOCUMENT) document) {
   }
-
+  
   ngOnInit() {
     //Endpoint calls
     this.productionService.getProductions(this.postQueryFilters)
       .subscribe(response => {
         const headers = JSON.parse(response.headers.get('X-Pagination'));
 
+        this.contentloaded =true;
         this.productionList = response.body;
         this.productionsCount = headers["TotalCount"];
         this.activePageDataChunk = this.productionList;

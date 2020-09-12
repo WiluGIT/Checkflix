@@ -79,8 +79,8 @@ export class CollectionListComponent implements OnInit {
   }
 
   deleteFromCollection(productionId) {
-    let userProduction:IApplicationUserProductionViewModel;
-    
+    let userProduction: IApplicationUserProductionViewModel;
+
     if (this.collectionType === "Ulubione") {
       userProduction = {
         productionId: productionId,
@@ -107,29 +107,64 @@ export class CollectionListComponent implements OnInit {
     }
 
     this.userProductionService.addUserProduction(userProduction)
-    .subscribe(response => {
-      if (response['status'] == 1) {
-        this.openSnackBar(response['messages'], 'Zamknij', 'blue-snackbar');
-      
-        this.userProductionService.getUserCollection(this.userQueryFilters)
-        .subscribe(response => {
-          const headers = JSON.parse(response.headers.get('X-Pagination'));
+      .subscribe(response => {
+        if (response['status'] == 1) {
+          this.openSnackBar(response['messages'], 'Zamknij', 'blue-snackbar');
 
-          this.productionsCount = headers["TotalCount"];
-          this.productionList = response.body.data;
-          this.activePageDataChunk = this.productionList;
-        });
-      } else {
-        this.openSnackBar(response['messages'], 'Zamknij', 'red-snackbar');
-      }
-    },(err => {
-      if(err.status == 401) {
-        this.router.navigate(['/']);
-      }
-      else {
-        this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
-      }
-    }));
+          this.userProductionService.getUserCollection(this.userQueryFilters)
+            .subscribe(response => {
+              const headers = JSON.parse(response.headers.get('X-Pagination'));
+
+              this.productionsCount = headers["TotalCount"];
+              this.productionList = response.body.data;
+              this.activePageDataChunk = this.productionList;
+            });
+        } else {
+          this.openSnackBar(response['messages'], 'Zamknij', 'red-snackbar');
+        }
+      }, (err => {
+        if (err.status == 401) {
+          this.router.navigate(['/']);
+        }
+        else {
+          this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+        }
+      }));
+  }
+
+  markAsSeen(productionId) {
+    console.log(productionId)
+    const userProduction: IApplicationUserProductionViewModel = {
+      productionId: productionId,
+      toWatch: false,
+      favourites: null,
+      watched: true
+    };
+
+    this.userProductionService.addUserProduction(userProduction)
+      .subscribe(response => {
+        if (response['status'] == 1) {
+          this.openSnackBar(response['messages'][1], 'Zamknij', 'blue-snackbar');
+
+          this.userProductionService.getUserCollection(this.userQueryFilters)
+            .subscribe(response => {
+              const headers = JSON.parse(response.headers.get('X-Pagination'));
+
+              this.productionsCount = headers["TotalCount"];
+              this.productionList = response.body.data;
+              this.activePageDataChunk = this.productionList;
+            });
+        } else {
+          this.openSnackBar(response['messages'], 'Zamknij', 'red-snackbar');
+        }
+      }, (err => {
+        if (err.status == 401) {
+          this.router.navigate(['/']);
+        }
+        else {
+          this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+        }
+      }));
   }
 
   openSnackBar(message: string, action: string, className: string) {

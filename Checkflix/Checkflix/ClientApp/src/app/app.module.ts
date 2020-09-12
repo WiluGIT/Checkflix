@@ -36,6 +36,8 @@ import { MultiSliderComponent } from './multi-slider/multi-slider.component';
 import { ProductionComponent } from './production/production.component';
 import { CollectionsComponent } from './collections/collections.component';
 import { CollectionListComponent } from './collection-list/collection-list.component';
+import { ContentSpinnerComponent } from './content-spinner/content-spinner.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +49,8 @@ import { CollectionListComponent } from './collection-list/collection-list.compo
     MultiSliderComponent,
     ProductionComponent,
     CollectionsComponent,
-    CollectionListComponent
+    CollectionListComponent,
+    ContentSpinnerComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
