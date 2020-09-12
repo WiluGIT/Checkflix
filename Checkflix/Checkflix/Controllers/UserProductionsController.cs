@@ -199,7 +199,7 @@ namespace Checkflix.Controllers
                 }
                 userProduction.ToWatch = userProductionVM.ToWatch;
             }
-            else if (userProductionVM.Watched != null)
+            if (userProductionVM.Watched != null)
             {
                 if (userProductionVM.Watched == true)
                 {
@@ -212,7 +212,7 @@ namespace Checkflix.Controllers
                 }
                 userProduction.Watched = userProductionVM.Watched;
             }
-            else if (userProductionVM.Favourites != null)
+            if (userProductionVM.Favourites != null)
             {
                 if (userProductionVM.Favourites == true)
                 {

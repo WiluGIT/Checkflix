@@ -9,7 +9,10 @@
       <circle fill="white" cx="100" cy="100" r="100"/>
     </svg>
     <div class="row-custom" >
-      <section class="prod-section">     
+      <div *ngIf="!contentLoaded" class="prod-section">
+        <app-content-spinner></app-content-spinner>  
+      </div>
+      <section *ngIf="contentLoaded" class="prod-section">           
         <div class="col-sm-4">
           <div class="prod-left">
             <div>

@@ -1,6 +1,6 @@
 .item-container {
     display: grid;
-    grid-template-columns: 100px 1fr 60px 60px 100px;
+    grid-template-columns: 100px 1fr 60px 80px 80px;
     background-color: #561011;
     border-radius: 8px;
     color: #fff;
@@ -37,9 +37,15 @@
 .action-del-btn{
     font-size: 1.3em;
 }
-
+.action-seen-btn{
+    font-size: 1.3em;
+}
+.action-seen-btn:hover{
+    color: rgb(0, 185, 9);
+    cursor: pointer;
+}
 .action-del-btn:hover{
-    color: red;
+    color: rgb(202, 0, 0);
     cursor: pointer;
 }
 
@@ -48,4 +54,16 @@
 }
 .title-spn {
     cursor: pointer;
+}
+
+.spinner-container {
+    margin-bottom: 100px;
+    display: -webkit-box;
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: auto;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+    justify-content: center;
 }

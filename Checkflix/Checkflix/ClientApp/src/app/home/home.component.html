@@ -61,6 +61,7 @@
     </svg>
     <div class="row">
       <section class="prod-section">
+        <app-content-spinner *ngIf="!contentloaded"></app-content-spinner>
         <div class="col-xl-2 col-md-3 col-sm-4 col-6 default-wdh" *ngFor="let production of activePageDataChunk">      
           <div class="card-prod">
             <a [routerLink]="'/production/'+production?.productionId">

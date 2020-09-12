@@ -1,28 +1,37 @@
 <h1 #target>{{collectionType}}</h1>
-<div class="row">
-    <div class="col-12" *ngFor="let production of activePageDataChunk">
-        <div class="item-container">
-            <div class="image-column">
-                <picture>
-                    <img src="{{production?.poster}}" class="img-thumbnail-prod" />
-                  </picture>
-            </div>
-            <div class="title-column">
-                <span [routerLink]="'/production/'+production?.productionId" class="title-spn">{{production?.title}} ({{production?.releaseDate.substr(0,4)}})</span>
-                <span class="subtitle-spn">{{production?.subtitle}}</span>
-            </div>
-            <div class="type-column">
-                <span *ngIf="production?.type == 1">Serial</span>
-                <span *ngIf="production?.type == 0">Film</span>
-            </div>
-            <div class="rating-column">
-                <span>{{production?.imbdRating}}</span>
-            </div>
-            <div class="actions-column">
-                <span class="iconify action-del-btn" data-icon="bi:trash" data-inline="false"></span>
-            </div>
-        </div>
+<div *ngIf="!contentLoaded" class="prod-section">
+    <app-content-spinner class="spinner-container"></app-content-spinner>
+  </div>
+<div *ngIf="contentLoaded" class="row">
+  <span class="mx-auto" *ngIf="activePageDataChunk?.length == 0">Brak produkcji w kolekcji
+    <b>{{collectionType}}</b></span>
+  <div class="col-12" *ngFor="let production of activePageDataChunk">
+    <div class="item-container">
+      <div class="image-column">
+        <picture>
+          <img src="{{production?.poster}}" class="img-thumbnail-prod" />
+        </picture>
+      </div>
+      <div class="title-column">
+        <span [routerLink]="'/production/'+production?.productionId" class="title-spn">{{production?.title}}
+          ({{production?.releaseDate.substr(0,4)}})</span>
+        <span class="subtitle-spn">{{production?.subtitle}}</span>
+      </div>
+      <div class="type-column">
+        <span *ngIf="production?.type == 1">Serial</span>
+        <span *ngIf="production?.type == 0">Film</span>
+      </div>
+      <div class="rating-column">
+        <span>{{production?.imbdRating}}/10</span>
+      </div>
+      <div class="actions-column">
+        <div (click)="deleteFromCollection(production?.productionId)"><span class="iconify action-del-btn"
+            data-icon="bi:trash" data-inline="false"></span></div>
+        <div *ngIf="collectionType == 'Do obejrzenia'" (click)="markAsSeen(production?.productionId)"><span
+            class="iconify action-seen-btn" data-icon="ant-design:check-outlined" data-inline="false"></span></div>
+      </div>
     </div>
+  </div>
 </div>
 <mat-paginator #collectionPaginator [length]="productionsCount" [pageSize]="userQueryFilters?.pageSize"
   (page)="onPageChanged($event,target)" [hidePageSize]="true">

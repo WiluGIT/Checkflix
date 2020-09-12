@@ -13,7 +13,7 @@ export class ProductionComponent implements OnInit {
   vodId: number;
   production:IProductionViewModel;
   productionType:string;
-
+  contentLoaded: boolean = false;
   constructor(
     private route: ActivatedRoute,
     private productionService: ProductionService) { 
@@ -26,6 +26,7 @@ export class ProductionComponent implements OnInit {
     this.productionService.getProduction(this.productionId)
     .subscribe(production =>{
       this.production = production;
+      this.contentLoaded = true;
     });
   }
 
