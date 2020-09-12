@@ -24,6 +24,7 @@ export class CollectionListComponent implements OnInit {
   productionsCount: number;
   activePageDataChunk: Array<IProductionViewModel>;
   collectionType: string;
+  contentLoaded: boolean = false;
 
   @ViewChild('collectionPaginator', { static: false }) paginator: MatPaginator;
   constructor(
@@ -56,6 +57,7 @@ export class CollectionListComponent implements OnInit {
       .subscribe(response => {
         const headers = JSON.parse(response.headers.get('X-Pagination'));
 
+        this.contentLoaded = true;
         this.productionList = response.body.data;
         this.productionsCount = headers["TotalCount"];
         this.activePageDataChunk = this.productionList;

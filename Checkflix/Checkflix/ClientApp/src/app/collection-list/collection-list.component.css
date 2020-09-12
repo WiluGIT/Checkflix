@@ -55,3 +55,15 @@
 .title-spn {
     cursor: pointer;
 }
+
+.spinner-container {
+    margin-bottom: 100px;
+    display: -webkit-box;
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: auto;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+    justify-content: center;
+}

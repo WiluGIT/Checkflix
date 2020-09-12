@@ -1,5 +1,8 @@
 <h1 #target>{{collectionType}}</h1>
-<div class="row">
+<div *ngIf="!contentLoaded" class="prod-section">
+    <app-content-spinner class="spinner-container"></app-content-spinner>
+  </div>
+<div *ngIf="contentLoaded" class="row">
   <span class="mx-auto" *ngIf="activePageDataChunk?.length == 0">Brak produkcji w kolekcji
     <b>{{collectionType}}</b></span>
   <div class="col-12" *ngFor="let production of activePageDataChunk">
