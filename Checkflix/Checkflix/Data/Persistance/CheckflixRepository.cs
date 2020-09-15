@@ -244,10 +244,13 @@ namespace Checkflix.Data.Persistance
         }
         #endregion
 
-        #region Users
-        public async Task<ApplicationUser> GetUser(string userId)
+        #region Followings 
+        public async Task<ApplicationUser> GetUserFollowings(string userId)
         {
-            return await _context.Users.Where(x => x.Id.Equals(userId)).Include(x => x.Followers).FirstOrDefaultAsync();
+            return await _context.Users.Where(x => x.Id.Equals(userId))
+                            .Include(m => m.Followers)
+                            .Include(m => m.Followees)
+                            .FirstOrDefaultAsync();
         } 
 
         public void AddFollowing(Following following)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Checkflix.Data.Persistance;
@@ -40,33 +41,59 @@ namespace Checkflix.Controllers
             try
             {
                 var follower = await _userManager.GetUserAsync(User);
-                var followee = await _repository.GetUser(followeeId);
 
-                if (follower != null && followee != null)
+                if (follower != null)
                 {
                     if (follower.Id == followeeId)
                     {
                         return BadRequest("Nie możesz zaobserować siebie");
                     }
 
-                    if (_repository.ValidateFollowing(follower.Id, followee.Id))
+                    if (_repository.ValidateFollowing(follower.Id, followeeId))
                     {
+                        //delete following
                         return BadRequest("Obserwujesz juz tę osobę");
                     }
 
                     var following = new Following
                     {
                         FollowerId = follower.Id,
-                        FolloweeId = followee.Id
+                        FolloweeId = followeeId
                     };
 
                     _repository.AddFollowing(following);
 
                     if (await _repository.SaveAll())
                         return Ok("Zaobserwowano");
-                    
+
                 }
                 return BadRequest("Wystąpił błąd przy obserwacji");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to add production to collection{ex}");
+                return BadRequest("Bad request");
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<FollowingCountViewModel>> GetFollowingCount()
+        {
+            try
+            {  
+                var user = await _repository.GetUserFollowings(_userManager.GetUserId(User));
+                if (user != null)
+                {
+                    var followingCountVm = new FollowingCountViewModel
+                    {
+                        FolloweeCount = user.Followees.Count(),
+                        FollowersCount = user.Followers.Count()
+                    };
+
+                    return Ok(followingCountVm);
+                }
+                return BadRequest();
             }
             catch (Exception ex)
             {
