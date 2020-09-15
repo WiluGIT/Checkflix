@@ -10,6 +10,7 @@ namespace Checkflix.Data.Persistance
 {
     public interface ICheckflixRepository
     {
+        void AddFollowing(Following following);
         void AddProduction(Production production);
         void AddProductionCategory(ProductionCategory productionCategory);
         void AddUserProduction(ApplicationUserProduction userProduction);
@@ -22,6 +23,7 @@ namespace Checkflix.Data.Persistance
         Task<Category> GetCategory(int id);
         Task<Production> GetProduction(int id);
         Task<ProductionCategory> GetProductionCategory(int categoryId, int productionId);
+        Task<ApplicationUser> GetUser(string userId);
         Task<PagedList<Production>> GetUserCollection(string userId, UserCollectionFilter userCollectionVM);
         Task<ApplicationUserProduction> GetUserProduction(string userId, int productionId);
         Task<List<ApplicationUserProduction>> GetUserProductionsIds(string userId);
@@ -37,5 +39,6 @@ namespace Checkflix.Data.Persistance
         void UpdateProduction(Production production);
         void UpdateProductionCategory(ProductionCategory productionCategory);
         void UpdateVodProduction(VodProduction vodProduction);
+        bool ValidateFollowing(string followerId, string followeeId);
     }
 }

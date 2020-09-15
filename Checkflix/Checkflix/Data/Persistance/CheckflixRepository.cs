@@ -244,6 +244,23 @@ namespace Checkflix.Data.Persistance
         }
         #endregion
 
+        #region Users
+        public async Task<ApplicationUser> GetUser(string userId)
+        {
+            return await _context.Users.Where(x => x.Id.Equals(userId)).Include(x => x.Followers).FirstOrDefaultAsync();
+        } 
+
+        public void AddFollowing(Following following)
+        {
+            _context.Followings.Add(following);
+        }
+
+        public bool ValidateFollowing(string followerId, string followeeId)
+        {
+            return _context.Followings.Any(x => x.FollowerId.Equals(followerId) && x.FolloweeId.Equals(followeeId));
+        }
+        #endregion
+
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;
