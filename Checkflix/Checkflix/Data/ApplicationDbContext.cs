@@ -26,17 +26,18 @@ namespace Checkflix.Data
         public DbSet<ApplicationUserVod> ApplicationUserVods { get; set; }
         public DbSet<ProductionCategory> ProductionCategories { get; set; }
         public DbSet<VodProduction> VodProductions { get; set; }
+        public DbSet<Following> Followings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // seed vod
             builder.Entity<Vod>().HasData(
-                new Vod {VodId = 1, PlatformName = "Netflix"},
-                new Vod {VodId = 2, PlatformName = "HBO GO" }
+                new Vod { VodId = 1, PlatformName = "Netflix" },
+                new Vod { VodId = 2, PlatformName = "HBO GO" }
                 );
             // seed categories
             builder.Entity<Category>().HasData(
-                new Category { CategoryId = 1, CategoryName = "Akcja", GenreApiId = 28},
+                new Category { CategoryId = 1, CategoryName = "Akcja", GenreApiId = 28 },
                 new Category { CategoryId = 2, CategoryName = "Thriller", GenreApiId = 53 },
                 new Category { CategoryId = 3, CategoryName = "film TV", GenreApiId = 10770 },
                 new Category { CategoryId = 4, CategoryName = "Sci-Fi", GenreApiId = 878 },
@@ -130,14 +131,25 @@ namespace Checkflix.Data
             builder.Entity<VodProduction>()
                 .HasKey(bc => new { bc.VodId, bc.ProductionId });
             builder.Entity<VodProduction>()
-           .HasOne(bc => bc.Vod)
-           .WithMany(b => b.VodProductions)
-           .HasForeignKey(bc => bc.VodId);
+                .HasOne(bc => bc.Vod)
+                .WithMany(b => b.VodProductions)
+                .HasForeignKey(bc => bc.VodId);
             builder.Entity<VodProduction>()
                 .HasOne(bc => bc.Production)
                 .WithMany(b => b.VodProductions)
                 .HasForeignKey(bc => bc.ProductionId);
-
+            
+            // Followings
+            builder.Entity<Following>()
+                .HasKey(bc => new {bc.FolloweeId, bc.FollowerId});
+            builder.Entity<Following>()
+                .HasOne(bc => bc.Follower)
+                .WithMany(b => b.Followees)
+                .HasForeignKey(bc => bc.FollowerId);
+            builder.Entity<Following>()
+                .HasOne(bc => bc.Followe)
+                .WithMany(b => b.Followers)
+                .HasForeignKey(bc => bc.FolloweeId);
 
             base.OnModelCreating(builder);
         }

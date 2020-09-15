@@ -11,6 +11,8 @@ import { MatPaginator, MatSnackBar } from '@angular/material';
 import { DOCUMENT } from '@angular/common';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { IApplicationUserProductionViewModel } from '../ClientViewModels/IApplicationUserProductionViewModel';
+import { ApplicationPaths } from 'src/api-authorization/api-authorization.constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -24,7 +26,7 @@ export class HomeComponent implements OnInit {
   productionsCount: number;
   postQueryFilters: IPostQueryFilters = {
     pageNumber: 1,
-    pageSize: 25,
+    pageSize: 30,
     searchQuery: null,
     isNetflix: null,
     isHbo: null,
@@ -36,6 +38,7 @@ export class HomeComponent implements OnInit {
   };
   categoryList: ICategoryViewModel[];
   activePageDataChunk: Array<IProductionViewModel>;
+  isAuthenticated:boolean;
   // Filter form
   productionsFilterForm: FormGroup;
 
@@ -59,6 +62,7 @@ export class HomeComponent implements OnInit {
     private authorizeService: AuthorizeService,
     public snackBar: MatSnackBar,
     private fb: FormBuilder,
+    private router: Router,
     @Inject(DOCUMENT) document) {
   }
   
@@ -73,6 +77,10 @@ export class HomeComponent implements OnInit {
         this.productionsCount = headers["TotalCount"];
         this.activePageDataChunk = this.productionList;
       });
+    
+    this.authorizeService.isAuthenticated().subscribe(authenticated =>{
+      this.isAuthenticated = authenticated;
+    });
     // Categories
     this.categoryService
       .getCategories()
@@ -192,7 +200,7 @@ export class HomeComponent implements OnInit {
     }
     // Change params to default
     this.postQueryFilters.pageNumber = 1;
-    this.postQueryFilters.pageSize = 25;
+    this.postQueryFilters.pageSize = 30;
     //Change page to first
     this.paginator.pageIndex = 0;
 
@@ -213,7 +221,7 @@ export class HomeComponent implements OnInit {
     this.yearSlider.resetValues();
     this.postQueryFilters = {
       pageNumber: 1,
-      pageSize: 25,
+      pageSize: 30,
       searchQuery: null,
       isNetflix: null,
       isHbo: null,
@@ -266,7 +274,7 @@ export class HomeComponent implements OnInit {
       }
     },(err => {
       if(err.status == 401) {
-        console.log("Przenies do logowania")
+        this.handleAuthorization(false);      
       }
       else {
         this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
@@ -304,8 +312,7 @@ export class HomeComponent implements OnInit {
       }
     },(err => {
       if(err.status == 401) {
-        console.log("Przenies do logowania")
-      }
+        this.handleAuthorization(false);      }
       else {
         this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
       }
@@ -322,6 +329,12 @@ export class HomeComponent implements OnInit {
     if (this.userProductionsList) {
       return this.userProductionsList.some(el => el.productionId == productionId && el.favourites == true)
     }
+  }
+
+  handleAuthorization(isAuthenticated: boolean) {
+    if (!isAuthenticated) {
+      this.router.navigate(ApplicationPaths.LoginPathComponents)
+    };
   }
 
   openSnackBar(message: string, action: string, className: string) {

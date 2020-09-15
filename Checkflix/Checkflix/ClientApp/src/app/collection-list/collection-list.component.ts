@@ -1,11 +1,12 @@
 import { IApplicationUserProductionViewModel } from './../ClientViewModels/IApplicationUserProductionViewModel';
 import { UserProducionService } from './../../services/user-producion.service';
 import { IUserCollectionFilter } from './../ClientViewModels/IUserCollectionFilter';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IPostQueryFilters } from '../ClientViewModels/IPostQueryFilters';
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
 import { MatPaginator, MatSnackBar } from '@angular/material';
+import { ApplicationPaths, QueryParameterNames } from 'src/api-authorization/api-authorization.constants';
 
 @Component({
   selector: 'app-collection-list',
@@ -61,7 +62,14 @@ export class CollectionListComponent implements OnInit {
         this.productionList = response.body.data;
         this.productionsCount = headers["TotalCount"];
         this.activePageDataChunk = this.productionList;
-      });
+      }, (err => {
+        if (err.status == 401) {
+          this.handleAuthorization(false);
+        }
+        else {
+          this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+        }
+      }));
   }
 
   onPageChanged(e, htmlTarget: HTMLElement) {
@@ -126,7 +134,7 @@ export class CollectionListComponent implements OnInit {
         }
       }, (err => {
         if (err.status == 401) {
-          this.router.navigate(['/']);
+          this.handleAuthorization(false);
         }
         else {
           this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
@@ -161,12 +169,18 @@ export class CollectionListComponent implements OnInit {
         }
       }, (err => {
         if (err.status == 401) {
-          this.router.navigate(['/']);
+          this.handleAuthorization(false);
         }
         else {
           this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
         }
       }));
+  }
+
+  handleAuthorization(isAuthenticated: boolean) {
+    if (!isAuthenticated) {
+      this.router.navigate(ApplicationPaths.LoginPathComponents)
+    };
   }
 
   openSnackBar(message: string, action: string, className: string) {
