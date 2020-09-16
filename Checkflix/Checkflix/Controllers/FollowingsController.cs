@@ -51,14 +51,14 @@ namespace Checkflix.Controllers
 
                     if (_repository.ValidateFollowing(follower.Id, followeeId))
                     {
-                        var existingFollowing = await _repository.GetFollowing(follower.Id,followeeId);
+                        var existingFollowing = await _repository.GetFollowing(follower.Id, followeeId);
                         _repository.RemoveFollowing(existingFollowing);
 
-                         if (await _repository.SaveAll())
-                         {
+                        if (await _repository.SaveAll())
+                        {
                             return Ok("Odobserwowano");
-                         }
-                        
+                        }
+
                         return BadRequest("Nie udało się odobserwować");
                     }
 
@@ -88,7 +88,7 @@ namespace Checkflix.Controllers
         public async Task<ActionResult<FollowingCountViewModel>> GetFollowingCount()
         {
             try
-            {  
+            {
                 var user = await _repository.GetUserFollowings(_userManager.GetUserId(User));
                 if (user != null)
                 {
@@ -101,6 +101,58 @@ namespace Checkflix.Controllers
                     return Ok(followingCountVm);
                 }
                 return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to add production to collection{ex}");
+                return BadRequest("Bad request");
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<UserViewModel>>> GetFollowers()
+        {
+            try
+            {
+                var user = await _repository.GetUserFollowings(_userManager.GetUserId(User));
+                if (user != null)
+                {
+                    var userFollowers = user.Followers.Select(x => new UserViewModel
+                    {
+                        Id = x.Follower.Id,
+                        UserName = x.Follower.UserName
+                    });
+                    return Ok(userFollowers);
+                }
+
+                return BadRequest("Nie udało się pobrać obserwatorów");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to add production to collection{ex}");
+                return BadRequest("Bad request");
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<UserViewModel>>> GetFollowees()
+        {
+            try
+            {
+                var user = await _repository.GetUserFollowings(_userManager.GetUserId(User));
+                if (user != null)
+                {
+                    var userFollowees = user.Followees.Select(x => new UserViewModel
+                    {
+                        Id = x.Followe.Id,
+                        UserName = x.Followe.UserName
+                    });
+                    return Ok(userFollowees);
+                }
+
+                return BadRequest("Nie udało się pobrać obserwowanych");
             }
             catch (Exception ex)
             {

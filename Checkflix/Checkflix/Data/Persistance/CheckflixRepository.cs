@@ -249,7 +249,9 @@ namespace Checkflix.Data.Persistance
         {
             return await _context.Users.Where(x => x.Id.Equals(userId))
                             .Include(m => m.Followers)
+                            .ThenInclude(x => x.Follower)
                             .Include(m => m.Followees)
+                            .ThenInclude(x => x.Followe)
                             .FirstOrDefaultAsync();
         }
 
