@@ -51,8 +51,15 @@ namespace Checkflix.Controllers
 
                     if (_repository.ValidateFollowing(follower.Id, followeeId))
                     {
-                        //delete following
-                        return BadRequest("Obserwujesz juz tę osobę");
+                        var existingFollowing = await _repository.GetFollowing(follower.Id,followeeId);
+                        _repository.RemoveFollowing(existingFollowing);
+
+                         if (await _repository.SaveAll())
+                         {
+                            return Ok("Odobserwowano");
+                         }
+                        
+                        return BadRequest("Nie udało się odobserwować");
                     }
 
                     var following = new Following

@@ -251,11 +251,21 @@ namespace Checkflix.Data.Persistance
                             .Include(m => m.Followers)
                             .Include(m => m.Followees)
                             .FirstOrDefaultAsync();
+        }
+
+        public async Task<Following> GetFollowing(string followerId, string followeeId)
+        {
+            return await _context.Followings.Where(x => x.FollowerId.Equals(followerId) && x.FolloweeId.Equals(followeeId)).FirstOrDefaultAsync();
         } 
 
         public void AddFollowing(Following following)
         {
             _context.Followings.Add(following);
+        }
+
+        public void RemoveFollowing(Following following)
+        {
+            _context.Followings.Remove(following);
         }
 
         public bool ValidateFollowing(string followerId, string followeeId)

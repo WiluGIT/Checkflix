@@ -40,5 +40,7 @@ namespace Checkflix.Data.Persistance
         void UpdateProductionCategory(ProductionCategory productionCategory);
         void UpdateVodProduction(VodProduction vodProduction);
         bool ValidateFollowing(string followerId, string followeeId);
+        Task<Following> GetFollowing(string followerId, string followeeId);
+        void RemoveFollowing(Following following);
     }
 }
