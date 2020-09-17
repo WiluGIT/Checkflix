@@ -94,7 +94,7 @@ namespace Checkflix.Controllers
                 {
                     var followingCountVm = new FollowingCountViewModel
                     {
-                        FolloweeCount = user.Followees.Count(),
+                        FolloweesCount = user.Followees.Count(),
                         FollowersCount = user.Followers.Count()
                     };
 

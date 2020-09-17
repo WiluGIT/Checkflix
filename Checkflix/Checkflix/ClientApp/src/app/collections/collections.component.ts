@@ -1,3 +1,5 @@
+import { IFollowingCountViewModel } from './../ClientViewModels/IFollowingCountViewModel';
+import { FollowingService } from './../../services/following.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,10 +8,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./collections.component.css']
 })
 export class CollectionsComponent implements OnInit {
-
-  constructor() { }
+  followingCount:IFollowingCountViewModel;
+  constructor(private followingService:FollowingService) { }
 
   ngOnInit() {
+    console.log("siema")
+    this.followingService.getFollowingCount()
+    .subscribe(followings => {
+      console.log(followings)
+      this.followingCount = followings;
+    });
   }
 
 }
