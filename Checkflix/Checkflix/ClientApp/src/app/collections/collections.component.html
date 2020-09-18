@@ -1,32 +1,56 @@
-<div class="row collections-row">
-    <span class="collections-header">Moje kolekcje</span>
-    <div class="col-12">
-        <a [routerLink]="['/collections/favourites']" class="box-wrap" style="text-decoration:none;">
-            <div class="tile">
-                <span class="iconify collections-ico" data-icon="ant-design:star-filled" data-inline="false"></span>
-                <br />
-                Ulubione
-            </div>
-        </a>
-
+<div class="row">
+    <div class="col-md-6 col-12">
+        <span class="collections-header">Moje kolekcje</span>
+        <div>
+            <a [routerLink]="['/collections/favourites']" class="box-wrap" style="text-decoration:none;">
+                <div class="tile">
+                    <span class="iconify collections-ico" data-icon="ant-design:star-filled" data-inline="false"></span>
+                    <br />
+                    Ulubione
+                </div>
+            </a>
+    
+        </div>
+        <div>
+            <a [routerLink]="['/collections/to-watch']" class="box-wrap" style="text-decoration:none;">
+                <div class="tile">
+                    <span class="iconify collections-ico" data-icon="bx:bxs-camera-movie" data-inline="false"></span>
+                    <br />
+                    Do obejrzenia
+                </div>
+            </a>
+        </div>
+        <div>
+            <a [routerLink]="['/collections/watched']" class="box-wrap" style="text-decoration:none;">
+                <div class="tile">
+                    <span class="iconify collections-ico" data-icon="ant-design:check-square-outlined" data-inline="false"></span>
+                    <br />
+                    Obejrzane
+                </div>
+            </a>
+        </div>
     </div>
-    <div class="col-12">
-        <a [routerLink]="['/collections/to-watch']" class="box-wrap" style="text-decoration:none;">
-            <div class="tile">
-                <span class="iconify collections-ico" data-icon="bx:bxs-camera-movie" data-inline="false"></span>
-                <br />
-                Do obejrzenia
+    <div class="col-md-6 col-12">
+        <span class="collections-header">Obserwacje</span>
+        <div>
+            <div class="following-container">
+                <div class="box-wrap">
+                    <div class="tile-sm">
+                        Obserwujący: {{followingCount?.followersCount}}
+                    </div>
+                </div>
+                <div class="box-wrap">
+                    <div class="tile-sm">
+                        Obserwowani: {{followingCount?.followeesCount}}
+                    </div>
+                </div>
             </div>
-        </a>
-    </div>
-    <div class="col-12">
-        <a [routerLink]="['/collections/watched']" class="box-wrap" style="text-decoration:none;">
-            <div class="tile">
-                <span class="iconify collections-ico" data-icon="ant-design:check-square-outlined" data-inline="false"></span>
-                <br />
-                Obejrzane
+        </div>
+        <div class="search-padding">
+            <div class="search-container">
+                <span class="iconify" data-icon="ant-design:search-outlined" data-inline="false"></span>
+                <input type="text" placeholder="Szukaj użytkowników"/>
             </div>
-        </a>
-
+        </div>
     </div>
 </div>
