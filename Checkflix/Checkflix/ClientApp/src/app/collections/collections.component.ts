@@ -1,3 +1,4 @@
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IFollowingCountViewModel } from './../ClientViewModels/IFollowingCountViewModel';
 import { FollowingService } from './../../services/following.service';
@@ -10,12 +11,14 @@ import { ApplicationPaths } from 'src/api-authorization/api-authorization.consta
   styleUrls: ['./collections.component.css']
 })
 export class CollectionsComponent implements OnInit {
+  userFilterForm: FormGroup;
   followingCount:IFollowingCountViewModel;
-  userList: any = ["siema","elo","siema","elo","siema","elo","siema","elo","siema","elo"];
+  userList: any = ["siema","elo","siema"];
   showDropdown:boolean = false;
   constructor(
     private followingService:FollowingService,
-    private router: Router) { }
+    private router: Router,
+    private fb: FormBuilder) { }
 
   ngOnInit() {
     this.followingService.getFollowingCount()
@@ -26,6 +29,10 @@ export class CollectionsComponent implements OnInit {
         this.handleAuthorization(false);
       }
     }));
+
+    this.userFilterForm = this.fb.group({
+      searchQuery: null,
+    });
   }
 
   closeDropDown() {
@@ -34,6 +41,11 @@ export class CollectionsComponent implements OnInit {
 
   openDropDown() {
     this.showDropdown = true;
+  }
+
+  searchUsers() {
+    let userSearchValue = this.userFilterForm.controls["searchQuery"].value;
+    console.log(userSearchValue)
   }
 
   handleAuthorization(isAuthenticated: boolean) {
