@@ -11,7 +11,7 @@ import { ApplicationPaths } from 'src/api-authorization/api-authorization.consta
 })
 export class CollectionsComponent implements OnInit {
   followingCount:IFollowingCountViewModel;
-  userList: any = ["siema","elo","gowno","beka"];
+  userList: any = ["siema","elo","siema","elo","siema","elo","siema","elo","siema","elo"];
   showDropdown:boolean = false;
   constructor(
     private followingService:FollowingService,
