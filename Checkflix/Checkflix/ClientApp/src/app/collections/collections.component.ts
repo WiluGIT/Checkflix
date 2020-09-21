@@ -1,6 +1,8 @@
+import { Router } from '@angular/router';
 import { IFollowingCountViewModel } from './../ClientViewModels/IFollowingCountViewModel';
 import { FollowingService } from './../../services/following.service';
 import { Component, OnInit } from '@angular/core';
+import { ApplicationPaths } from 'src/api-authorization/api-authorization.constants';
 
 @Component({
   selector: 'app-collections',
@@ -9,15 +11,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CollectionsComponent implements OnInit {
   followingCount:IFollowingCountViewModel;
-  constructor(private followingService:FollowingService) { }
+  userList: any = ["siema","elo","gowno","beka"];
+  showDropdown:boolean = false;
+  constructor(
+    private followingService:FollowingService,
+    private router: Router) { }
 
   ngOnInit() {
-    console.log("siema")
     this.followingService.getFollowingCount()
     .subscribe(followings => {
-      console.log(followings)
       this.followingCount = followings;
-    });
+    }, (err => {
+      if (err.status == 401) {
+        this.handleAuthorization(false);
+      }
+    }));
   }
 
+  closeDropDown() {
+    this.showDropdown = false;
+  }
+
+  openDropDown() {
+    this.showDropdown = true;
+  }
+
+  handleAuthorization(isAuthenticated: boolean) {
+    if (!isAuthenticated) {
+      this.router.navigate(ApplicationPaths.LoginPathComponents)
+    };
+  }
 }

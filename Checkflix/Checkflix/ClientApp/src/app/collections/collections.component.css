@@ -85,3 +85,21 @@
 .search-padding {
     padding: 15px;
 }
+
+.search-container-dropdown {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 200px;
+    max-height: 300px;
+    background: #ffffff;
+}
+
+.user-item {
+    padding: 10px;
+    color: red;
+}
+
+.user-item:hover {
+    background-color: #c3c3c3;
+}

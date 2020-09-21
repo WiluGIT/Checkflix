@@ -47,9 +47,18 @@
             </div>
         </div>
         <div class="search-padding">
-            <div class="search-container">
+            <form class="search-container">
                 <span class="iconify" data-icon="ant-design:search-outlined" data-inline="false"></span>
-                <input type="text" placeholder="Szukaj użytkowników"/>
+                <input (click)="openDropDown()" type="text" placeholder="Szukaj użytkowników"/>
+            </form>
+            <div clickOutside (clickOutside)="closeDropDown()">
+                <div *ngIf="showDropdown" class="search-container-dropdown">
+                    <div>
+                        <div class="user-item" *ngFor="let user of userList">
+                            {{user}}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
