@@ -37,6 +37,7 @@ import { ProductionComponent } from './production/production.component';
 import { CollectionsComponent } from './collections/collections.component';
 import { CollectionListComponent } from './collection-list/collection-list.component';
 import { ContentSpinnerComponent } from './content-spinner/content-spinner.component';
+import { ClickOutsideDirective } from './dropdown-directive/dropdown-directive.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ContentSpinnerComponent } from './content-spinner/content-spinner.compo
     ProductionComponent,
     CollectionsComponent,
     CollectionListComponent,
-    ContentSpinnerComponent
+    ContentSpinnerComponent,
+    ClickOutsideDirective
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

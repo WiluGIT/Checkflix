@@ -47,9 +47,22 @@
             </div>
         </div>
         <div class="search-padding">
-            <div class="search-container">
+            <form [formGroup]="userFilterForm" class="search-container">
                 <span class="iconify" data-icon="ant-design:search-outlined" data-inline="false"></span>
-                <input type="text" placeholder="Szukaj użytkowników"/>
+                <input (click)="openDropDown()" (keydown)="searchUsers()" formControlName="searchQuery" type="text" placeholder="Szukaj użytkowników"/>
+            </form>
+            {{userFilterForm.value | json}}
+            <div clickOutside (clickOutside)="closeDropDown()">
+                <div *ngIf="showDropdown" class="search-container-dropdown">
+                    <div>
+                        <div class="user-item" *ngFor="let user of userList">
+                            {{user}}
+                        </div>    
+                    </div>
+                    <div class="user-item" *ngIf="userList?.length < 1"> 
+                        Brak wyników
+                    </div>
+                </div>
             </div>
         </div>
     </div>
