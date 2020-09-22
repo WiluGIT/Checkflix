@@ -160,5 +160,25 @@ namespace Checkflix.Controllers
                 return BadRequest("Bad request");
             }
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<FollowingCountViewModel>> GetUsers([FromQuery]string searchQuery)
+        {
+            try
+            {
+                var users = await _repository.GetUsersSearch(searchQuery);
+                if (users != null)
+                {
+                    return Ok(users);
+                }
+                return BadRequest("Nie udało się pobrać uytkowników");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get users{ex}");
+                return BadRequest("Bad request");
+            }
+        }
     }
 }

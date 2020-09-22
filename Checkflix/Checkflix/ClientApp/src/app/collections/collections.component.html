@@ -46,17 +46,17 @@
                 </div>
             </div>
         </div>
+        {{userFilterForm.value | json}}
         <div class="search-padding">
             <form [formGroup]="userFilterForm" class="search-container">
                 <span class="iconify" data-icon="ant-design:search-outlined" data-inline="false"></span>
-                <input (click)="openDropDown()" (keydown)="searchUsers()" formControlName="searchQuery" type="text" placeholder="Szukaj użytkowników"/>
+                <input (click)="openDropDown()" (keyup)="searchUsers($event)" formControlName="searchQuery" type="text" placeholder="Szukaj użytkowników"/>
             </form>
-            {{userFilterForm.value | json}}
             <div clickOutside (clickOutside)="closeDropDown()">
                 <div *ngIf="showDropdown" class="search-container-dropdown">
                     <div>
                         <div class="user-item" *ngFor="let user of userList">
-                            {{user}}
+                            <span class="iconify" data-icon="clarity:avatar-line" data-inline="false"></span>{{user?.userName}}
                         </div>    
                     </div>
                     <div class="user-item" *ngIf="userList?.length < 1"> 

@@ -42,5 +42,6 @@ namespace Checkflix.Data.Persistance
         bool ValidateFollowing(string followerId, string followeeId);
         Task<Following> GetFollowing(string followerId, string followeeId);
         void RemoveFollowing(Following following);
+        Task<IEnumerable<UserViewModel>> GetUsersSearch(string searchQuery);
     }
 }
