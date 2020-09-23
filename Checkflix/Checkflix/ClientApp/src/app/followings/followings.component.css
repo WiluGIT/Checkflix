@@ -1,0 +1,8 @@
+.user-element {
+    padding: 10px;
+}
+
+.user-element > .iconify {
+    font-size: 20px;
+    margin-right: 10px;
+}

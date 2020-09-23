@@ -4,9 +4,9 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IFollowingCountViewModel } from './../ClientViewModels/IFollowingCountViewModel';
 import { FollowingService } from './../../services/following.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ApplicationPaths } from 'src/api-authorization/api-authorization.constants';
-import { MatDialog, MatDialogConfig} from "@angular/material";
+import { MatDialog, MatDialogConfig } from "@angular/material";
 @Component({
   selector: 'app-collections',
   templateUrl: './collections.component.html',
@@ -14,25 +14,25 @@ import { MatDialog, MatDialogConfig} from "@angular/material";
 })
 export class CollectionsComponent implements OnInit {
   userFilterForm: FormGroup;
-  followingCount:IFollowingCountViewModel;
+  followingCount: IFollowingCountViewModel;
   userList: IUserViewModel[];
-  showDropdown:boolean = false;
+  showDropdown: boolean = false;
   lastKeypress: number = 0;
   constructor(
-    private followingService:FollowingService,
+    private followingService: FollowingService,
     private router: Router,
     private fb: FormBuilder,
     private dialog: MatDialog) { }
 
   ngOnInit() {
     this.followingService.getFollowingCount()
-    .subscribe(followings => {
-      this.followingCount = followings;
-    }, (err => {
-      if (err.status == 401) {
-        this.handleAuthorization(false);
-      }
-    }));
+      .subscribe(followings => {
+        this.followingCount = followings;
+      }, (err => {
+        if (err.status == 401) {
+          this.handleAuthorization(false);
+        }
+      }));
 
     this.userList = [];
 
@@ -49,24 +49,41 @@ export class CollectionsComponent implements OnInit {
     this.showDropdown = true;
   }
 
+  siema(followeId) {
+    this.followingService.postFollowing(followeId)
+      .subscribe(res => {
+        console.log(res)
+      });
+  }
+
   searchUsers($event) {
     let userSearchValue = this.userFilterForm.controls["searchQuery"].value;
-    if($event.timeStamp - this.lastKeypress > 200) {
+    if ($event.timeStamp - this.lastKeypress > 200) {
       this.followingService.getUsers(userSearchValue)
-      .subscribe(users => {
-        this.userList = users;
-      });
+        .subscribe(users => {
+          this.userList = users;
+        });
     }
     this.lastKeypress = $event.timeStamp;
-    console.log(this.lastKeypress)
   }
 
   showFollowers() {
-    this.dialog.open(FollowingsComponent);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      type: 1,
+      collectionName: "Followers"
+    };
+    this.dialog.open(FollowingsComponent, dialogConfig);
+
   }
 
   showFollowees() {
-    console.log("elo")
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      type: 2,
+      collectionName: "Followees"
+    };
+    this.dialog.open(FollowingsComponent, dialogConfig);
   }
 
   handleAuthorization(isAuthenticated: boolean) {
