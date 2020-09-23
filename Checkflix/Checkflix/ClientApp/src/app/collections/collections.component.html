@@ -35,18 +35,17 @@
         <div>
             <div class="following-container">
                 <div class="box-wrap">
-                    <div class="tile-sm">
+                    <div (click)="showFollowers()" class="tile-sm">
                         Obserwujący: {{followingCount?.followersCount}}
                     </div>
                 </div>
                 <div class="box-wrap">
-                    <div class="tile-sm">
+                    <div (click)="showFollowees()" class="tile-sm">
                         Obserwowani: {{followingCount?.followeesCount}}
                     </div>
                 </div>
             </div>
         </div>
-        {{userFilterForm.value | json}}
         <div class="search-padding">
             <form [formGroup]="userFilterForm" class="search-container">
                 <span class="iconify" data-icon="ant-design:search-outlined" data-inline="false"></span>

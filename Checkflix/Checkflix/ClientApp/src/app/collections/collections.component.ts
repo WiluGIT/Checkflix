@@ -1,4 +1,4 @@
-import { LoginMenuComponent } from './../../api-authorization/login-menu/login-menu.component';
+import { FollowingsComponent } from './../followings/followings.component';
 import { IUserViewModel } from './../ClientViewModels/IUserViewModel';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -6,7 +6,7 @@ import { IFollowingCountViewModel } from './../ClientViewModels/IFollowingCountV
 import { FollowingService } from './../../services/following.service';
 import { Component, OnInit } from '@angular/core';
 import { ApplicationPaths } from 'src/api-authorization/api-authorization.constants';
-
+import { MatDialog, MatDialogConfig} from "@angular/material";
 @Component({
   selector: 'app-collections',
   templateUrl: './collections.component.html',
@@ -21,7 +21,8 @@ export class CollectionsComponent implements OnInit {
   constructor(
     private followingService:FollowingService,
     private router: Router,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
     this.followingService.getFollowingCount()
@@ -58,6 +59,14 @@ export class CollectionsComponent implements OnInit {
     }
     this.lastKeypress = $event.timeStamp;
     console.log(this.lastKeypress)
+  }
+
+  showFollowers() {
+    this.dialog.open(FollowingsComponent);
+  }
+
+  showFollowees() {
+    console.log("elo")
   }
 
   handleAuthorization(isAuthenticated: boolean) {
