@@ -1,8 +1,9 @@
-<h2 mat-dialog-title>Lista {{data.type == 1 ? 'Obserwujących' : 'Obserwowanych'}}</h2>
+<h2 mat-dialog-title>Lista {{data?.type == 1 ? 'Obserwujących' : 'Obserwowanych'}}</h2>
 <mat-dialog-content class="mat-typography">
 <div *ngFor="let user of userList" class="user-element">
     <span class="iconify" data-icon="clarity:avatar-line" data-inline="false"></span>
-    <span>{{user.userName}}</span>
+    <span>{{user?.userName}}</span>
+    <button (click)="followingClick(user?.id)" class="btn btn-outline-success" [class.following]="checkIfFollowing(user?.id)">{{checkIfFollowing(user?.id) ? 'Obserwujesz' : 'Obserwuj'}}</button>
 </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

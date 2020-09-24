@@ -10,24 +10,40 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class FollowingsComponent implements OnInit {
   userList:IUserViewModel[];
+  followeesList :IUserViewModel[];
   constructor(private followingService:FollowingService,
     @Inject(MAT_DIALOG_DATA) public data) { }
 
   ngOnInit() {
-    this.followingService.getUsers("gowno")
-    .subscribe(data=> {
-      let a = [];
-      a.push(...data);
-      a.push(...data);
-      a.push(...data);
-      a.push(...data);
-      a.push(...data);
+    if(this.data.type == 1) {
+      this.followingService.getFollowers()
+      .subscribe(users => {
+        this.userList = users;
 
-      console.log(a)
-      this.userList = a;
-
-    });
-    console.log(this.data)
+        this.followingService.getFollowees()
+        .subscribe(users => {
+          this.followeesList = users;
+        });
+      });
+    }
+    else if (this.data.type == 2) {
+      this.followingService.getFollowees()
+      .subscribe(users => {
+        this.userList = users;
+      });
+    }
   }
 
+  followingClick(followeId) {
+    this.followingService.postFollowing(followeId)
+    .subscribe(res => {
+      console.log(res)
+    });
+  }
+
+  checkIfFollowing(userId) {
+    if (this.followeesList && this.userList) {
+      return this.followeesList.some(el => el.id == userId);
+    }
+  }
 }
