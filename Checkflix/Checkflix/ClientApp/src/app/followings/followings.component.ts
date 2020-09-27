@@ -1,7 +1,7 @@
 import { IUserViewModel } from './../ClientViewModels/IUserViewModel';
 import { FollowingService } from './../../services/following.service';
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-followings',
@@ -12,7 +12,8 @@ export class FollowingsComponent implements OnInit {
   userList:IUserViewModel[];
   followeesList :IUserViewModel[];
   constructor(private followingService:FollowingService,
-    @Inject(MAT_DIALOG_DATA) public data) { }
+    @Inject(MAT_DIALOG_DATA) public data,
+    public dialogRef: MatDialogRef<FollowingsComponent>) { }
 
   ngOnInit() {
     if(this.data.type == 1) {
@@ -34,10 +35,18 @@ export class FollowingsComponent implements OnInit {
     }
   }
 
-  followingClick(followeId) {
+  followingClick(followeId,e) {
+    const targetButton = e.currentTarget;
     this.followingService.postFollowing(followeId)
-    .subscribe(res => {
-      console.log(res)
+    .subscribe(response => {
+      if (response["status"] == 0) {
+        targetButton.classList.add("following");
+        targetButton.textContent = "Obserwujesz"
+      }
+      else if (response["status"] == 1) {
+        targetButton.classList.remove("following");
+        targetButton.textContent = "Obserwuj";
+      }
     });
   }
 

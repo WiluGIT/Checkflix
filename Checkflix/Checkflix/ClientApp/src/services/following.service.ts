@@ -41,6 +41,6 @@ export class FollowingService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.post(this.postFollowingPath, JSON.stringify(followeeId), {headers, responseType: 'text'});
+    return this.http.post(this.postFollowingPath, JSON.stringify(followeeId), {headers});
   }
 }

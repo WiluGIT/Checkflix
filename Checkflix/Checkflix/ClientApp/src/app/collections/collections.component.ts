@@ -73,8 +73,12 @@ export class CollectionsComponent implements OnInit {
       type: 1,
       collectionName: "Followers"
     };
-    this.dialog.open(FollowingsComponent, dialogConfig);
+    dialogConfig.autoFocus = false;
+    const dialogRef = this.dialog.open(FollowingsComponent, dialogConfig);
 
+    dialogRef.afterClosed().subscribe(result => {
+      this.updateFollowingCount();
+    });
   }
 
   showFollowees() {
@@ -83,7 +87,23 @@ export class CollectionsComponent implements OnInit {
       type: 2,
       collectionName: "Followees"
     };
-    this.dialog.open(FollowingsComponent, dialogConfig);
+    dialogConfig.autoFocus = false;
+    const dialogRef = this.dialog.open(FollowingsComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.updateFollowingCount();
+    });
+  }
+
+  updateFollowingCount() {
+    this.followingService.getFollowingCount()
+    .subscribe(followings => {
+      this.followingCount = followings;
+    }, (err => {
+      if (err.status == 401) {
+        this.handleAuthorization(false);
+      }
+    }));
   }
 
   handleAuthorization(isAuthenticated: boolean) {

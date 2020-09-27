@@ -8,5 +8,12 @@
 }
 
 .following {
-    color: red;
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.following:hover {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
 }
