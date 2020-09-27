@@ -32,19 +32,11 @@ namespace Checkflix.Data.Persistance
                                 .Contains(x.CategoryId))
                                 .Select(x => x.Production)
                                 .Distinct()
-                                // .Include(m => m.VodProductions)
-                                // .ThenInclude(m => m.Vod)
-                                // .Include(m => m.ProductionCategories)
-                                // .ThenInclude(m => m.Category)
                                 .ToListAsync();
             }
             else
             {
                 productions = await _context.Productions
-                            //    .Include(m => m.VodProductions)
-                            //    .ThenInclude(m => m.Vod)
-                            //    .Include(m => m.ProductionCategories)
-                            //    .ThenInclude(m => m.Category)
                                .ToListAsync();
             }
             // Here in if condition implement filter logic for each patameter in PostQueryFilters class
@@ -76,7 +68,7 @@ namespace Checkflix.Data.Persistance
             {
                 productions = productions.Where(x => x.ImbdRating >= filters.RatingFrom && x.ImbdRating <= filters.RatingTo).ToList();
             }
-            
+
             var pagedProductions = PagedList<Production>.Create(productions, filters.PageNumber, filters.PageSize);
 
             return pagedProductions;
@@ -258,7 +250,7 @@ namespace Checkflix.Data.Persistance
         public async Task<Following> GetFollowing(string followerId, string followeeId)
         {
             return await _context.Followings.Where(x => x.FollowerId.Equals(followerId) && x.FolloweeId.Equals(followeeId)).FirstOrDefaultAsync();
-        } 
+        }
 
         public void AddFollowing(Following following)
         {
@@ -273,6 +265,25 @@ namespace Checkflix.Data.Persistance
         public bool ValidateFollowing(string followerId, string followeeId)
         {
             return _context.Followings.Any(x => x.FollowerId.Equals(followerId) && x.FolloweeId.Equals(followeeId));
+        }
+
+        public async Task<IEnumerable<UserViewModel>> GetUsersSearch(string searchQuery)
+        {
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                var querySearch = searchQuery.ToLower();
+                var users = await _context.Users.Where(x => x.UserName.Contains(querySearch) || x.Email.ToLower().Contains(querySearch))
+                .Select(x => new UserViewModel
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Email = x.Email
+                })
+                .Take(10)
+                .ToListAsync();
+                return users;
+            }
+            return null;
         }
         #endregion
 

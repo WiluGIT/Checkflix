@@ -1,6 +1,7 @@
+import { IUserViewModel } from './../app/ClientViewModels/IUserViewModel';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IFollowingCountViewModel } from 'src/app/ClientViewModels/IFollowingCountViewModel';
 import { map } from 'rxjs/internal/operators/map';
@@ -10,10 +11,36 @@ import { map } from 'rxjs/internal/operators/map';
 })
 export class FollowingService {
   private getCategoriesPath = environment.apiUrl + '/api/followings/GetFollowingCount';
+  private getUsersPath = environment.apiUrl + '/api/followings/GetUsers';
+  private getFollowersPath = environment.apiUrl + '/api/followings/GetFollowers';
+  private getFolloweesPath = environment.apiUrl + '/api/followings/GetFollowees';
+  private postFollowingPath = environment.apiUrl + '/api/followings/PostFollowing';
   constructor(private http: HttpClient) { }
 
-    // Categories
-    getFollowingCount(): Observable<IFollowingCountViewModel> {
-      return this.http.get(this.getCategoriesPath).pipe(map((followingCount: IFollowingCountViewModel) => followingCount));
-    }
+  // Categories
+  getFollowingCount(): Observable<IFollowingCountViewModel> {
+    return this.http.get(this.getCategoriesPath).pipe(map((followingCount: IFollowingCountViewModel) => followingCount));
+  }
+
+  getUsers(searchQuery: string): Observable<IUserViewModel[]> {
+    let params = new HttpParams();
+    if (searchQuery)
+      params = params.append('searchQuery', searchQuery.toString());
+    return this.http.get(this.getUsersPath, { params }).pipe(map((users: IUserViewModel[]) => users));
+  }
+
+  getFollowers(): Observable<IUserViewModel[]> {
+    return this.http.get(this.getFollowersPath).pipe(map((users: IUserViewModel[]) => users));
+  }
+
+  getFollowees(): Observable<IUserViewModel[]> {
+    return this.http.get(this.getFolloweesPath).pipe(map((users: IUserViewModel[]) => users));
+  }
+
+  postFollowing(followeeId: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.http.post(this.postFollowingPath, JSON.stringify(followeeId), {headers});
+  }
 }

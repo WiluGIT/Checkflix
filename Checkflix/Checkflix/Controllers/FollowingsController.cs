@@ -40,13 +40,20 @@ namespace Checkflix.Controllers
         {
             try
             {
-                var follower = await _userManager.GetUserAsync(User);
+                var validationResponse = new ResponseViewModel
+                {
+                    Status = ResponseStatus.Success,
+                    Messages = new List<string>()
+                };
 
+                var follower = await _userManager.GetUserAsync(User);
                 if (follower != null)
                 {
                     if (follower.Id == followeeId)
                     {
-                        return BadRequest("Nie możesz zaobserować siebie");
+                        validationResponse.Messages.Add("Nie możesz zaobserować siebie");
+                        validationResponse.Status = ResponseStatus.Error;
+                        return BadRequest(validationResponse);
                     }
 
                     if (_repository.ValidateFollowing(follower.Id, followeeId))
@@ -56,10 +63,13 @@ namespace Checkflix.Controllers
 
                         if (await _repository.SaveAll())
                         {
-                            return Ok("Odobserwowano");
+                            validationResponse.Messages.Add("Odobserwowano");
+                            validationResponse.Status = ResponseStatus.Error;
+                            return Ok(validationResponse);
                         }
-
-                        return BadRequest("Nie udało się odobserwować");
+                        validationResponse.Messages.Add("Nie udało się odobserwować");
+                        validationResponse.Status = ResponseStatus.Error;
+                        return BadRequest(validationResponse);
                     }
 
                     var following = new Following
@@ -71,10 +81,14 @@ namespace Checkflix.Controllers
                     _repository.AddFollowing(following);
 
                     if (await _repository.SaveAll())
-                        return Ok("Zaobserwowano");
-
+                    {
+                        validationResponse.Messages.Add("Zaobserwowano");
+                        return Ok(validationResponse);
+                    }
                 }
-                return BadRequest("Wystąpił błąd przy obserwacji");
+                validationResponse.Messages.Add("Wystąpił błąd przy obserwacji");
+                validationResponse.Status = ResponseStatus.Error;
+                return BadRequest(validationResponse);
             }
             catch (Exception ex)
             {
@@ -157,6 +171,26 @@ namespace Checkflix.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Failed to add production to collection{ex}");
+                return BadRequest("Bad request");
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<FollowingCountViewModel>> GetUsers([FromQuery] string searchQuery)
+        {
+            try
+            {
+                var users = await _repository.GetUsersSearch(searchQuery);
+                if (users != null)
+                {
+                    return Ok(users);
+                }
+                return BadRequest("Nie udało się pobrać uytkowników");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get users{ex}");
                 return BadRequest("Bad request");
             }
         }

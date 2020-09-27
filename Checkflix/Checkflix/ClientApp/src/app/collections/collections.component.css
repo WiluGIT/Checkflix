@@ -103,7 +103,11 @@
 
 .user-item {
     padding: 10px;
-    color: red;
+    color: #000000;
+}
+
+.user-item > .iconify {
+    margin-right: 10px;
 }
 
 .user-item:hover {

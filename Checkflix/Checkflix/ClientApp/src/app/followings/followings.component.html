@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Lista {{data?.type == 1 ? 'Obserwujących' : 'Obserwowanych'}}</h2>
+<mat-dialog-content class="mat-typography">
+<div *ngFor="let user of userList" class="user-element">
+    <span class="iconify" data-icon="clarity:avatar-line" data-inline="false"></span>
+    <span>{{user?.userName}}</span>
+    <button *ngIf="data.type == 2" (click)="followingClick(user?.id, $event)" class="btn btn-outline-success following">Obserwujesz</button>
+    <button *ngIf="data.type == 1" (click)="followingClick(user?.id, $event)" class="btn btn-outline-success" [class.following]="checkIfFollowing(user?.id)">{{checkIfFollowing(user?.id) ? 'Obserwujesz' : 'Obserwuj'}}</button>
+</div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Zamknij</button>
+  </mat-dialog-actions>

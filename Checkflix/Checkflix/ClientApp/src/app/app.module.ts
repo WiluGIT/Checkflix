@@ -38,6 +38,8 @@ import { CollectionsComponent } from './collections/collections.component';
 import { CollectionListComponent } from './collection-list/collection-list.component';
 import { ContentSpinnerComponent } from './content-spinner/content-spinner.component';
 import { ClickOutsideDirective } from './dropdown-directive/dropdown-directive.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import { FollowingsComponent } from './followings/followings.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,8 @@ import { ClickOutsideDirective } from './dropdown-directive/dropdown-directive.c
     CollectionsComponent,
     CollectionListComponent,
     ContentSpinnerComponent,
-    ClickOutsideDirective
+    ClickOutsideDirective,
+    FollowingsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -84,7 +87,8 @@ import { ClickOutsideDirective } from './dropdown-directive/dropdown-directive.c
     MatIconModule,
     MatPaginatorModule,
     MatSnackBarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDialogModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
@@ -92,6 +96,7 @@ import { ClickOutsideDirective } from './dropdown-directive/dropdown-directive.c
     { provide: MAT_DATE_LOCALE, useValue: 'pl-Pl' },
     { provide: MatPaginatorIntl, useValue: getPlPaginatorIntl() }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [FollowingsComponent]
 })
 export class AppModule { }

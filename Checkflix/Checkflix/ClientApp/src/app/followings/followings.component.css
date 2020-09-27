@@ -1,0 +1,29 @@
+.user-element {
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+}
+
+.user-element > .iconify {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.user-element > button {
+    justify-content: flex-end;
+    position: absolute;
+    right: 0;
+}
+
+.following {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.following:hover {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
