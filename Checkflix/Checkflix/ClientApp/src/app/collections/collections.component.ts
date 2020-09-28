@@ -74,7 +74,7 @@ export class CollectionsComponent implements OnInit {
       collectionName: "Followers"
     };
     dialogConfig.autoFocus = false;
-    dialogConfig.width = "30%";
+    //dialogConfig.width = "30%";
     const dialogRef = this.dialog.open(FollowingsComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
@@ -89,7 +89,8 @@ export class CollectionsComponent implements OnInit {
       collectionName: "Followees"
     };
     dialogConfig.autoFocus = false;
-    dialogConfig.width = "30%";
+    // dialogConfig.width = "50%";
+    // dialogConfig.minWidth = "30%"
     const dialogRef = this.dialog.open(FollowingsComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
