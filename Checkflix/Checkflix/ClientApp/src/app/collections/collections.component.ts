@@ -49,13 +49,6 @@ export class CollectionsComponent implements OnInit {
     this.showDropdown = true;
   }
 
-  siema(followeId) {
-    this.followingService.postFollowing(followeId)
-      .subscribe(res => {
-        console.log(res)
-      });
-  }
-
   searchUsers($event) {
     let userSearchValue = this.userFilterForm.controls["searchQuery"].value;
     if ($event.timeStamp - this.lastKeypress > 200) {

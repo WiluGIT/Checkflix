@@ -56,7 +56,6 @@
                     <div>
                         <div [routerLink]="['/user-collections/'+user?.id]" class="user-item" *ngFor="let user of userList">
                             <span class="iconify" data-icon="clarity:avatar-line" data-inline="false"></span>{{user?.userName}}
-                            <button (click)="siema(user?.id)" class="btn btn-outline-success">follow</button>
                         </div>    
                     </div>
                     <div class="user-item" *ngIf="userList?.length < 1"> 
