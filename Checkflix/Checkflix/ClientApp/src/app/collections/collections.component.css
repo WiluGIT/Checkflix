@@ -29,13 +29,6 @@
     color: #222;
 }
 
-/* .box-wrap:hover .tile {
-    filter: blur(3px);
-    opacity: .5;
-    transform: scale(.98);
-    box-shadow: none;
-} */
-
 .tile:hover {
     box-shadow: 0 8px 20px 0px rgba(0,0,0,0.125);
 }
@@ -104,6 +97,7 @@
 .user-item {
     padding: 10px;
     color: #000000;
+    cursor: pointer;
 }
 
 .user-item > .iconify {
