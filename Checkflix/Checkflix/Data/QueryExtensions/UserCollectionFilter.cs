@@ -8,5 +8,6 @@ namespace Checkflix.ViewModels
         public bool? Favourites { get; set; }
         public bool? ToWatch { get; set; }
         public bool? Watched { get; set; }
+        public string UserId { get; set; }
     }
 }

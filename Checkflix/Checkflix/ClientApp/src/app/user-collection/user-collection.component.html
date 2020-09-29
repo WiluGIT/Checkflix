@@ -7,7 +7,7 @@
             <span class="collections-header">Użytkownik: {{user?.userName}}</span>
         </div>
         <div>
-            <a [routerLink]="['/collections/favourites']" class="box-wrap" style="text-decoration:none;">
+            <a [routerLink]="['/collections/'+user?.id+'/favourites']" class="box-wrap" style="text-decoration:none;">
                 <div class="tile">
                     <span class="iconify collections-ico" data-icon="ant-design:star-filled" data-inline="false"></span>
                     <br />
@@ -17,7 +17,7 @@
     
         </div>
         <div>
-            <a [routerLink]="['/collections/to-watch']" class="box-wrap" style="text-decoration:none;">
+            <a [routerLink]="['/collections/'+user?.id+'/to-watch']" class="box-wrap" style="text-decoration:none;">
                 <div class="tile">
                     <span class="iconify collections-ico" data-icon="bx:bxs-camera-movie" data-inline="false"></span>
                     <br />
@@ -26,7 +26,7 @@
             </a>
         </div>
         <div>
-            <a [routerLink]="['/collections/watched']" class="box-wrap" style="text-decoration:none;">
+            <a [routerLink]="['/collections/'+user?.id+'/watched']" class="box-wrap" style="text-decoration:none;">
                 <div class="tile">
                     <span class="iconify collections-ico" data-icon="ant-design:check-square-outlined" data-inline="false"></span>
                     <br />

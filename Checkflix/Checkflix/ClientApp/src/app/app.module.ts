@@ -72,7 +72,8 @@ import { UserCollectionComponent } from './user-collection/user-collection.compo
       { path: 'production/:id', component: ProductionComponent },
       { path: 'collections', component: CollectionsComponent, canActivate: [AuthorizeGuard]},
       { path: 'user-collections/:id', component: UserCollectionComponent, canActivate: [AuthorizeGuard]},
-      { path: 'collections/:collectionName', component:CollectionListComponent, canActivate: [AuthorizeGuard]}
+      { path: 'collections/:collectionName', component:CollectionListComponent, canActivate: [AuthorizeGuard]},
+      { path: 'collections/:id/:collectionName', component:CollectionListComponent, canActivate: [AuthorizeGuard]}
     ], { anchorScrolling: 'enabled'}),
     BrowserAnimationsModule,
     MatTabsModule,
