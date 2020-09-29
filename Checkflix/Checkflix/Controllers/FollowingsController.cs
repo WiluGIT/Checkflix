@@ -177,7 +177,7 @@ namespace Checkflix.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<FollowingCountViewModel>> GetUsers([FromQuery] string searchQuery)
+        public async Task<ActionResult<IEnumerable<UserViewModel>>> GetUsers([FromQuery] string searchQuery)
         {
             try
             {
@@ -191,6 +191,46 @@ namespace Checkflix.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Failed to get users{ex}");
+                return BadRequest("Bad request");
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<UserViewModel>> GetUser([FromQuery] string userId)
+        {
+            try
+            {
+                var user = await _repository.GetUserData(userId);
+                if (user != null)
+                {
+                    return Ok(user);
+                }
+                return BadRequest("Nie udało się pobrać użytkownika");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get user{ex}");
+                return BadRequest("Bad request");
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<bool>> CheckIfFollowing([FromQuery] string userId)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    return Ok(_repository.ValidateFollowing(user.Id,userId));
+                }
+                return BadRequest("Nie udało się sprawdzić obserwacji");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get user{ex}");
                 return BadRequest("Bad request");
             }
         }

@@ -27,7 +27,7 @@
       <div class="actions-column">
         <div (click)="deleteFromCollection(production?.productionId)"><span class="iconify action-del-btn"
             data-icon="bi:trash" data-inline="false"></span></div>
-        <div *ngIf="collectionType == 'Do obejrzenia'" (click)="markAsSeen(production?.productionId)"><span
+        <div *ngIf="collectionType == 'Do obejrzenia' && userQueryFilters.userId == null" (click)="markAsSeen(production?.productionId)"><span
             class="iconify action-seen-btn" data-icon="ant-design:check-outlined" data-inline="false"></span></div>
       </div>
     </div>

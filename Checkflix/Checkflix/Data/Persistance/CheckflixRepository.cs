@@ -285,6 +285,18 @@ namespace Checkflix.Data.Persistance
             }
             return null;
         }
+        public async Task<UserViewModel> GetUserData(string userId)
+        {
+             var user = await _context.Users.Where(x => x.Id.Equals(userId))
+                .Select(x => new UserViewModel
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Email = x.Email
+                })
+                .FirstOrDefaultAsync();
+            return user;
+        }
         #endregion
 
         public async Task<bool> SaveAll()

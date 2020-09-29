@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-6 tile-container">
+        <div class="following-container">
+            <button (click)="followingClick(user?.id, $event)" [class.following]="following" class="btn btn-outline-success">{{following ? 'Obserwujesz' : 'Obserwuj'}}</button>
+        </div>
+        <div>
+            <span class="collections-header">Użytkownik: {{user?.userName}}</span>
+        </div>
+        <div>
+            <a [routerLink]="['/collections/'+user?.id+'/favourites']" class="box-wrap" style="text-decoration:none;">
+                <div class="tile">
+                    <span class="iconify collections-ico" data-icon="ant-design:star-filled" data-inline="false"></span>
+                    <br />
+                    Ulubione
+                </div>
+            </a>
+    
+        </div>
+        <div>
+            <a [routerLink]="['/collections/'+user?.id+'/to-watch']" class="box-wrap" style="text-decoration:none;">
+                <div class="tile">
+                    <span class="iconify collections-ico" data-icon="bx:bxs-camera-movie" data-inline="false"></span>
+                    <br />
+                    Do obejrzenia
+                </div>
+            </a>
+        </div>
+        <div>
+            <a [routerLink]="['/collections/'+user?.id+'/watched']" class="box-wrap" style="text-decoration:none;">
+                <div class="tile">
+                    <span class="iconify collections-ico" data-icon="ant-design:check-square-outlined" data-inline="false"></span>
+                    <br />
+                    Obejrzane
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

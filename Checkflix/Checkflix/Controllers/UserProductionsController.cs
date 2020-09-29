@@ -141,7 +141,7 @@ namespace Checkflix.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<ResponseViewModel>> GetUserCollection([FromQuery]UserCollectionFilter userProductionVM)
+        public async Task<ActionResult<ResponseViewModel>> GetUserCollection([FromQuery] UserCollectionFilter userProductionVM)
         {
             try
             {
@@ -151,10 +151,20 @@ namespace Checkflix.Controllers
                     Messages = new List<string>()
                 };
 
-                var user = await _userManager.GetUserAsync(User);
-                if (user != null)
+                string userId;
+                if (userProductionVM.UserId != null)
                 {
-                    var userCollection = await _repository.GetUserCollection(user.Id, userProductionVM);
+                    userId = userProductionVM.UserId;
+                }
+                else
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    userId = user.Id;
+                }
+
+                if (userId != null)
+                {
+                    var userCollection = await _repository.GetUserCollection(userId, userProductionVM);
                     if (userCollection != null)
                     {
                         var metadata = new

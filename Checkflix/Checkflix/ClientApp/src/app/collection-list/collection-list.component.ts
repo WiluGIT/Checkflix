@@ -19,7 +19,8 @@ export class CollectionListComponent implements OnInit {
     pageSize: 10,
     favourites: null,
     toWatch: null,
-    watched: null
+    watched: null,
+    userId: null
   };
   productionList: Array<IProductionViewModel>;
   productionsCount: number;
@@ -34,6 +35,7 @@ export class CollectionListComponent implements OnInit {
     private router: Router,
     public snackBar: MatSnackBar) {
     route.params.subscribe(p => {
+      this.userQueryFilters.userId = p['id'] || null;
       let collectionName = p['collectionName'];
       if (collectionName === "favourites") {
         this.collectionType = "Ulubione";

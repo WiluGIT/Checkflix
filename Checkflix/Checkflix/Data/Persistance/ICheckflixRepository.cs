@@ -43,5 +43,6 @@ namespace Checkflix.Data.Persistance
         Task<Following> GetFollowing(string followerId, string followeeId);
         void RemoveFollowing(Following following);
         Task<IEnumerable<UserViewModel>> GetUsersSearch(string searchQuery);
+        Task<UserViewModel> GetUserData(string userId);
     }
 }

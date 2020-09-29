@@ -1,20 +1,28 @@
 .user-element {
-    padding: 15px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    position: relative;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 30px 1fr 120px;
 }
 
-.user-element > .iconify {
+.user-element > .icon-column {
     font-size: 20px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-element > .user-name {
     margin-right: 10px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .user-element > button {
-    justify-content: flex-end;
-    position: absolute;
-    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .following {

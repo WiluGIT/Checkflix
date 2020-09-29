@@ -49,13 +49,6 @@ export class CollectionsComponent implements OnInit {
     this.showDropdown = true;
   }
 
-  siema(followeId) {
-    this.followingService.postFollowing(followeId)
-      .subscribe(res => {
-        console.log(res)
-      });
-  }
-
   searchUsers($event) {
     let userSearchValue = this.userFilterForm.controls["searchQuery"].value;
     if ($event.timeStamp - this.lastKeypress > 200) {
@@ -74,7 +67,6 @@ export class CollectionsComponent implements OnInit {
       collectionName: "Followers"
     };
     dialogConfig.autoFocus = false;
-    dialogConfig.width = "30%";
     const dialogRef = this.dialog.open(FollowingsComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {
@@ -89,7 +81,6 @@ export class CollectionsComponent implements OnInit {
       collectionName: "Followees"
     };
     dialogConfig.autoFocus = false;
-    dialogConfig.width = "30%";
     const dialogRef = this.dialog.open(FollowingsComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(result => {

@@ -29,6 +29,8 @@ export class UserProducionService {
     let params = new HttpParams();
     params = params.append('pageNumber', userQueryFilters.pageNumber.toString());
     params = params.append('pageSize', userQueryFilters.pageSize.toString());
+    if (userQueryFilters.userId)
+      params = params.append('userId', userQueryFilters.userId.toString());
     if (userQueryFilters.favourites)
       params = params.append('favourites', userQueryFilters.favourites.toString());
     else if (userQueryFilters.toWatch)

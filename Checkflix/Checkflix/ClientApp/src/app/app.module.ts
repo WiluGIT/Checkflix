@@ -40,6 +40,7 @@ import { ContentSpinnerComponent } from './content-spinner/content-spinner.compo
 import { ClickOutsideDirective } from './dropdown-directive/dropdown-directive.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { FollowingsComponent } from './followings/followings.component';
+import { UserCollectionComponent } from './user-collection/user-collection.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { FollowingsComponent } from './followings/followings.component';
     CollectionListComponent,
     ContentSpinnerComponent,
     ClickOutsideDirective,
-    FollowingsComponent
+    FollowingsComponent,
+    UserCollectionComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -69,7 +71,9 @@ import { FollowingsComponent } from './followings/followings.component';
       { path: 'production-form/:id', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production/:id', component: ProductionComponent },
       { path: 'collections', component: CollectionsComponent, canActivate: [AuthorizeGuard]},
-      { path: 'collections/:collectionName', component:CollectionListComponent, canActivate: [AuthorizeGuard]}
+      { path: 'user-collections/:id', component: UserCollectionComponent, canActivate: [AuthorizeGuard]},
+      { path: 'collections/:collectionName', component:CollectionListComponent, canActivate: [AuthorizeGuard]},
+      { path: 'collections/:id/:collectionName', component:CollectionListComponent, canActivate: [AuthorizeGuard]}
     ], { anchorScrolling: 'enabled'}),
     BrowserAnimationsModule,
     MatTabsModule,
