@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
   };
   categoryList: ICategoryViewModel[];
   activePageDataChunk: Array<IProductionViewModel>;
-  isAuthenticated:boolean;
+  isAuthenticated: boolean;
   // Filter form
   productionsFilterForm: FormGroup;
 
@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit {
   //Vods icons
   netflixClicked: boolean = true;
   hboClicked: boolean = true;
-  contentloaded:boolean = false;
+  contentloaded: boolean = false;
 
   @ViewChild('homePaginator', { static: false }) paginator: MatPaginator;
   @ViewChild('ratingSlider', { static: false }) ratingSlider: MultiSliderComponent;
@@ -65,34 +65,34 @@ export class HomeComponent implements OnInit {
     private router: Router,
     @Inject(DOCUMENT) document) {
   }
-  
+
   ngOnInit() {
     //Endpoint calls
     this.productionService.getProductions(this.postQueryFilters)
       .subscribe(response => {
         const headers = JSON.parse(response.headers.get('X-Pagination'));
 
-        this.contentloaded =true;
+        this.contentloaded = true;
         this.productionList = response.body;
         this.productionsCount = headers["TotalCount"];
         this.activePageDataChunk = this.productionList;
       });
-    
-    this.authorizeService.isAuthenticated().subscribe(authenticated =>{
+
+    this.authorizeService.isAuthenticated().subscribe(authenticated => {
       this.isAuthenticated = authenticated;
     });
     // Categories
     this.categoryService
       .getCategories()
       .subscribe(categories => this.categoryList = categories)
-    
-      this.authorizeService.isAuthenticated()
+
+    this.authorizeService.isAuthenticated()
       .subscribe(authenticated => {
         if (authenticated) {
           this.userProductionService.getUserProductions()
-          .subscribe(responseData => {
-            this.userProductionsList = responseData["data"];
-          });
+            .subscribe(responseData => {
+              this.userProductionsList = responseData["data"];
+            });
         }
       });
 
@@ -211,6 +211,7 @@ export class HomeComponent implements OnInit {
         this.productionList = response.body;
         this.productionsCount = headers["TotalCount"];
         this.activePageDataChunk = this.productionList;
+        this.postQueryFilters.searchQuery = null;
       });
   }
 
@@ -244,7 +245,7 @@ export class HomeComponent implements OnInit {
     netflixBtn.classList.add("netflix-btn");
   }
 
-  addToWatch(productionId,e) {
+  addToWatch(productionId, e) {
     const toWatchButton = e.currentTarget;
     let userProduction: IApplicationUserProductionViewModel;
     if (toWatchButton.classList.contains('to-watch-y')) {
@@ -264,25 +265,25 @@ export class HomeComponent implements OnInit {
       };
     }
     this.userProductionService.addUserProduction(userProduction)
-    .subscribe(response => {
-      if (response['status'] == 1) {
-        this.openSnackBar(response['messages'], 'Zamknij', 'blue-snackbar');
-        toWatchButton.classList.remove("to-watch-y");
-      } else {
-        this.openSnackBar(response['messages'], 'Zamknij', 'green-snackbar');
-        toWatchButton.classList.add("to-watch-y");
-      }
-    },(err => {
-      if(err.status == 401) {
-        this.handleAuthorization(false);      
-      }
-      else {
-        this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
-      }
-    }));
+      .subscribe(response => {
+        if (response['status'] == 1) {
+          this.openSnackBar(response['messages'], 'Zamknij', 'blue-snackbar');
+          toWatchButton.classList.remove("to-watch-y");
+        } else {
+          this.openSnackBar(response['messages'], 'Zamknij', 'green-snackbar');
+          toWatchButton.classList.add("to-watch-y");
+        }
+      }, (err => {
+        if (err.status == 401) {
+          this.handleAuthorization(false);
+        }
+        else {
+          this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+        }
+      }));
   }
 
-  addToFavourites(productionId,e) {
+  addToFavourites(productionId, e) {
     const toWatchButton = e.currentTarget;
     let userProduction: IApplicationUserProductionViewModel;
     if (toWatchButton.classList.contains('to-watch-y')) {
@@ -302,21 +303,22 @@ export class HomeComponent implements OnInit {
       };
     }
     this.userProductionService.addUserProduction(userProduction)
-    .subscribe(response => {
-      if (response['status'] == 1) {
-        this.openSnackBar(response['messages'], 'Zamknij', 'blue-snackbar');
-        toWatchButton.classList.remove("to-watch-y");
-      } else {
-        this.openSnackBar(response['messages'], 'Zamknij', 'green-snackbar');
-        toWatchButton.classList.add("to-watch-y");
-      }
-    },(err => {
-      if(err.status == 401) {
-        this.handleAuthorization(false);      }
-      else {
-        this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
-      }
-    }));
+      .subscribe(response => {
+        if (response['status'] == 1) {
+          this.openSnackBar(response['messages'], 'Zamknij', 'blue-snackbar');
+          toWatchButton.classList.remove("to-watch-y");
+        } else {
+          this.openSnackBar(response['messages'], 'Zamknij', 'green-snackbar');
+          toWatchButton.classList.add("to-watch-y");
+        }
+      }, (err => {
+        if (err.status == 401) {
+          this.handleAuthorization(false);
+        }
+        else {
+          this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+        }
+      }));
   }
 
   checkIfExistsToWatch(productionId) {
