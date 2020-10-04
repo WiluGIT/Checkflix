@@ -32,12 +32,14 @@ namespace Checkflix.Data.Persistance
                                 .Contains(x.CategoryId))
                                 .Select(x => x.Production)
                                 .Distinct()
+                                .Include(m => m.VodProductions)
                                 .ToListAsync();
             }
             else
             {
                 productions = await _context.Productions
-                               .ToListAsync();
+                                .Include(x => x.VodProductions)
+                                .ToListAsync();
             }
             // Here in if condition implement filter logic for each patameter in PostQueryFilters class
             // Search string
@@ -287,14 +289,14 @@ namespace Checkflix.Data.Persistance
         }
         public async Task<UserViewModel> GetUserData(string userId)
         {
-             var user = await _context.Users.Where(x => x.Id.Equals(userId))
-                .Select(x => new UserViewModel
-                {
-                    Id = x.Id,
-                    UserName = x.UserName,
-                    Email = x.Email
-                })
-                .FirstOrDefaultAsync();
+            var user = await _context.Users.Where(x => x.Id.Equals(userId))
+               .Select(x => new UserViewModel
+               {
+                   Id = x.Id,
+                   UserName = x.UserName,
+                   Email = x.Email
+               })
+               .FirstOrDefaultAsync();
             return user;
         }
         #endregion
