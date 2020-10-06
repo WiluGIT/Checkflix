@@ -21,6 +21,7 @@ namespace Checkflix.Data
         public DbSet<Production> Productions { get; set; }
         public DbSet<Vod> Vods { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
         public DbSet<ApplicationUserCategory> ApplicationUserCategories { get; set; }
         public DbSet<ApplicationUserProduction> ApplicationUserProductions { get; set; }
         public DbSet<ApplicationUserVod> ApplicationUserVods { get; set; }

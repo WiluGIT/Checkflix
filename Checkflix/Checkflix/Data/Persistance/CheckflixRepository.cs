@@ -301,6 +301,35 @@ namespace Checkflix.Data.Persistance
         }
         #endregion
 
+        #region Notifications
+        public async Task<int> GetUnseenNotificationsCount(string userId)
+        {
+            var notificationsCount = await _context.ApplicationUserNotifications
+            .Include(x => x.Notification)
+            .Where(x => x.ApplicationUserId.Equals(userId) && x.Notification.IsSeen.Equals(false))
+            .Select(x => x.Notification)
+            .CountAsync();
+
+            return notificationsCount;
+        }
+
+        public async Task<IEnumerable<Notification>> GetUnseenNotifications(string userId)
+        {
+            var notifications = await _context.ApplicationUserNotifications
+                        .Include(x => x.Notification)
+                        .Where(x => x.ApplicationUserId.Equals(userId) && x.Notification.IsSeen.Equals(false))
+                        .Select(x => x.Notification)
+                        .ToListAsync();
+
+            return notifications;
+        }
+
+        public void UpdateNotification(IEnumerable<Notification> notifications)
+        {
+            _context.Notifications.UpdateRange(notifications);
+        }
+        #endregion
+
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;
