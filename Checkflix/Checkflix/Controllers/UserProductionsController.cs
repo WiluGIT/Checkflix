@@ -227,6 +227,7 @@ namespace Checkflix.Controllers
                 if (userProductionVM.Favourites == true)
                 {
                     validationResponse.Messages.Add("Dodano do 'Ulubione'");
+                    SendNotificationToFollowers();
                 }
                 else if (userProductionVM.Favourites == false)
                 {
@@ -234,6 +235,35 @@ namespace Checkflix.Controllers
                     validationResponse.Status = ResponseStatus.Error;
                 }
                 userProduction.Favourites = userProductionVM.Favourites;
+            }
+        }
+
+        private async void SendNotificationToFollowers()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user != null)
+            {
+                var userFollowers = await _repository.GetUserFollowers(user.Id);
+                var notification = new Notification
+                {
+                    Date = DateTime.Now,
+                    Content = "Siema",
+                    IsSeen = false,
+
+                };
+                var userNotificationList = new List<ApplicationUserNotification>();
+                foreach (var follower in userFollowers)
+                {
+                    var userNotification = new ApplicationUserNotification
+                    {
+                        ApplicationUser = follower,
+                        Notification = notification
+                    };  
+                    userNotificationList.Add(userNotification);                             
+                }
+                _repository.AddApplicationUserNotification(userNotificationList);
+                await _repository.SaveAll();
             }
         }
     }

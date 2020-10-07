@@ -249,6 +249,15 @@ namespace Checkflix.Data.Persistance
                             .FirstOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<ApplicationUser>> GetUserFollowers(string userId)
+        {
+            return await _context.Followings
+                            .Include(x => x.Follower)
+                            .Where(x => x.FolloweeId.Equals(userId))
+                            .Select(x => x.Follower)
+                            .ToListAsync();
+        }
+
         public async Task<Following> GetFollowing(string followerId, string followeeId)
         {
             return await _context.Followings.Where(x => x.FollowerId.Equals(followerId) && x.FolloweeId.Equals(followeeId)).FirstOrDefaultAsync();
@@ -327,6 +336,10 @@ namespace Checkflix.Data.Persistance
         public void UpdateNotification(IEnumerable<Notification> notifications)
         {
             _context.Notifications.UpdateRange(notifications);
+        }
+        public void AddApplicationUserNotification(IEnumerable<ApplicationUserNotification> userNotifications)
+        {
+            _context.ApplicationUserNotifications.AddRange(userNotifications);
         }
         #endregion
 

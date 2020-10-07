@@ -368,7 +368,7 @@ namespace Checkflix.Migrations
 
                     b.HasKey("NotificationId");
 
-                    b.ToTable("Notification");
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Checkflix.Models.Production", b =>
