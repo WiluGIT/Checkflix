@@ -204,7 +204,7 @@ namespace Checkflix.Data.Persistance
         #region UserProductions
         public async Task<ApplicationUserProduction> GetUserProduction(string userId, int productionId)
         {
-            return await _context.ApplicationUserProductions.Where(m => m.ApplicationUserId.Equals(userId) && m.ProductionId.Equals(productionId)).FirstOrDefaultAsync();
+            return await _context.ApplicationUserProductions.Include(m => m.Production).Where(m => m.ApplicationUserId.Equals(userId) && m.ProductionId.Equals(productionId)).FirstOrDefaultAsync();
         }
         public async Task<List<ApplicationUserProduction>> GetUserProductionsIds(string userId)
         {
