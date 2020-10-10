@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Checkflix.Data.Persistance;
 using Checkflix.Models;
+using Checkflix.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +37,22 @@ namespace Checkflix.Controllers
             {
                 var notificationsCount = await _repository.GetUnseenNotificationsCount(_userManager.GetUserId(User));
                 return Ok(notificationsCount);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to add production to collection{ex}");
+                return BadRequest("Bad request");
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<NotificationViewModel>>> GetUnseenNotifications()
+        {
+            try
+            {
+                var notifications = await _repository.GetUnseenNotifications(_userManager.GetUserId(User));
+                return Ok(_mapper.Map<IEnumerable<Notification>, IEnumerable<NotificationViewModel>>(notifications));
             }
             catch (Exception ex)
             {

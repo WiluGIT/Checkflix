@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Notyfikacje</h2>
+<mat-dialog-content class="mat-typography">
+<div *ngFor="let notification of notificationList" class="user-element">
+    <div class="icon-column"><span class="iconify" data-icon="clarity:avatar-line" data-inline="false"></span></div>
+    <span class="user-name">{{notification?.content}}</span>
+</div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Zamknij</button>
+  </mat-dialog-actions>

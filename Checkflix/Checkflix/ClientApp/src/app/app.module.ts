@@ -41,6 +41,7 @@ import { ClickOutsideDirective } from './dropdown-directive/dropdown-directive.c
 import {MatDialogModule} from '@angular/material/dialog';
 import { FollowingsComponent } from './followings/followings.component';
 import { UserCollectionComponent } from './user-collection/user-collection.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { UserCollectionComponent } from './user-collection/user-collection.compo
     ContentSpinnerComponent,
     ClickOutsideDirective,
     FollowingsComponent,
-    UserCollectionComponent
+    UserCollectionComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -101,6 +103,6 @@ import { UserCollectionComponent } from './user-collection/user-collection.compo
     { provide: MatPaginatorIntl, useValue: getPlPaginatorIntl() }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [FollowingsComponent]
+  entryComponents: [FollowingsComponent, NotificationsComponent]
 })
 export class AppModule { }

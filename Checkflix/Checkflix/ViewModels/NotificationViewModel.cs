@@ -10,7 +10,5 @@ namespace Checkflix.ViewModels
         public DateTime Date { get; set; }
         [Required]
         public string Content { get; set; }
-        [Required]
-        public bool IsSeen { get; set; }
     }
 }
