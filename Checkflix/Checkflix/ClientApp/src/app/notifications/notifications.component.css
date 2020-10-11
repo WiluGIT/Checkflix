@@ -1,0 +1,37 @@
+.notification-element {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 30px 1fr;
+}
+
+.notification-element > .icon-column {
+    font-size: 20px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-element > .notification-content {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.notification-element > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.following {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.following:hover {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}

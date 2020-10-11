@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Checkflix.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200904191922_InitiaLSqlite")]
-    partial class InitiaLSqlite
+    [Migration("20201006235221_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,6 +95,21 @@ namespace Checkflix.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("ApplicationUserCategories");
+                });
+
+            modelBuilder.Entity("Checkflix.Models.ApplicationUserNotification", b =>
+                {
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ApplicationUserId", "NotificationId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("ApplicationUserNotifications");
                 });
 
             modelBuilder.Entity("Checkflix.Models.ApplicationUserProduction", b =>
@@ -321,6 +336,41 @@ namespace Checkflix.Migrations
                             CategoryName = "Wojna & Polityka",
                             GenreApiId = 10768
                         });
+                });
+
+            modelBuilder.Entity("Checkflix.Models.Following", b =>
+                {
+                    b.Property<string>("FolloweeId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FollowerId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("FolloweeId", "FollowerId");
+
+                    b.HasIndex("FollowerId");
+
+                    b.ToTable("Followings");
+                });
+
+            modelBuilder.Entity("Checkflix.Models.Notification", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSeen")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Checkflix.Models.Production", b =>
@@ -643,6 +693,21 @@ namespace Checkflix.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Checkflix.Models.ApplicationUserNotification", b =>
+                {
+                    b.HasOne("Checkflix.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("ApplicationUserNotifications")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Checkflix.Models.Notification", "Notification")
+                        .WithMany("ApplicationUserNotifications")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Checkflix.Models.ApplicationUserProduction", b =>
                 {
                     b.HasOne("Checkflix.Models.ApplicationUser", "ApplicationUser")
@@ -669,6 +734,21 @@ namespace Checkflix.Migrations
                     b.HasOne("Checkflix.Models.Vod", "Vod")
                         .WithMany("ApplicationUserVods")
                         .HasForeignKey("VodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Checkflix.Models.Following", b =>
+                {
+                    b.HasOne("Checkflix.Models.ApplicationUser", "Followe")
+                        .WithMany("Followers")
+                        .HasForeignKey("FolloweeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Checkflix.Models.ApplicationUser", "Follower")
+                        .WithMany("Followees")
+                        .HasForeignKey("FollowerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

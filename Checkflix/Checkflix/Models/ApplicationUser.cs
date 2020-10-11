@@ -12,6 +12,7 @@ namespace Checkflix.Models
         public ICollection<ApplicationUserVod> ApplicationUserVods { get; set; }
         public ICollection<ApplicationUserProduction> ApplicationUserProductions { get; set; }
         public ICollection<ApplicationUserCategory> ApplicationUserCategories { get; set; }
+        public ICollection<ApplicationUserNotification> ApplicationUserNotifications { get; set; }
         public ICollection<Following> Followers { get; set; }
         public ICollection<Following> Followees { get; set; }
         public ApplicationUser()
@@ -19,6 +20,9 @@ namespace Checkflix.Models
             ApplicationUserVods = new Collection<ApplicationUserVod>();
             ApplicationUserProductions = new Collection<ApplicationUserProduction>();
             ApplicationUserCategories = new Collection<ApplicationUserCategory>();
+            ApplicationUserNotifications = new Collection<ApplicationUserNotification>();
+            Followers = new Collection<Following>();
+            Followees = new Collection<Following>();
         }
     }
 }

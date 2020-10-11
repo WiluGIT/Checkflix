@@ -204,7 +204,7 @@ namespace Checkflix.Data.Persistance
         #region UserProductions
         public async Task<ApplicationUserProduction> GetUserProduction(string userId, int productionId)
         {
-            return await _context.ApplicationUserProductions.Where(m => m.ApplicationUserId.Equals(userId) && m.ProductionId.Equals(productionId)).FirstOrDefaultAsync();
+            return await _context.ApplicationUserProductions.Include(m => m.Production).Where(m => m.ApplicationUserId.Equals(userId) && m.ProductionId.Equals(productionId)).FirstOrDefaultAsync();
         }
         public async Task<List<ApplicationUserProduction>> GetUserProductionsIds(string userId)
         {
@@ -247,6 +247,15 @@ namespace Checkflix.Data.Persistance
                             .Include(m => m.Followees)
                             .ThenInclude(x => x.Followe)
                             .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<ApplicationUser>> GetUserFollowers(string userId)
+        {
+            return await _context.Followings
+                            .Include(x => x.Follower)
+                            .Where(x => x.FolloweeId.Equals(userId))
+                            .Select(x => x.Follower)
+                            .ToListAsync();
         }
 
         public async Task<Following> GetFollowing(string followerId, string followeeId)
@@ -298,6 +307,39 @@ namespace Checkflix.Data.Persistance
                })
                .FirstOrDefaultAsync();
             return user;
+        }
+        #endregion
+
+        #region Notifications
+        public async Task<int> GetUnseenNotificationsCount(string userId)
+        {
+            var notificationsCount = await _context.ApplicationUserNotifications
+            .Include(x => x.Notification)
+            .Where(x => x.ApplicationUserId.Equals(userId) && x.Notification.IsSeen.Equals(false))
+            .Select(x => x.Notification)
+            .CountAsync();
+
+            return notificationsCount;
+        }
+
+        public async Task<IEnumerable<Notification>> GetUnseenNotifications(string userId)
+        {
+            var notifications = await _context.ApplicationUserNotifications
+                        .Include(x => x.Notification)
+                        .Where(x => x.ApplicationUserId.Equals(userId) && x.Notification.IsSeen.Equals(false))
+                        .Select(x => x.Notification)
+                        .ToListAsync();
+
+            return notifications;
+        }
+
+        public void UpdateNotification(IEnumerable<Notification> notifications)
+        {
+            _context.Notifications.UpdateRange(notifications);
+        }
+        public void AddApplicationUserNotification(IEnumerable<ApplicationUserNotification> userNotifications)
+        {
+            _context.ApplicationUserNotifications.AddRange(userNotifications);
         }
         #endregion
 

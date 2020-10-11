@@ -95,6 +95,21 @@ namespace Checkflix.Migrations
                     b.ToTable("ApplicationUserCategories");
                 });
 
+            modelBuilder.Entity("Checkflix.Models.ApplicationUserNotification", b =>
+                {
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ApplicationUserId", "NotificationId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("ApplicationUserNotifications");
+                });
+
             modelBuilder.Entity("Checkflix.Models.ApplicationUserProduction", b =>
                 {
                     b.Property<string>("ApplicationUserId")
@@ -334,6 +349,26 @@ namespace Checkflix.Migrations
                     b.HasIndex("FollowerId");
 
                     b.ToTable("Followings");
+                });
+
+            modelBuilder.Entity("Checkflix.Models.Notification", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSeen")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Checkflix.Models.Production", b =>
@@ -652,6 +687,21 @@ namespace Checkflix.Migrations
                     b.HasOne("Checkflix.Models.Category", "Category")
                         .WithMany("ApplicationUserCategories")
                         .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Checkflix.Models.ApplicationUserNotification", b =>
+                {
+                    b.HasOne("Checkflix.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("ApplicationUserNotifications")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Checkflix.Models.Notification", "Notification")
+                        .WithMany("ApplicationUserNotifications")
+                        .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -55,7 +55,7 @@ namespace Checkflix.Controllers
                     var userProduction = await _repository.GetUserProduction(user.Id, productionId);
                     if (userProduction != null)
                     {
-                        updateUserProduction(userProductionVM, ref userProduction, ref validationResponse);
+                        updateUserProduction(userProductionVM, ref userProduction, ref validationResponse, userProduction.Production.Title, user.UserName);
                         if (userProduction.ToWatch == false && userProduction.Watched == false && userProduction.Favourites == false)
                         {
                             _repository.RemoveUserProduction(userProduction);
@@ -75,7 +75,7 @@ namespace Checkflix.Controllers
                                 Production = production,
                                 ApplicationUser = user,
                             };
-                            updateUserProduction(userProductionVM, ref newUserProduction, ref validationResponse);
+                            updateUserProduction(userProductionVM, ref newUserProduction, ref validationResponse, production.Title, user.UserName);
                             _repository.AddUserProduction(newUserProduction);
                             validationResponse.Data = (ApplicationUserProductionViewModel)_mapper.Map<ApplicationUserProduction, ApplicationUserProductionViewModel>(newUserProduction);
                         }
@@ -194,7 +194,7 @@ namespace Checkflix.Controllers
             }
         }
 
-        private void updateUserProduction(ApplicationUserProductionViewModel userProductionVM, ref ApplicationUserProduction userProduction, ref ResponseViewModel validationResponse)
+        private void updateUserProduction(ApplicationUserProductionViewModel userProductionVM, ref ApplicationUserProduction userProduction, ref ResponseViewModel validationResponse, string productionName, string userName)
         {
             if (userProductionVM.ToWatch != null)
             {
@@ -227,6 +227,7 @@ namespace Checkflix.Controllers
                 if (userProductionVM.Favourites == true)
                 {
                     validationResponse.Messages.Add("Dodano do 'Ulubione'");
+                    SendNotificationToFollowers(productionName, userName);
                 }
                 else if (userProductionVM.Favourites == false)
                 {
@@ -234,6 +235,35 @@ namespace Checkflix.Controllers
                     validationResponse.Status = ResponseStatus.Error;
                 }
                 userProduction.Favourites = userProductionVM.Favourites;
+            }
+        }
+
+        private async void SendNotificationToFollowers(string productionName, string userName)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user != null)
+            {
+                var userFollowers = await _repository.GetUserFollowers(user.Id);
+                var notification = new Notification
+                {
+                    Date = DateTime.Now,
+                    Content = $"Użytkownik {userName} dodał produkcję {productionName} do kolekcji Ulubione",
+                    IsSeen = false,
+
+                };
+                var userNotificationList = new List<ApplicationUserNotification>();
+                foreach (var follower in userFollowers)
+                {
+                    var userNotification = new ApplicationUserNotification
+                    {
+                        ApplicationUser = follower,
+                        Notification = notification
+                    };  
+                    userNotificationList.Add(userNotification);                             
+                }
+                _repository.AddApplicationUserNotification(userNotificationList);
+                await _repository.SaveAll();
             }
         }
     }

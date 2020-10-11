@@ -21,9 +21,11 @@ namespace Checkflix.Data
         public DbSet<Production> Productions { get; set; }
         public DbSet<Vod> Vods { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
         public DbSet<ApplicationUserCategory> ApplicationUserCategories { get; set; }
         public DbSet<ApplicationUserProduction> ApplicationUserProductions { get; set; }
         public DbSet<ApplicationUserVod> ApplicationUserVods { get; set; }
+        public DbSet<ApplicationUserNotification> ApplicationUserNotifications { get; set; }
         public DbSet<ProductionCategory> ProductionCategories { get; set; }
         public DbSet<VodProduction> VodProductions { get; set; }
         public DbSet<Following> Followings { get; set; }
@@ -105,15 +107,27 @@ namespace Checkflix.Data
 
             // ApplicationUserVods
             builder.Entity<ApplicationUserVod>()
-              .HasKey(bc => new { bc.ApplicationUserId, bc.VodId });
+                .HasKey(bc => new { bc.ApplicationUserId, bc.VodId });
             builder.Entity<ApplicationUserVod>()
-               .HasOne(bc => bc.ApplicationUser)
-               .WithMany(b => b.ApplicationUserVods)
-               .HasForeignKey(bc => bc.ApplicationUserId);
+                .HasOne(bc => bc.ApplicationUser)
+                .WithMany(b => b.ApplicationUserVods)
+                .HasForeignKey(bc => bc.ApplicationUserId);
             builder.Entity<ApplicationUserVod>()
                 .HasOne(bc => bc.Vod)
                 .WithMany(b => b.ApplicationUserVods)
                 .HasForeignKey(bc => bc.VodId);
+
+            //  ApplicationUserNorification
+            builder.Entity<ApplicationUserNotification>()
+                .HasKey(bc => new { bc.ApplicationUserId, bc.NotificationId });
+            builder.Entity<ApplicationUserNotification>()
+                .HasOne(bc => bc.ApplicationUser)
+                .WithMany(b => b.ApplicationUserNotifications)
+                .HasForeignKey(bc => bc.ApplicationUserId);
+            builder.Entity<ApplicationUserNotification>()
+                .HasOne(bc => bc.Notification)
+                .WithMany(b => b.ApplicationUserNotifications)
+                .HasForeignKey(bc => bc.NotificationId);
 
             // ProductionCategories
             builder.Entity<ProductionCategory>()
@@ -138,10 +152,10 @@ namespace Checkflix.Data
                 .HasOne(bc => bc.Production)
                 .WithMany(b => b.VodProductions)
                 .HasForeignKey(bc => bc.ProductionId);
-            
+
             // Followings
             builder.Entity<Following>()
-                .HasKey(bc => new {bc.FolloweeId, bc.FollowerId});
+                .HasKey(bc => new { bc.FolloweeId, bc.FollowerId });
             builder.Entity<Following>()
                 .HasOne(bc => bc.Follower)
                 .WithMany(b => b.Followees)

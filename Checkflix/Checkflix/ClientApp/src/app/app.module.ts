@@ -27,7 +27,7 @@ import { MatNativeDateModule, MatRippleModule, MAT_DATE_LOCALE } from '@angular/
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import {MatPaginatorModule, MatPaginatorIntl} from '@angular/material/paginator';
+import { MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
 import { PaginatorCustomComponent } from './paginator-custom/paginator-custom.component';
 import { getPlPaginatorIntl } from './paginator-custom/pl-paginator-intl';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -38,9 +38,12 @@ import { CollectionsComponent } from './collections/collections.component';
 import { CollectionListComponent } from './collection-list/collection-list.component';
 import { ContentSpinnerComponent } from './content-spinner/content-spinner.component';
 import { ClickOutsideDirective } from './dropdown-directive/dropdown-directive.component';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { FollowingsComponent } from './followings/followings.component';
 import { UserCollectionComponent } from './user-collection/user-collection.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   declarations: [
@@ -57,7 +60,8 @@ import { UserCollectionComponent } from './user-collection/user-collection.compo
     ContentSpinnerComponent,
     ClickOutsideDirective,
     FollowingsComponent,
-    UserCollectionComponent
+    UserCollectionComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -70,11 +74,11 @@ import { UserCollectionComponent } from './user-collection/user-collection.compo
       { path: 'production-form', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production-form/:id', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production/:id', component: ProductionComponent },
-      { path: 'collections', component: CollectionsComponent, canActivate: [AuthorizeGuard]},
-      { path: 'user-collections/:id', component: UserCollectionComponent, canActivate: [AuthorizeGuard]},
-      { path: 'collections/:collectionName', component:CollectionListComponent, canActivate: [AuthorizeGuard]},
-      { path: 'collections/:id/:collectionName', component:CollectionListComponent, canActivate: [AuthorizeGuard]}
-    ], { anchorScrolling: 'enabled'}),
+      { path: 'collections', component: CollectionsComponent, canActivate: [AuthorizeGuard] },
+      { path: 'user-collections/:id', component: UserCollectionComponent, canActivate: [AuthorizeGuard] },
+      { path: 'collections/:collectionName', component: CollectionListComponent, canActivate: [AuthorizeGuard] },
+      { path: 'collections/:id/:collectionName', component: CollectionListComponent, canActivate: [AuthorizeGuard] }
+    ], { anchorScrolling: 'enabled' }),
     BrowserAnimationsModule,
     MatTabsModule,
     MatCardModule,
@@ -92,7 +96,9 @@ import { UserCollectionComponent } from './user-collection/user-collection.compo
     MatPaginatorModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule,
+    MatBadgeModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
@@ -101,6 +107,6 @@ import { UserCollectionComponent } from './user-collection/user-collection.compo
     { provide: MatPaginatorIntl, useValue: getPlPaginatorIntl() }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [FollowingsComponent]
+  entryComponents: [FollowingsComponent, NotificationsComponent]
 })
 export class AppModule { }

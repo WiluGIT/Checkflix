@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Checkflix.Migrations
 {
-    public partial class InitiaLSqlite : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -75,6 +75,21 @@ namespace Checkflix.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeviceCodes", x => x.UserCode);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    NotificationId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Date = table.Column<DateTime>(nullable: false),
+                    Content = table.Column<string>(nullable: true),
+                    IsSeen = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.NotificationId);
                 });
 
             migrationBuilder.CreateTable(
@@ -234,6 +249,30 @@ namespace Checkflix.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Followings",
+                columns: table => new
+                {
+                    FollowerId = table.Column<string>(nullable: false),
+                    FolloweeId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Followings", x => new { x.FolloweeId, x.FollowerId });
+                    table.ForeignKey(
+                        name: "FK_Followings_AspNetUsers_FolloweeId",
+                        column: x => x.FolloweeId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Followings_AspNetUsers_FollowerId",
+                        column: x => x.FollowerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ApplicationUserCategories",
                 columns: table => new
                 {
@@ -254,6 +293,30 @@ namespace Checkflix.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "CategoryId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ApplicationUserNotifications",
+                columns: table => new
+                {
+                    NotificationId = table.Column<int>(nullable: false),
+                    ApplicationUserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUserNotifications", x => new { x.ApplicationUserId, x.NotificationId });
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserNotifications_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserNotifications_Notifications_NotificationId",
+                        column: x => x.NotificationId,
+                        principalTable: "Notifications",
+                        principalColumn: "NotificationId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -507,6 +570,11 @@ namespace Checkflix.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUserNotifications_NotificationId",
+                table: "ApplicationUserNotifications",
+                column: "NotificationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ApplicationUserProductions_ProductionId",
                 table: "ApplicationUserProductions",
                 column: "ProductionId");
@@ -565,6 +633,11 @@ namespace Checkflix.Migrations
                 column: "Expiration");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Followings_FollowerId",
+                table: "Followings",
+                column: "FollowerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
                 table: "PersistedGrants",
                 column: "Expiration");
@@ -591,6 +664,9 @@ namespace Checkflix.Migrations
                 name: "ApplicationUserCategories");
 
             migrationBuilder.DropTable(
+                name: "ApplicationUserNotifications");
+
+            migrationBuilder.DropTable(
                 name: "ApplicationUserProductions");
 
             migrationBuilder.DropTable(
@@ -615,6 +691,9 @@ namespace Checkflix.Migrations
                 name: "DeviceCodes");
 
             migrationBuilder.DropTable(
+                name: "Followings");
+
+            migrationBuilder.DropTable(
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
@@ -622,6 +701,9 @@ namespace Checkflix.Migrations
 
             migrationBuilder.DropTable(
                 name: "VodProductions");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
