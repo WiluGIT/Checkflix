@@ -62,6 +62,22 @@ namespace Checkflix.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<NotificationViewModel>>> GetNotifications()
+        {
+            try
+            {
+                var notifications = await _repository.GetNotifications(_userManager.GetUserId(User));
+                return Ok(_mapper.Map<IEnumerable<Notification>, IEnumerable<NotificationViewModel>>(notifications));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to add production to collection{ex}");
+                return BadRequest("Bad request");
+            }
+        }
+
         [HttpPut]
         [Authorize]
         public async Task<ActionResult<ResponseViewModel>> MarkAsSeen()
