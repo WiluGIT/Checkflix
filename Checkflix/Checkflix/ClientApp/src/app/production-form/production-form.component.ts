@@ -148,8 +148,6 @@ export class ProductionFormComponent implements OnInit {
     return this.productionForm.get('imbdRating');
   }
 
- 
-
   submitForm() {
     // convert categories, vods dropdownlist value to proper object and set to form value
     const categories = this.productionForm.controls.categories.value.map(el =>

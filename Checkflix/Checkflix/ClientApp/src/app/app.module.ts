@@ -44,6 +44,7 @@ import { UserCollectionComponent } from './user-collection/user-collection.compo
 import { NotificationsComponent } from './notifications/notifications.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
+import { NotificationFormComponent } from './notification-form/notification-form.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { MatBadgeModule } from '@angular/material/badge';
     ClickOutsideDirective,
     FollowingsComponent,
     UserCollectionComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    NotificationFormComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -72,6 +74,7 @@ import { MatBadgeModule } from '@angular/material/badge';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'admin', component: AdminComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production-form', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
+      { path: 'notification-form', component: NotificationFormComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production-form/:id', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production/:id', component: ProductionComponent },
       { path: 'collections', component: CollectionsComponent, canActivate: [AuthorizeGuard] },
