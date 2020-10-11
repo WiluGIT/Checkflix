@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
 export class NotificationService {
   private unseenNotificationCountPath = environment.apiUrl + '/api/notifications/GetUnseenNotificationsCount';
   private unseenNotificationPath = environment.apiUrl + '/api/notifications/GetUnseenNotifications';
-
+  private markAsSeenPath = environment.apiUrl + '/api/notifications/MarkAsSeen';
   constructor(private http: HttpClient) { }
 
   getUnseenNotificationsCount(): Observable<number> {
@@ -19,5 +19,9 @@ export class NotificationService {
 
   getUnseenNotifications(): Observable<INotificationViewModel[]> {
     return this.http.get(this.unseenNotificationPath).pipe(map((notifications: INotificationViewModel[]) => notifications));
+  }
+
+  markAsSeen() {
+    return this.http.put(this.markAsSeenPath, {});
   }
 }

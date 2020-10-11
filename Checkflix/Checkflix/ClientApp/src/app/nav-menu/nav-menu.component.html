@@ -10,7 +10,7 @@
         <app-login-menu></app-login-menu>
         <ul class="navbar-nav flex-grow">
           <li class="nav-item notifications-icon">
-            <div (click)="showNotifications()" class=""><span class="iconify" data-icon="carbon:notification" data-inline="false"></span></div>
+            <div matBadge="{{notificationCount}}" matBadgePosition="below" matBadgeSize="small" matTooltip="Notyfikacje" (click)="showNotifications()"><span class="iconify" data-icon="carbon:notification" data-inline="false"></span></div>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
             <a class="nav-link text-dark" [routerLink]="['/collections']">Kolekcje</a>

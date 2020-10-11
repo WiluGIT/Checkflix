@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Checkflix.Data.Persistance;
 using Checkflix.Models;
+using Checkflix.Models.Enums;
 using Checkflix.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -63,23 +64,34 @@ namespace Checkflix.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<ActionResult> MarkAsSeen()
+        public async Task<ActionResult<ResponseViewModel>> MarkAsSeen()
         {
             try
             {
+                var validationResponse = new ResponseViewModel
+                {
+                    Status = ResponseStatus.Success,
+                    Messages = new List<string>()
+                };
                 var unseenNotifications = await _repository.GetUnseenNotifications(_userManager.GetUserId(User));
 
-                foreach (var notification in unseenNotifications)
+                if (unseenNotifications != null)
                 {
-                    notification.IsSeen = true;
-                }
-                _repository.UpdateNotification(unseenNotifications);
+                    foreach (var notification in unseenNotifications)
+                    {
+                        notification.IsSeen = true;
+                    }
+                    _repository.UpdateNotification(unseenNotifications);
 
-                if (await _repository.SaveAll())
-                {
-                    return Ok("Zaktualiozowano notyfikacje");
+                    if (await _repository.SaveAll())
+                    {
+                        validationResponse.Messages.Add("Zaktualiozowano notyfikacje");
+                        return Ok(validationResponse);
+                    }
                 }
-                return BadRequest("Nie udało się zaktualizować notyfikacji");
+                validationResponse.Status = ResponseStatus.Error;
+                validationResponse.Messages.Add("Nie udało się zaktualizować notyfikacji");
+                return Ok(validationResponse);
             }
             catch (Exception ex)
             {
