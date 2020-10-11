@@ -9,8 +9,8 @@
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]="{ show: isExpanded }">
         <app-login-menu></app-login-menu>
         <ul class="navbar-nav flex-grow">
-          <li class="nav-item">
-            <button (click)="showNotifications()">siema</button>
+          <li class="nav-item notifications-icon">
+            <div (click)="showNotifications()" class=""><span class="iconify" data-icon="carbon:notification" data-inline="false"></span></div>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
             <a class="nav-link text-dark" [routerLink]="['/collections']">Kolekcje</a>
