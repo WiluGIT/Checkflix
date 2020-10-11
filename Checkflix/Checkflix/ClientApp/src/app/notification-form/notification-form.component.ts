@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { IVodViewModel } from '../ClientViewModels/IVodViewModel';
 import { VodService } from 'src/services/vod.service';
@@ -16,20 +16,21 @@ export class NotificationFormComponent implements OnInit {
   categoryList: ICategoryViewModel[];
   vodList: IVodViewModel[];
   notification: INotificationFromViewModel;
+  toAllChecked: boolean = true;
   constructor(private fb: FormBuilder,
     private vodService: VodService,
     private categorySevice: CategoryService) { }
 
   ngOnInit() {
     this.notificationForm = this.fb.group({
-      content: ['',
-        [Validators.required
-        ]],
-      categories: ['', [
+      content: ['', [
         Validators.required
       ]],
-      vods: ['', [
-        Validators.required
+      categories: [null, [
+      ]],
+      vods: [null, [
+      ]],
+      toAll: [this.toAllChecked, [
       ]]
     });
 
@@ -40,26 +41,64 @@ export class NotificationFormComponent implements OnInit {
     this.categorySevice
       .getCategories()
       .subscribe(categories => this.categoryList = categories);
+
+    this.toAll.valueChanges.subscribe(checked => {
+      if (checked) {
+        this.notificationForm.controls.categories.setValidators(null);
+        this.notificationForm.controls.vods.setValidators(null);   
+      } else {
+        const validators = [Validators.required];
+        this.notificationForm.controls.categories.setValidators(validators);
+        this.notificationForm.controls.vods.setValidators(validators);
+      }
+      this.notificationForm.updateValueAndValidity();
+    });
   }
 
   get content() {
     return this.notificationForm.get('content');
   }
 
+  get toAll() {
+    return this.notificationForm.get('toAll') as FormControl;
+  }
+
+  checkCheckbox() {
+    this.toAllChecked = !this.toAllChecked;
+    if (this.toAllChecked) {
+      this.notificationForm.controls.categories.setValue(null);
+      this.notificationForm.controls.vods.setValue(null);
+      this.notificationForm.controls.categories.setValidators(null);
+      this.notificationForm.controls.vods.setValidators(null);
+    }
+    else {
+      this.notificationForm.controls.categories.setValidators([Validators.required]);
+      this.notificationForm.controls.vods.setValidators([Validators.required]);
+    }
+  }
+
   submitForm() {
-    // convert categories, vods dropdownlist value to proper object and set to form value
-    const categories = this.notificationForm.controls.categories.value.map(el =>
-      this.categoryList.find(x => x.categoryName === el)
-    );
-    const vods = this.notificationForm.controls.vods.value.map(el =>
-      this.vodList.find(x => x.platformName === el)
-    );
+    if (!this.toAllChecked) {
+      const categories = this.notificationForm.controls.categories.value.map(el =>
+        this.categoryList.find(x => x.categoryName === el)
+      );
+      const vods = this.notificationForm.controls.vods.value.map(el =>
+        this.vodList.find(x => x.platformName === el)
+      );
+      this.notificationForm.controls.categories.setValue(categories);
+      this.notificationForm.controls.vods.setValue(vods);
 
-    this.notificationForm.controls.categories.setValue(categories);
-    this.notificationForm.controls.vods.setValue(vods);
+      this.notification = this.notificationForm.value;
 
-    // bind values from form to API POST/PUT
-    this.notification = this.notificationForm.value;
+      // populate dropdown lists back 
+      const selectedCategories = this.notification.categories.map(cat => cat.categoryName);
+      const selectedVods = this.notification.vods.map(vod => vod.platformName);
+      this.notificationForm.controls.categories.setValue(selectedCategories);
+      this.notificationForm.controls.vods.setValue(selectedVods);
+    }
+    else {
+      this.notification = this.notificationForm.value;
+    }
     this.notification.date = new Date();
     console.log(this.notification)
     // this.productionService.createProduction(this.production).subscribe(res => {
@@ -69,10 +108,6 @@ export class NotificationFormComponent implements OnInit {
     //     this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
     //   }
 
-      // populate dropdown lists back 
-      const selectedCategories = this.notification.categories.map(cat => cat.categoryName);
-      const selectedVods = this.notification.vods.map(vod => vod.platformName);
-      this.notificationForm.controls.categories.setValue(selectedCategories);
-      this.notificationForm.controls.vods.setValue(selectedVods);
-    }
+
+  }
 }

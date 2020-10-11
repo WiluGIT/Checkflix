@@ -1,56 +1,63 @@
 <div class="container">
-    <div class="mb-3 card">
-      <div class="card-header-tab card-header">
-        <div>
-          <div class="text-left">
-            <a [routerLink]="['/admin']" class="btn btn-secondary btn-sm">Powrót do panelu</a>
-          </div>
-        </div>
-        <div class="text-center">
-          <span class="text-center">Notyfikacje</span>
+  <div class="mb-3 card">
+    <div class="card-header-tab card-header">
+      <div>
+        <div class="text-left">
+          <a [routerLink]="['/admin']" class="btn btn-secondary btn-sm">Powrót do panelu</a>
         </div>
       </div>
-      <form [formGroup]="notificationForm" (ngSubmit)="submitForm()">
-        Value: {{notificationForm.value | json}}
-        <hr />
-        <mat-form-field appearance="fill">
-          <mat-label>Wprowadź treść notyfikacji</mat-label>
-          <textarea matInput placeholder="Przykładowa treść" formControlName="content"></textarea>
-          <mat-error *ngIf="content.invalid">Treść notyfikacji musi być podana</mat-error>
-        </mat-form-field>
-  
-        <mat-form-field>
-          <mat-label>Wybierz kategorie</mat-label>
-          <mat-select formControlName="categories" multiple>
-            <mat-select-trigger>
-              {{this.notificationForm.controls.categories.value ? this.notificationForm.controls['categories']?.value[0]: ''}}
-              <span *ngIf="notificationForm.controls.categories.value?.length > 1" class="example-additional-selection">
-                (+{{notificationForm.controls.categories.value.length - 1}} {{notificationForm.controls.categories.value?.length === 2 ? 'inny' : 'inne'}})
-              </span>
-            </mat-select-trigger>
-            <mat-option *ngFor="let category of categoryList" [value]="category.categoryName">{{category.categoryName}}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="notificationForm.controls.categories.errors?.required">Kategoria musi być podana</mat-error>
-        </mat-form-field>
-  
-        <mat-form-field>
-          <mat-label>Wybierz platformę VOD</mat-label>
-          <mat-select formControlName="vods" multiple>
-            <mat-select-trigger>
-              {{this.notificationForm.controls.vods.value ? this.notificationForm.controls['vods']?.value[0]: ''}}
-              <span *ngIf="notificationForm.controls.vods.value?.length > 1" class="example-additional-selection">
-                (+{{notificationForm.controls.vods.value.length - 1}} {{notificationForm.controls.vods.value?.length === 2 ? 'inny' : 'inne'}})
-              </span>
-            </mat-select-trigger>
-            <mat-option *ngFor="let vod of vodList" [value]="vod.platformName">{{vod.platformName}}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="notificationForm.controls.vods.errors?.required">Platforma VOD musi być podana</mat-error>
-        </mat-form-field>
-  
-        <div class="text-center">
-          <button type="submit" [disabled]="notificationForm.invalid" class="btn btn-outline-primary">Stwórz</button>
-        </div>
-      </form>
-  
+      <div class="text-center">
+        <span class="text-center">Notyfikacje</span>
+      </div>
     </div>
+    <form [formGroup]="notificationForm" (ngSubmit)="submitForm()">
+      Value: {{notificationForm.value | json}}
+      Valid: {{notificationForm.valid | json}}
+      <hr />
+      <mat-form-field appearance="fill">
+        <mat-label>Wprowadź treść notyfikacji</mat-label>
+        <textarea matInput placeholder="Przykładowa treść" formControlName="content"></textarea>
+        <mat-error *ngIf="content.invalid">Treść notyfikacji musi być podana</mat-error>
+      </mat-form-field>
+      <mat-checkbox (change)="checkCheckbox($event.checked)" [checked]="toAllChecked" formControlName="toAll" class="checkbox-container">
+        Do wszystkich
+      </mat-checkbox>
+      <div *ngIf="!toAllChecked">
+        <mat-form-field>
+            <mat-label>Wybierz kategorie</mat-label>
+            <mat-select formControlName="categories" multiple>
+              <mat-select-trigger>
+                {{this.notificationForm.controls.categories.value ? this.notificationForm.controls['categories']?.value[0]: ''}}
+                <span *ngIf="notificationForm.controls.categories.value?.length > 1" class="example-additional-selection">
+                  (+{{notificationForm.controls.categories.value.length - 1}}
+                  {{notificationForm.controls.categories.value?.length === 2 ? 'inny' : 'inne'}})
+                </span>
+              </mat-select-trigger>
+              <mat-option *ngFor="let category of categoryList" [value]="category.categoryName">{{category.categoryName}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="notificationForm.controls.categories.errors?.required">Kategoria musi być podana</mat-error>
+          </mat-form-field>
+    
+          <mat-form-field>
+            <mat-label>Wybierz platformę VOD</mat-label>
+            <mat-select formControlName="vods" multiple>
+              <mat-select-trigger>
+                {{this.notificationForm.controls.vods.value ? this.notificationForm.controls['vods']?.value[0]: ''}}
+                <span *ngIf="notificationForm.controls.vods.value?.length > 1" class="example-additional-selection">
+                  (+{{notificationForm.controls.vods.value.length - 1}}
+                  {{notificationForm.controls.vods.value?.length === 2 ? 'inny' : 'inne'}})
+                </span>
+              </mat-select-trigger>
+              <mat-option *ngFor="let vod of vodList" [value]="vod.platformName">{{vod.platformName}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="notificationForm.controls.vods.errors?.required">Platforma VOD musi być podana</mat-error>
+          </mat-form-field>
+      </div>     
+      <div class="text-center">
+        <button type="submit" [disabled]="notificationForm.invalid" class="btn btn-outline-primary">Stwórz</button>
+      </div>
+    </form>
+
   </div>
+</div>

@@ -24,3 +24,8 @@
   display: inline;
   /* float: left; */
 }
+
+.checkbox-container {
+  display: flex;
+  justify-content: center;
+}

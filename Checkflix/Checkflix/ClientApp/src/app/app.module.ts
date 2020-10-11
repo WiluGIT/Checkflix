@@ -20,7 +20,7 @@ import { ProductionFormComponent } from './production-form/production-form.compo
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material';
+import { MatInputModule, MatCheckboxModule } from '@angular/material';
 import { MatSelectModule, MatSelect } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MatRippleModule, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -101,7 +101,8 @@ import { NotificationFormComponent } from './notification-form/notification-form
     MatProgressSpinnerModule,
     MatDialogModule,
     MatTooltipModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatCheckboxModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
