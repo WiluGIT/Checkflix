@@ -18,4 +18,10 @@ export class NotificationsComponent implements OnInit {
     });
   }
 
+  loadNotificationHostory() {
+    this.notificationService.getNotifications()
+    .subscribe(notifications => {
+      this.notificationList = notifications;
+    });
+  }
 }

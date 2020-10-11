@@ -35,3 +35,13 @@
     background-color: #dc3545;
     border-color: #dc3545;
 }
+
+.empty-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.empty-info > button {
+    font-size: 0.8rem;
+}

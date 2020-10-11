@@ -30,7 +30,7 @@
     <div class="mb-3 card">
       <div class="text-center card-header-tab card-header">Panel zarządzania produkcjami</div>
       <a [routerLink]="['/production-form']" class="btn btn-outline-primary">Stwórz produkcję</a>
-
+      <a [routerLink]="['/notification-form']" class="btn btn-outline-primary">Stwórz notyfikację</a>
       <form [formGroup]="productionsFilterForm" (ngSubmit)="applyFilters()">
         <mat-form-field class="example-full-width text-center">
           <mat-label>Szukaj po tytule</mat-label>

@@ -321,7 +321,6 @@ namespace Checkflix.Data.Persistance
 
             return notificationsCount;
         }
-
         public async Task<IEnumerable<Notification>> GetUnseenNotifications(string userId)
         {
             var notifications = await _context.ApplicationUserNotifications
@@ -332,7 +331,16 @@ namespace Checkflix.Data.Persistance
 
             return notifications;
         }
+        public async Task<IEnumerable<Notification>> GetNotifications(string userId)
+        {
+            var notifications = await _context.ApplicationUserNotifications
+                        .Include(x => x.Notification)
+                        .Where(x => x.ApplicationUserId.Equals(userId) && x.Notification.IsSeen.Equals(true))
+                        .Select(x => x.Notification)
+                        .ToListAsync();
 
+            return notifications;
+        }
         public void UpdateNotification(IEnumerable<Notification> notifications)
         {
             _context.Notifications.UpdateRange(notifications);

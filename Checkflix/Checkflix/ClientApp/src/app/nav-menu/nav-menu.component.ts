@@ -35,7 +35,6 @@ export class NavMenuComponent implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       this.notificationService.markAsSeen()
       .subscribe(result => {
-        console.log(result)
         if (result["status"] == 0) {
           this.getNotificationCount();
         }

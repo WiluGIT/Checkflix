@@ -20,7 +20,7 @@ import { ProductionFormComponent } from './production-form/production-form.compo
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material';
+import { MatInputModule, MatCheckboxModule } from '@angular/material';
 import { MatSelectModule, MatSelect } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MatRippleModule, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -44,6 +44,7 @@ import { UserCollectionComponent } from './user-collection/user-collection.compo
 import { NotificationsComponent } from './notifications/notifications.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
+import { NotificationFormComponent } from './notification-form/notification-form.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { MatBadgeModule } from '@angular/material/badge';
     ClickOutsideDirective,
     FollowingsComponent,
     UserCollectionComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    NotificationFormComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -72,6 +74,7 @@ import { MatBadgeModule } from '@angular/material/badge';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'admin', component: AdminComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production-form', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
+      { path: 'notification-form', component: NotificationFormComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production-form/:id', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production/:id', component: ProductionComponent },
       { path: 'collections', component: CollectionsComponent, canActivate: [AuthorizeGuard] },
@@ -98,7 +101,8 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatProgressSpinnerModule,
     MatDialogModule,
     MatTooltipModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatCheckboxModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },

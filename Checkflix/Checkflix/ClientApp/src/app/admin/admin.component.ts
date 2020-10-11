@@ -173,17 +173,6 @@ export class AdminComponent implements OnInit {
 
 
   }
-  gowno() {
-    console.log(this.productionListFromApi)
-    // this.value = 0
-    // let dataCount = 1000;
-    // let counter = 0;
-    // for (let i = 0; i < dataCount; i++) {
-    //   counter += 1;
-    //   this.value = counter / dataCount * 100; 
-    // }
-
-  }
 
   async fetchNetflix() {
     this.productionListFromApi = [];
