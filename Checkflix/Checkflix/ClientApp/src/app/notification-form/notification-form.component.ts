@@ -43,16 +43,18 @@ export class NotificationFormComponent implements OnInit {
       .subscribe(categories => this.categoryList = categories);
 
     this.toAll.valueChanges.subscribe(checked => {
-      if (checked) {
-        this.notificationForm.controls.categories.setValidators(null);
-        this.notificationForm.controls.vods.setValidators(null);   
+      if (checked) {  
+        this.notificationForm.controls.categories.setErrors(null);   
+        this.notificationForm.controls.vods.setErrors(null);   
+        this.notificationForm.updateValueAndValidity();
       } else {
         const validators = [Validators.required];
         this.notificationForm.controls.categories.setValidators(validators);
         this.notificationForm.controls.vods.setValidators(validators);
+        this.notificationForm.updateValueAndValidity();
       }
-      this.notificationForm.updateValueAndValidity();
     });
+ 
   }
 
   get content() {
@@ -65,16 +67,6 @@ export class NotificationFormComponent implements OnInit {
 
   checkCheckbox() {
     this.toAllChecked = !this.toAllChecked;
-    if (this.toAllChecked) {
-      this.notificationForm.controls.categories.setValue(null);
-      this.notificationForm.controls.vods.setValue(null);
-      this.notificationForm.controls.categories.setValidators(null);
-      this.notificationForm.controls.vods.setValidators(null);
-    }
-    else {
-      this.notificationForm.controls.categories.setValidators([Validators.required]);
-      this.notificationForm.controls.vods.setValidators([Validators.required]);
-    }
   }
 
   submitForm() {
