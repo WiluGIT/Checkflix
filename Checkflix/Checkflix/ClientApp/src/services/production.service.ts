@@ -68,8 +68,4 @@ export class ProductionService {
   deleteProduction(id: number) {
     return this.http.delete(this.deleteProductionPath + id).pipe(map((production: IProductionViewModel) => production));
   }
-
-
-
-
 }

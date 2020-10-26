@@ -1,3 +1,4 @@
+import { NotificationService } from './../../services/notification.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
@@ -19,7 +20,8 @@ export class NotificationFormComponent implements OnInit {
   toAllChecked: boolean = true;
   constructor(private fb: FormBuilder,
     private vodService: VodService,
-    private categorySevice: CategoryService) { }
+    private categorySevice: CategoryService,
+    private notificationService: NotificationService) { }
 
   ngOnInit() {
     this.notificationForm = this.fb.group({
@@ -43,9 +45,9 @@ export class NotificationFormComponent implements OnInit {
       .subscribe(categories => this.categoryList = categories);
 
     this.toAll.valueChanges.subscribe(checked => {
-      if (checked) {  
-        this.notificationForm.controls.categories.setErrors(null);   
-        this.notificationForm.controls.vods.setErrors(null);   
+      if (checked) {
+        this.notificationForm.controls.categories.setErrors(null);
+        this.notificationForm.controls.vods.setErrors(null);
         this.notificationForm.updateValueAndValidity();
       } else {
         const validators = [Validators.required];
@@ -54,7 +56,7 @@ export class NotificationFormComponent implements OnInit {
         this.notificationForm.updateValueAndValidity();
       }
     });
- 
+
   }
 
   get content() {
@@ -93,13 +95,13 @@ export class NotificationFormComponent implements OnInit {
     }
     this.notification.date = new Date();
     console.log(this.notification)
-    // this.productionService.createProduction(this.production).subscribe(res => {
-    //   if (res['status'] == 1) {
-    //     this.openSnackBar(res['messages'], 'Zamknij', 'red-snackbar');
-    //   } else {
-    //     this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
-    //   }
-
-
+    this.notificationService.createNotification(this.notification).subscribe(res => {
+      // if (res['status'] == 1) {
+      //   this.openSnackBar(res['messages'], 'Zamknij', 'red-snackbar');
+      // } else {
+      //   this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
+      // }
+      console.log(res);
+    });
   }
 }

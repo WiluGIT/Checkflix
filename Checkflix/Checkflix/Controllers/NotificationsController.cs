@@ -115,5 +115,58 @@ namespace Checkflix.Controllers
                 return BadRequest("Bad request");
             }
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult<ResponseViewModel>> PostNotification([FromBody] NotificationFormViewModel notificationFormViewModel)
+        {
+            var mapNotification = _mapper.Map<NotificationFormViewModel, Notification>(notificationFormViewModel);
+            mapNotification.IsSeen = false;
+
+            var response = ValidateNotificaiton(mapNotification);
+            if (response.Status == ResponseStatus.Error)
+                return response;
+
+            var usersToSend = await _repository.GetUsersByNotificationPreferences(notificationFormViewModel);
+
+            foreach (var userId in usersToSend)
+            {
+                var applicationUserNotification = new ApplicationUserNotification
+                {
+                    Notification = mapNotification,
+                    ApplicationUserId = userId
+                };
+                _repository.AddApplicationUserNotification(applicationUserNotification);
+            }
+
+            if (await _repository.SaveAll())
+            {
+                response.Messages.Add("Notyfikacja została wysłana");
+                response.Data = (NotificationViewModel)_mapper.Map<Notification, NotificationViewModel>(mapNotification);
+                return CreatedAtAction("PostNotification", new { id = mapNotification.NotificationId }, response);
+            }
+
+            response.Messages.Add("Produkcja nie została dodana");
+                response.Status = ResponseStatus.Error;
+                return BadRequest(response);
+        }
+
+        private ResponseViewModel ValidateNotificaiton(Notification notification)
+        {
+            var validationResponse = new ResponseViewModel
+            {
+                Status = ResponseStatus.Success,
+                Messages = new List<string>()
+            };
+
+            if (notification == null)
+            {
+                validationResponse.Status = ResponseStatus.Error;
+                validationResponse.Messages.Add("Podana notyfikacja jest pusta");
+                return validationResponse;
+            }
+
+            return validationResponse;
+        }
     }
 }
