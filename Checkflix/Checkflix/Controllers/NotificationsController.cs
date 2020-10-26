@@ -146,7 +146,7 @@ namespace Checkflix.Controllers
                 return CreatedAtAction("PostNotification", new { id = mapNotification.NotificationId }, response);
             }
 
-            response.Messages.Add("Produkcja nie została dodana");
+            response.Messages.Add("Notyfikacja nie została wysłana");
                 response.Status = ResponseStatus.Error;
                 return BadRequest(response);
         }

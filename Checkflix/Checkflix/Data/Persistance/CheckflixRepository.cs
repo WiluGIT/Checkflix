@@ -344,25 +344,31 @@ namespace Checkflix.Data.Persistance
 
         public async Task<IEnumerable<string>> GetUsersByNotificationPreferences(NotificationFormViewModel notificationFormViewModel)
         {
-            var applicationUsersIds = await _context.Users.Select(x => x.Id).ToListAsync();
             if (notificationFormViewModel.ToAll)
             {
-                return applicationUsersIds;
+                return await _context.Users
+                                    .Select(x => x.Id)
+                                    .ToListAsync(); ;
             }
-            
-            if(notificationFormViewModel.Categories.Count > 0)
+            var categoryUsers = new List<string>();
+            var vodsUsers = new List<string>();
+            if (notificationFormViewModel.Categories.Count > 0)
             {
-                applicationUsersIds = await _context.ApplicationUserCategories
-                .Where(x => notificationFormViewModel.Categories.Any(m => m.CategoryId.Equals(x.CategoryId)))
-                .Select(x => x.ApplicationUserId).ToListAsync();
+                foreach (var category in notificationFormViewModel.Categories)
+                {
+                    categoryUsers.AddRange(_context.ApplicationUserCategories.Where(x => x.CategoryId.Equals(category.CategoryId)).Select(x => x.ApplicationUserId).ToList());
+                }
             }
+
             if (notificationFormViewModel.Vods.Count > 0)
             {
-                 applicationUsersIds = await _context.ApplicationUserVods
-                .Where(x => notificationFormViewModel.Vods.Any(m => m.VodId.Equals(x.VodId)))
-                .Select(x => x.ApplicationUserId).ToListAsync();
+                foreach (var vod in notificationFormViewModel.Vods)
+                {
+                    vodsUsers.AddRange(_context.ApplicationUserVods.Where(x => x.VodId.Equals(vod.VodId)).Select(x => x.ApplicationUserId).ToList());
+                }
             }
-            return applicationUsersIds;
+
+            return categoryUsers.Union(vodsUsers).ToList();
         }
         public void UpdateNotification(IEnumerable<Notification> notifications)
         {
