@@ -175,6 +175,36 @@ namespace Checkflix.Controllers
             }
         }
 
+        [HttpPut]
+        [Authorize]
+        public async Task<ActionResult<ResponseViewModel>> MuteFollowee([FromBody] string followeeId)
+        {
+            try
+            {
+                var follower = await _userManager.GetUserAsync(User);
+                if (follower != null)
+                {
+                    var existingFollowing = await _repository.GetFollowing(follower.Id, followeeId);
+                    if (existingFollowing != null)
+                    {
+                        existingFollowing.FolloweeIsMuted = !existingFollowing.FolloweeIsMuted;
+                        _repository.UpdateFollowing(existingFollowing);
+
+                        if (await _repository.SaveAll())
+                        {
+                            return Ok("Wyciszono użytkownika");
+                        }
+                    }
+                }
+                return BadRequest("Nie udało się wyciszyć użytkownika");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to mute followee{ex}");
+                return BadRequest("Bad request");
+            }
+        }
+
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<IEnumerable<UserViewModel>>> GetUsers([FromQuery] string searchQuery)
@@ -224,7 +254,7 @@ namespace Checkflix.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 if (user != null)
                 {
-                    return Ok(_repository.ValidateFollowing(user.Id,userId));
+                    return Ok(_repository.ValidateFollowing(user.Id, userId));
                 }
                 return BadRequest("Nie udało się sprawdzić obserwacji");
             }

@@ -273,6 +273,11 @@ namespace Checkflix.Data.Persistance
             _context.Followings.Remove(following);
         }
 
+        public void UpdateFollowing(Following following)
+        {
+            _context.Followings.Update(following);
+        }
+
         public bool ValidateFollowing(string followerId, string followeeId)
         {
             return _context.Followings.Any(x => x.FollowerId.Equals(followerId) && x.FolloweeId.Equals(followeeId));
