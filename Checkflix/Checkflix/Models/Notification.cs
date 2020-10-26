@@ -9,7 +9,7 @@ namespace Checkflix.Models
         public int NotificationId { get; set; }
         public DateTime Date { get; set; }
         public string Content { get; set; }
-        public bool IsSeen { get; set; }
+
         public ICollection<ApplicationUserNotification> ApplicationUserNotifications { get; set; }
         public Notification()
         {

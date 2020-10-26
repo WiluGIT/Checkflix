@@ -84,8 +84,7 @@ namespace Checkflix.Migrations
                     NotificationId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Date = table.Column<DateTime>(nullable: false),
-                    Content = table.Column<string>(nullable: true),
-                    IsSeen = table.Column<bool>(nullable: false)
+                    Content = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -253,7 +252,8 @@ namespace Checkflix.Migrations
                 columns: table => new
                 {
                     FollowerId = table.Column<string>(nullable: false),
-                    FolloweeId = table.Column<string>(nullable: false)
+                    FolloweeId = table.Column<string>(nullable: false),
+                    FolloweeIsMuted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -301,7 +301,8 @@ namespace Checkflix.Migrations
                 columns: table => new
                 {
                     NotificationId = table.Column<int>(nullable: false),
-                    ApplicationUserId = table.Column<string>(nullable: false)
+                    ApplicationUserId = table.Column<string>(nullable: false),
+                    IsSeen = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

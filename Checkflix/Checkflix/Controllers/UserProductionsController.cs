@@ -248,9 +248,7 @@ namespace Checkflix.Controllers
                 var notification = new Notification
                 {
                     Date = DateTime.Now,
-                    Content = $"Użytkownik {userName} dodał produkcję {productionName} do kolekcji Ulubione",
-                    IsSeen = false,
-
+                    Content = $"Użytkownik {userName} dodał produkcję {productionName} do kolekcji Ulubione"
                 };
                 var userNotificationList = new List<ApplicationUserNotification>();
                 foreach (var follower in userFollowers)

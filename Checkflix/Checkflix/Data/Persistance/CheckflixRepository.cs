@@ -245,7 +245,7 @@ namespace Checkflix.Data.Persistance
                             .Include(m => m.Followers)
                             .ThenInclude(x => x.Follower)
                             .Include(m => m.Followees)
-                            .ThenInclude(x => x.Followe)
+                            .ThenInclude(x => x.Followee)
                             .FirstOrDefaultAsync();
         }
 
@@ -315,7 +315,7 @@ namespace Checkflix.Data.Persistance
         {
             var notificationsCount = await _context.ApplicationUserNotifications
             .Include(x => x.Notification)
-            .Where(x => x.ApplicationUserId.Equals(userId) && x.Notification.IsSeen.Equals(false))
+            .Where(x => x.ApplicationUserId.Equals(userId) && x.IsSeen.Equals(false))
             .Select(x => x.Notification)
             .CountAsync();
 
@@ -325,8 +325,17 @@ namespace Checkflix.Data.Persistance
         {
             var notifications = await _context.ApplicationUserNotifications
                         .Include(x => x.Notification)
-                        .Where(x => x.ApplicationUserId.Equals(userId) && x.Notification.IsSeen.Equals(false))
+                        .Where(x => x.ApplicationUserId.Equals(userId) && x.IsSeen.Equals(false))
                         .Select(x => x.Notification)
+                        .ToListAsync();
+
+            return notifications;
+        }
+
+        public async Task<IEnumerable<ApplicationUserNotification>> GetUnseenUserNotifications(string userId)
+        {
+            var notifications = await _context.ApplicationUserNotifications
+                        .Where(x => x.ApplicationUserId.Equals(userId) && x.IsSeen.Equals(false))
                         .ToListAsync();
 
             return notifications;
@@ -335,7 +344,7 @@ namespace Checkflix.Data.Persistance
         {
             var notifications = await _context.ApplicationUserNotifications
                         .Include(x => x.Notification)
-                        .Where(x => x.ApplicationUserId.Equals(userId) && x.Notification.IsSeen.Equals(true))
+                        .Where(x => x.ApplicationUserId.Equals(userId) && x.IsSeen.Equals(true))
                         .Select(x => x.Notification)
                         .ToListAsync();
 
@@ -370,9 +379,9 @@ namespace Checkflix.Data.Persistance
 
             return categoryUsers.Union(vodsUsers).ToList();
         }
-        public void UpdateNotification(IEnumerable<Notification> notifications)
+        public void UpdateUserNotification(IEnumerable<ApplicationUserNotification> notifications)
         {
-            _context.Notifications.UpdateRange(notifications);
+            _context.ApplicationUserNotifications.UpdateRange(notifications);
         }
         public void AddApplicationUserNotification(ApplicationUserNotification applicationUserNotification)
         {

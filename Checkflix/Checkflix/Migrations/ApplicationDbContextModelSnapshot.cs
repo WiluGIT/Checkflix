@@ -103,6 +103,9 @@ namespace Checkflix.Migrations
                     b.Property<int>("NotificationId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsSeen")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("ApplicationUserId", "NotificationId");
 
                     b.HasIndex("NotificationId");
@@ -344,6 +347,9 @@ namespace Checkflix.Migrations
                     b.Property<string>("FollowerId")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("FolloweeIsMuted")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("FolloweeId", "FollowerId");
 
                     b.HasIndex("FollowerId");
@@ -362,9 +368,6 @@ namespace Checkflix.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsSeen")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("NotificationId");
 
@@ -738,7 +741,7 @@ namespace Checkflix.Migrations
 
             modelBuilder.Entity("Checkflix.Models.Following", b =>
                 {
-                    b.HasOne("Checkflix.Models.ApplicationUser", "Followe")
+                    b.HasOne("Checkflix.Models.ApplicationUser", "Followee")
                         .WithMany("Followers")
                         .HasForeignKey("FolloweeId")
                         .OnDelete(DeleteBehavior.Cascade)

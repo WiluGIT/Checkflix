@@ -161,7 +161,7 @@ namespace Checkflix.Data
                 .WithMany(b => b.Followees)
                 .HasForeignKey(bc => bc.FollowerId);
             builder.Entity<Following>()
-                .HasOne(bc => bc.Followe)
+                .HasOne(bc => bc.Followee)
                 .WithMany(b => b.Followers)
                 .HasForeignKey(bc => bc.FolloweeId);
 

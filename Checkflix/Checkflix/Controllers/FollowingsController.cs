@@ -160,8 +160,8 @@ namespace Checkflix.Controllers
                 {
                     var userFollowees = user.Followees.Select(x => new UserViewModel
                     {
-                        Id = x.Followe.Id,
-                        UserName = x.Followe.UserName
+                        Id = x.Followee.Id,
+                        UserName = x.Followee.UserName
                     });
                     return Ok(userFollowees);
                 }
