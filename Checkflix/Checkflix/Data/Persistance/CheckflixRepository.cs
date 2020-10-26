@@ -341,9 +341,36 @@ namespace Checkflix.Data.Persistance
 
             return notifications;
         }
+
+        public async Task<IEnumerable<string>> GetUsersByNotificationPreferences(NotificationFormViewModel notificationFormViewModel)
+        {
+            var applicationUsersIds = await _context.Users.Select(x => x.Id).ToListAsync();
+            if (notificationFormViewModel.ToAll)
+            {
+                return applicationUsersIds;
+            }
+            
+            if(notificationFormViewModel.Categories.Count > 0)
+            {
+                applicationUsersIds = await _context.ApplicationUserCategories
+                .Where(x => notificationFormViewModel.Categories.Any(m => m.CategoryId.Equals(x.CategoryId)))
+                .Select(x => x.ApplicationUserId).ToListAsync();
+            }
+            if (notificationFormViewModel.Vods.Count > 0)
+            {
+                 applicationUsersIds = await _context.ApplicationUserVods
+                .Where(x => notificationFormViewModel.Vods.Any(m => m.VodId.Equals(x.VodId)))
+                .Select(x => x.ApplicationUserId).ToListAsync();
+            }
+            return applicationUsersIds;
+        }
         public void UpdateNotification(IEnumerable<Notification> notifications)
         {
             _context.Notifications.UpdateRange(notifications);
+        }
+        public void AddApplicationUserNotification(ApplicationUserNotification applicationUserNotification)
+        {
+            _context.ApplicationUserNotifications.Add(applicationUserNotification);
         }
         public void AddApplicationUserNotification(IEnumerable<ApplicationUserNotification> userNotifications)
         {

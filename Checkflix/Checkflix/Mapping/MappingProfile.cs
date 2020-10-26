@@ -28,6 +28,9 @@ namespace Checkflix.Mapping
 
             CreateMap<Notification, NotificationViewModel>()
                 .ReverseMap();
+
+            CreateMap<Notification, NotificationFormViewModel>()
+                .ReverseMap();
         }
     }
 }

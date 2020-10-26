@@ -50,5 +50,7 @@ namespace Checkflix.Data.Persistance
         Task<IEnumerable<ApplicationUser>> GetUserFollowers(string userId);
         void AddApplicationUserNotification(IEnumerable<ApplicationUserNotification> userNotifications);
         Task<IEnumerable<Notification>> GetNotifications(string userId);
+        Task<IEnumerable<string>> GetUsersByNotificationPreferences(NotificationFormViewModel notificationFormViewModel);
+        void AddApplicationUserNotification(ApplicationUserNotification applicationUserNotification);
     }
 }
