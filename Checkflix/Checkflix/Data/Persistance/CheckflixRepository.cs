@@ -249,11 +249,11 @@ namespace Checkflix.Data.Persistance
                             .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetUserFollowers(string userId)
+        public async Task<IEnumerable<ApplicationUser>> GetUserFollowersNotMuted(string userId)
         {
             return await _context.Followings
                             .Include(x => x.Follower)
-                            .Where(x => x.FolloweeId.Equals(userId))
+                            .Where(x => x.FolloweeId.Equals(userId) && !x.FolloweeIsMuted)
                             .Select(x => x.Follower)
                             .ToListAsync();
         }

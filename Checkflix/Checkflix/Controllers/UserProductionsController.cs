@@ -244,7 +244,7 @@ namespace Checkflix.Controllers
 
             if (user != null)
             {
-                var userFollowers = await _repository.GetUserFollowers(user.Id);
+                var userFollowers = await _repository.GetUserFollowersNotMuted(user.Id);
                 var notification = new Notification
                 {
                     Date = DateTime.Now,

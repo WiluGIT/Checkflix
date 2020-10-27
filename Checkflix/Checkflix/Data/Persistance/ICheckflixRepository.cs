@@ -47,7 +47,7 @@ namespace Checkflix.Data.Persistance
         Task<int> GetUnseenNotificationsCount(string userId);
         Task<IEnumerable<Notification>> GetUnseenNotifications(string userId);
         void UpdateUserNotification(IEnumerable<ApplicationUserNotification> notifications);
-        Task<IEnumerable<ApplicationUser>> GetUserFollowers(string userId);
+        Task<IEnumerable<ApplicationUser>> GetUserFollowersNotMuted(string userId);
         void AddApplicationUserNotification(IEnumerable<ApplicationUserNotification> userNotifications);
         Task<IEnumerable<Notification>> GetNotifications(string userId);
         Task<IEnumerable<string>> GetUsersByNotificationPreferences(NotificationFormViewModel notificationFormViewModel);
