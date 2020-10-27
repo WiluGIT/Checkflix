@@ -1,6 +1,7 @@
+import { MatSnackBar } from '@angular/material';
 import { NotificationService } from './../../services/notification.service';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { IVodViewModel } from '../ClientViewModels/IVodViewModel';
 import { VodService } from 'src/services/vod.service';
@@ -21,16 +22,17 @@ export class NotificationFormComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private vodService: VodService,
     private categorySevice: CategoryService,
-    private notificationService: NotificationService) { }
+    private notificationService: NotificationService,
+    public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.notificationForm = this.fb.group({
       content: ['', [
         Validators.required
       ]],
-      categories: [null, [
+      categories: [[], [
       ]],
-      vods: [null, [
+      vods: [[], [
       ]],
       toAll: [this.toAllChecked, [
       ]]
@@ -46,13 +48,14 @@ export class NotificationFormComponent implements OnInit {
 
     this.toAll.valueChanges.subscribe(checked => {
       if (checked) {
-        this.notificationForm.controls.categories.setErrors(null);
-        this.notificationForm.controls.vods.setErrors(null);
+        // this.notificationForm.controls.categories.setErrors(null);
+        // this.notificationForm.controls.vods.setErrors(null);
+        // this.notificationForm.setErrors(null)
+        this.notificationForm.setValidators(null)
         this.notificationForm.updateValueAndValidity();
-      } else {
-        const validators = [Validators.required];
-        this.notificationForm.controls.categories.setValidators(validators);
-        this.notificationForm.controls.vods.setValidators(validators);
+      } 
+      else {
+        this.notificationForm.setValidators(atLeastOne(Validators.required, ['categories','vods']))
         this.notificationForm.updateValueAndValidity();
       }
     });
@@ -76,10 +79,11 @@ export class NotificationFormComponent implements OnInit {
       const categories = this.notificationForm.controls.categories.value.map(el =>
         this.categoryList.find(x => x.categoryName === el)
       );
+      this.notificationForm.controls.categories.setValue(categories);
+      
       const vods = this.notificationForm.controls.vods.value.map(el =>
         this.vodList.find(x => x.platformName === el)
-      );
-      this.notificationForm.controls.categories.setValue(categories);
+      );   
       this.notificationForm.controls.vods.setValue(vods);
 
       this.notification = this.notificationForm.value;
@@ -94,14 +98,37 @@ export class NotificationFormComponent implements OnInit {
       this.notification = this.notificationForm.value;
     }
     this.notification.date = new Date();
-    console.log(this.notification)
+
     this.notificationService.createNotification(this.notification).subscribe(res => {
-      // if (res['status'] == 1) {
-      //   this.openSnackBar(res['messages'], 'Zamknij', 'red-snackbar');
-      // } else {
-      //   this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
-      // }
-      console.log(res);
+      if (res['status'] == 1) {
+        this.openSnackBar(res['messages'], 'Zamknij', 'red-snackbar');
+      } else {
+        this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
+      }
+    });
+  }
+
+  openSnackBar(message: string, action: string, className: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+      panelClass: [className]
     });
   }
 }
+
+
+
+export const atLeastOne = (validator: ValidatorFn, controls:string[] = null) => (
+  group: FormGroup,
+): ValidationErrors | null => {
+  if(!controls){
+    controls = Object.keys(group.controls)
+  }
+
+  const hasAtLeastOne = group && group.controls && controls
+    .some(k => !validator(group.controls[k]));
+
+  return hasAtLeastOne ? null : {
+    atLeastOne: true,
+  };
+};
