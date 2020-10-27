@@ -281,9 +281,7 @@ namespace Checkflix.Controllers
                         var vodProduction = new VodProduction
                         {
                             Production = mapPorduction,
-                            ProductionId = mapPorduction.ProductionId,
                             Vod = currentVod,
-                            VodId = v.VodId
                         };
                         _repository.AddVodProduction(vodProduction); // first loop add production and vod, another only vods
                     }
@@ -294,9 +292,7 @@ namespace Checkflix.Controllers
                         var productionCategory = new ProductionCategory
                         {
                             Category = currentCategory,
-                            CategoryId = currentCategory.CategoryId,
                             Production = mapPorduction,
-                            ProductionId = mapPorduction.ProductionId
                         };
                         _repository.AddProductionCategory(productionCategory);
                     }

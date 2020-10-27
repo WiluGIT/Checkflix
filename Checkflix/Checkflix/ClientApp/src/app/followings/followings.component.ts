@@ -2,6 +2,7 @@ import { IUserViewModel } from './../ClientViewModels/IUserViewModel';
 import { FollowingService } from './../../services/following.service';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-followings',
@@ -13,7 +14,8 @@ export class FollowingsComponent implements OnInit {
   followeesList :IUserViewModel[];
   constructor(private followingService:FollowingService,
     @Inject(MAT_DIALOG_DATA) public data,
-    public dialogRef: MatDialogRef<FollowingsComponent>) { }
+    public dialogRef: MatDialogRef<FollowingsComponent>,
+    public snackBar:MatSnackBar) { }
 
   ngOnInit() {
     if(this.data.type == 1) {
@@ -63,11 +65,21 @@ export class FollowingsComponent implements OnInit {
       if (response["status"] == 0) {
         targetButton.classList.add("mute-btn");
         targetButton.classList.remove("mute-btn-y");
+        this.openSnackBar(response['messages'], 'Zamknij', 'green-snackbar');
       }
       else if (response["status"] == 1) {
         targetButton.classList.remove("mute-btn");
         targetButton.classList.add("mute-btn-y");
+        this.openSnackBar(response['messages'], 'Zamknij', 'gray-snackbar');
       }
     });   
+  }
+
+
+  openSnackBar(message: string, action: string, className: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+      panelClass: [className]
+    });
   }
 }
