@@ -54,5 +54,6 @@ namespace Checkflix.Data.Persistance
         void AddApplicationUserNotification(ApplicationUserNotification applicationUserNotification);
         Task<IEnumerable<ApplicationUserNotification>> GetUnseenUserNotifications(string userId);
         void UpdateFollowing(Following following);
+        Task<UserPreferencesViewModel> GetUserPreferences(string userId);
     }
 }

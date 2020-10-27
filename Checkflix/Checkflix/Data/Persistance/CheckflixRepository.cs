@@ -398,6 +398,30 @@ namespace Checkflix.Data.Persistance
         }
         #endregion
 
+        #region UserPreferences
+        public async Task<UserPreferencesViewModel> GetUserPreferences(string userId)
+        {
+            var userCategories = await _context.ApplicationUserCategories
+                                        .Include(x => x.Category)
+                                        .Where(x => x.ApplicationUserId.Equals(userId))
+                                        .Select(x => new CategoryViewModel
+                                        {
+                                            CategoryId = x.CategoryId,
+                                            CategoryName = x.Category.CategoryName
+                                        }).ToListAsync();
+
+            var userVods = await _context.ApplicationUserVods
+                                        .Include(x => x.Vod)
+                                        .Where(x => x.ApplicationUserId.Equals(userId))
+                                        .Select(x => new VodViewModel
+                                        {
+                                            VodId = x.VodId,
+                                            PlatformName = x.Vod.PlatformName
+                                        }).ToListAsync();
+            
+            return new UserPreferencesViewModel {Vods = userVods, Categories = userCategories};
+        }
+        #endregion
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;

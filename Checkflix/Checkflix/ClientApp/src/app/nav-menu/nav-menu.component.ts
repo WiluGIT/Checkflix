@@ -1,3 +1,4 @@
+import { AuthorizeService } from './../../api-authorization/authorize.service';
 import { NotificationService } from './../../services/notification.service';
 import { NotificationsComponent } from './../notifications/notifications.component';
 import { Component, OnInit } from '@angular/core';
@@ -12,10 +13,16 @@ export class NavMenuComponent implements OnInit{
   isExpanded = false;
   notificationCount: number;
   constructor(private dialog: MatDialog,
-    private notificationService: NotificationService){}
+    private notificationService: NotificationService,
+    private authorizeService: AuthorizeService){}
 
   ngOnInit() {
-    this.getNotificationCount();
+    this.authorizeService.isAuthenticated()
+    .subscribe(authenticated => {
+      if (authenticated) {
+        this.getNotificationCount();
+      }
+    });
   }
 
   collapse() {

@@ -45,6 +45,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 import { NotificationFormComponent } from './notification-form/notification-form.component';
+import { UserPreferencesComponent } from './user-preferences/user-preferences.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { NotificationFormComponent } from './notification-form/notification-form
     FollowingsComponent,
     UserCollectionComponent,
     NotificationsComponent,
-    NotificationFormComponent
+    NotificationFormComponent,
+    UserPreferencesComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -80,7 +82,8 @@ import { NotificationFormComponent } from './notification-form/notification-form
       { path: 'collections', component: CollectionsComponent, canActivate: [AuthorizeGuard] },
       { path: 'user-collections/:id', component: UserCollectionComponent, canActivate: [AuthorizeGuard] },
       { path: 'collections/:collectionName', component: CollectionListComponent, canActivate: [AuthorizeGuard] },
-      { path: 'collections/:id/:collectionName', component: CollectionListComponent, canActivate: [AuthorizeGuard] }
+      { path: 'collections/:id/:collectionName', component: CollectionListComponent, canActivate: [AuthorizeGuard] },
+      { path: 'user-preferences', component: UserPreferencesComponent, canActivate: [AuthorizeGuard] }
     ], { anchorScrolling: 'enabled' }),
     BrowserAnimationsModule,
     MatTabsModule,
