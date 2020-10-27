@@ -6,5 +6,6 @@ namespace Checkflix.Models
         public Notification Notification { get; set; }
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+        public bool IsSeen { get; set; }
     }
 }

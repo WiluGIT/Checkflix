@@ -245,7 +245,7 @@ namespace Checkflix.Data.Persistance
                             .Include(m => m.Followers)
                             .ThenInclude(x => x.Follower)
                             .Include(m => m.Followees)
-                            .ThenInclude(x => x.Followe)
+                            .ThenInclude(x => x.Followee)
                             .FirstOrDefaultAsync();
         }
 
@@ -271,6 +271,11 @@ namespace Checkflix.Data.Persistance
         public void RemoveFollowing(Following following)
         {
             _context.Followings.Remove(following);
+        }
+
+        public void UpdateFollowing(Following following)
+        {
+            _context.Followings.Update(following);
         }
 
         public bool ValidateFollowing(string followerId, string followeeId)
@@ -315,7 +320,7 @@ namespace Checkflix.Data.Persistance
         {
             var notificationsCount = await _context.ApplicationUserNotifications
             .Include(x => x.Notification)
-            .Where(x => x.ApplicationUserId.Equals(userId) && x.Notification.IsSeen.Equals(false))
+            .Where(x => x.ApplicationUserId.Equals(userId) && x.IsSeen.Equals(false))
             .Select(x => x.Notification)
             .CountAsync();
 
@@ -325,8 +330,17 @@ namespace Checkflix.Data.Persistance
         {
             var notifications = await _context.ApplicationUserNotifications
                         .Include(x => x.Notification)
-                        .Where(x => x.ApplicationUserId.Equals(userId) && x.Notification.IsSeen.Equals(false))
+                        .Where(x => x.ApplicationUserId.Equals(userId) && x.IsSeen.Equals(false))
                         .Select(x => x.Notification)
+                        .ToListAsync();
+
+            return notifications;
+        }
+
+        public async Task<IEnumerable<ApplicationUserNotification>> GetUnseenUserNotifications(string userId)
+        {
+            var notifications = await _context.ApplicationUserNotifications
+                        .Where(x => x.ApplicationUserId.Equals(userId) && x.IsSeen.Equals(false))
                         .ToListAsync();
 
             return notifications;
@@ -335,7 +349,7 @@ namespace Checkflix.Data.Persistance
         {
             var notifications = await _context.ApplicationUserNotifications
                         .Include(x => x.Notification)
-                        .Where(x => x.ApplicationUserId.Equals(userId) && x.Notification.IsSeen.Equals(true))
+                        .Where(x => x.ApplicationUserId.Equals(userId) && x.IsSeen.Equals(true))
                         .Select(x => x.Notification)
                         .ToListAsync();
 
@@ -344,29 +358,35 @@ namespace Checkflix.Data.Persistance
 
         public async Task<IEnumerable<string>> GetUsersByNotificationPreferences(NotificationFormViewModel notificationFormViewModel)
         {
-            var applicationUsersIds = await _context.Users.Select(x => x.Id).ToListAsync();
             if (notificationFormViewModel.ToAll)
             {
-                return applicationUsersIds;
+                return await _context.Users
+                                    .Select(x => x.Id)
+                                    .ToListAsync(); ;
             }
-            
-            if(notificationFormViewModel.Categories.Count > 0)
+            var categoryUsers = new List<string>();
+            var vodsUsers = new List<string>();
+            if (notificationFormViewModel.Categories.Count > 0)
             {
-                applicationUsersIds = await _context.ApplicationUserCategories
-                .Where(x => notificationFormViewModel.Categories.Any(m => m.CategoryId.Equals(x.CategoryId)))
-                .Select(x => x.ApplicationUserId).ToListAsync();
+                foreach (var category in notificationFormViewModel.Categories)
+                {
+                    categoryUsers.AddRange(_context.ApplicationUserCategories.Where(x => x.CategoryId.Equals(category.CategoryId)).Select(x => x.ApplicationUserId).ToList());
+                }
             }
+
             if (notificationFormViewModel.Vods.Count > 0)
             {
-                 applicationUsersIds = await _context.ApplicationUserVods
-                .Where(x => notificationFormViewModel.Vods.Any(m => m.VodId.Equals(x.VodId)))
-                .Select(x => x.ApplicationUserId).ToListAsync();
+                foreach (var vod in notificationFormViewModel.Vods)
+                {
+                    vodsUsers.AddRange(_context.ApplicationUserVods.Where(x => x.VodId.Equals(vod.VodId)).Select(x => x.ApplicationUserId).ToList());
+                }
             }
-            return applicationUsersIds;
+
+            return categoryUsers.Union(vodsUsers).ToList();
         }
-        public void UpdateNotification(IEnumerable<Notification> notifications)
+        public void UpdateUserNotification(IEnumerable<ApplicationUserNotification> notifications)
         {
-            _context.Notifications.UpdateRange(notifications);
+            _context.ApplicationUserNotifications.UpdateRange(notifications);
         }
         public void AddApplicationUserNotification(ApplicationUserNotification applicationUserNotification)
         {

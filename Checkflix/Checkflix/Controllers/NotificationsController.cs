@@ -89,7 +89,7 @@ namespace Checkflix.Controllers
                     Status = ResponseStatus.Success,
                     Messages = new List<string>()
                 };
-                var unseenNotifications = await _repository.GetUnseenNotifications(_userManager.GetUserId(User));
+                var unseenNotifications = await _repository.GetUnseenUserNotifications(_userManager.GetUserId(User));
 
                 if (unseenNotifications != null)
                 {
@@ -97,7 +97,7 @@ namespace Checkflix.Controllers
                     {
                         notification.IsSeen = true;
                     }
-                    _repository.UpdateNotification(unseenNotifications);
+                    _repository.UpdateUserNotification(unseenNotifications);
 
                     if (await _repository.SaveAll())
                     {
@@ -121,7 +121,6 @@ namespace Checkflix.Controllers
         public async Task<ActionResult<ResponseViewModel>> PostNotification([FromBody] NotificationFormViewModel notificationFormViewModel)
         {
             var mapNotification = _mapper.Map<NotificationFormViewModel, Notification>(notificationFormViewModel);
-            mapNotification.IsSeen = false;
 
             var response = ValidateNotificaiton(mapNotification);
             if (response.Status == ResponseStatus.Error)
@@ -146,7 +145,7 @@ namespace Checkflix.Controllers
                 return CreatedAtAction("PostNotification", new { id = mapNotification.NotificationId }, response);
             }
 
-            response.Messages.Add("Produkcja nie została dodana");
+            response.Messages.Add("Notyfikacja nie została wysłana");
                 response.Status = ResponseStatus.Error;
                 return BadRequest(response);
         }
