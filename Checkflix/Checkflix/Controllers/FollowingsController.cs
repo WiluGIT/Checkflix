@@ -161,7 +161,8 @@ namespace Checkflix.Controllers
                     var userFollowees = user.Followees.Select(x => new UserViewModel
                     {
                         Id = x.Followee.Id,
-                        UserName = x.Followee.UserName
+                        UserName = x.Followee.UserName,
+                        IsMuted = x.FolloweeIsMuted
                     });
                     return Ok(userFollowees);
                 }
@@ -181,6 +182,12 @@ namespace Checkflix.Controllers
         {
             try
             {
+                var validationResponse = new ResponseViewModel
+                {
+                    Status = ResponseStatus.Success,
+                    Messages = new List<string>()
+                };
+
                 var follower = await _userManager.GetUserAsync(User);
                 if (follower != null)
                 {
@@ -192,11 +199,23 @@ namespace Checkflix.Controllers
 
                         if (await _repository.SaveAll())
                         {
-                            return Ok("Wyciszono użytkownika");
+                            if (existingFollowing.FolloweeIsMuted)
+                            {
+                                validationResponse.Messages.Add("Wyciszono użytkownika");
+                                validationResponse.Status = ResponseStatus.Error;
+                            }
+                            else
+                            {
+                                validationResponse.Messages.Add("Odciszono uźytkownika");
+                            }
+
+                            return Ok(validationResponse);
                         }
                     }
                 }
-                return BadRequest("Nie udało się wyciszyć użytkownika");
+                validationResponse.Status = ResponseStatus.Error;
+                validationResponse.Messages.Add("Nie udało się wyciszyć użytkownika");
+                return BadRequest(validationResponse);
             }
             catch (Exception ex)
             {

@@ -1,7 +1,7 @@
 .user-element {
     padding: 10px;
     display: grid;
-    grid-template-columns: 30px 1fr 120px;
+    grid-template-columns: 30px 1fr 35px 120px;
 }
 
 .user-element > .icon-column {
@@ -34,4 +34,21 @@
     color: #fff;
     background-color: #dc3545;
     border-color: #dc3545;
+}
+
+.mute-btn-y {
+    color: red;
+}
+
+.mute-btn {
+    color:green;
+    cursor: pointer;
+}
+
+.mute-btn:hover {
+    color:red;
+}
+
+.mute-btn-y:hover {
+    color: green;
 }

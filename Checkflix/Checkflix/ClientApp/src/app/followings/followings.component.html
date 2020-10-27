@@ -3,6 +3,7 @@
 <div *ngFor="let user of userList" class="user-element">
     <div class="icon-column"><span class="iconify" data-icon="clarity:avatar-line" data-inline="false"></span></div>
     <span class="user-name">{{user?.userName}}</span>
+    <div (click)="muteUser(user?.id, $event)" *ngIf="data.type == 2" class="icon-column" [class.mute-btn]="!user?.isMuted" [class.mute-btn-y]="user?.isMuted" matTooltip="Wyciszanie"><span class="iconify" data-icon="bx:bxs-volume-mute" data-inline="false"></span></div>
     <button *ngIf="data.type == 2" (click)="followingClick(user?.id, $event)" class="btn btn-outline-success following">Obserwujesz</button>
     <button *ngIf="data.type == 1" (click)="followingClick(user?.id, $event)" class="btn btn-outline-success" [class.following]="checkIfFollowing(user?.id)">{{checkIfFollowing(user?.id) ? 'Obserwujesz' : 'Obserwuj'}}</button>
 </div>
