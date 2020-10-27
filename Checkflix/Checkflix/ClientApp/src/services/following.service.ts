@@ -17,6 +17,7 @@ export class FollowingService {
   private getFollowersPath = environment.apiUrl + '/api/followings/GetFollowers';
   private getFolloweesPath = environment.apiUrl + '/api/followings/GetFollowees';
   private postFollowingPath = environment.apiUrl + '/api/followings/PostFollowing';
+  private muteUserPath = environment.apiUrl + '/api/followings/MuteFollowee';
   constructor(private http: HttpClient) { }
 
   // Categories
@@ -58,5 +59,12 @@ export class FollowingService {
       'Content-Type': 'application/json'
     });
     return this.http.post(this.postFollowingPath, JSON.stringify(followeeId), {headers});
+  }
+
+  muteUser(followeeId: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.http.put(this.muteUserPath, JSON.stringify(followeeId), {headers});
   }
 }

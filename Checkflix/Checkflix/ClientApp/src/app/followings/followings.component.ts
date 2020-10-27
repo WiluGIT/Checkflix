@@ -55,4 +55,19 @@ export class FollowingsComponent implements OnInit {
       return this.followeesList.some(el => el.id == userId);
     }
   }
+
+  muteUser(userId, e) {
+    const targetButton = e.currentTarget;
+    this.followingService.muteUser(userId)
+    .subscribe(response => {
+      if (response["status"] == 0) {
+        targetButton.classList.add("mute-btn");
+        targetButton.classList.remove("mute-btn-y");
+      }
+      else if (response["status"] == 1) {
+        targetButton.classList.remove("mute-btn");
+        targetButton.classList.add("mute-btn-y");
+      }
+    });   
+  }
 }
