@@ -1,0 +1,53 @@
+<div class="container">
+  <div class="mb-3 card">
+    <div class="card-header-tab card-header">
+      <div class="text-center">
+        <span class="text-center">Preferencje użytkownika</span>
+      </div>
+    </div>
+    <form [formGroup]="preferencesForm" (ngSubmit)="submitForm()">
+      Value: {{preferencesForm.value | json}}
+      <hr />
+      <div class="text-center">
+        <span class="text-center"><strong>Wybierz interesujące cię kategorie</strong></span>
+      </div>
+      <mat-form-field>
+        <mat-label>Wybierz kategorie</mat-label>
+        <mat-select formControlName="categories" multiple>
+          <mat-select-trigger>
+            {{this.preferencesForm.controls.categories.value ? this.preferencesForm.controls['categories']?.value[0]: ''}}
+            <span *ngIf="preferencesForm.controls.categories.value?.length > 1" class="example-additional-selection">
+              (+{{preferencesForm.controls.categories.value.length - 1}}
+              {{preferencesForm.controls.categories.value?.length === 2 ? 'inny' : 'inne'}})
+            </span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let category of categoryList" [value]="category.categoryName">{{category.categoryName}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="preferencesForm.controls.categories.errors?.required">Kategoria musi być podana</mat-error>
+      </mat-form-field>
+
+      <div class="text-center">
+        <span class="text-center"><strong>Wybierz subskrybowane platformy VOD</strong></span>
+      </div>
+      <mat-form-field>
+        <mat-label>Wybierz platformę VOD</mat-label>
+        <mat-select formControlName="vods" multiple>
+          <mat-select-trigger>
+            {{this.preferencesForm.controls.vods.value ? this.preferencesForm.controls['vods']?.value[0]: ''}}
+            <span *ngIf="preferencesForm.controls.vods.value?.length > 1" class="example-additional-selection">
+              (+{{preferencesForm.controls.vods.value.length - 1}}
+              {{preferencesForm.controls.vods.value?.length === 2 ? 'inny' : 'inne'}})
+            </span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let vod of vodList" [value]="vod.platformName">{{vod.platformName}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="preferencesForm.controls.vods.errors?.required">Platforma VOD musi być podana</mat-error>
+      </mat-form-field>
+
+      <div class="text-center">
+        <button type="submit" [disabled]="preferencesForm.invalid" class="btn btn-outline-primary">Uaktualnij</button>
+      </div>
+    </form>
+  </div>
+</div>

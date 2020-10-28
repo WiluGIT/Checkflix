@@ -189,7 +189,8 @@ export class AdminComponent implements OnInit {
     if (productionCount) {
       // calculate real count
       const realCount = parseInt(productionCount['COUNT'])
-      const pageCount = Math.ceil(realCount / 100) / 2; // PODZIELILEM ZEBY MNIEJ CIAGNAC
+      //const pageCount = Math.ceil(realCount / 100); // PODZIELILEM ZEBY MNIEJ CIAGNAC
+      const pageCount = 3; // PODZIELILEM ZEBY MNIEJ CIAGNAC
       console.log(pageCount)
       for (let i = 0; i < pageCount; i++) {
         const currentPage = i + 1;
@@ -209,7 +210,7 @@ export class AdminComponent implements OnInit {
             const apiData = currentPageData["ITEMS"][j];
 
             // themoviedb endpoint
-            const movieDburl = `https://api.themoviedb.org/3/find/${apiData.imdbid}?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl_PL&external_source=imdb_id`;
+            const movieDburl = `https://api.themoviedb.org/3/find/${apiData.imdbid}?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl-PL&external_source=imdb_id`;
             let movieDbData = await this.http.get(movieDburl).toPromise();
 
             // imbd endpoint

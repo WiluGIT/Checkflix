@@ -206,7 +206,7 @@ namespace Checkflix.Controllers
                             }
                             else
                             {
-                                validationResponse.Messages.Add("Odciszono uźytkownika");
+                                validationResponse.Messages.Add("Wyłączono wyciszenie użytkownika");
                             }
 
                             return Ok(validationResponse);

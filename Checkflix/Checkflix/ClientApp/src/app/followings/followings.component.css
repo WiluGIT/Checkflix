@@ -4,7 +4,13 @@
     grid-template-columns: 30px 1fr 35px 120px;
 }
 
-.user-element > .icon-column {
+.user-element-followers {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 30px 1fr 120px;
+}
+
+.icon-column {
     font-size: 20px;
     display: flex;
     -webkit-box-align: center;
@@ -12,14 +18,14 @@
     justify-content: center;
 }
 
-.user-element > .user-name {
+.user-name {
     margin-right: 10px;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
 }
 
-.user-element > button {
+.follow-btn {
     display: flex;
     align-items: center;
     justify-content: center;

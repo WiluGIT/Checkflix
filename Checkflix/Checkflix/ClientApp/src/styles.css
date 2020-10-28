@@ -172,6 +172,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background: rgba(121, 121, 121, 0.96);
 }
 
+.gray-snackbar {
+  background: rgba(121, 121, 121, 0.96);
+}
 /* Bootstrap ovverides */
 
 .card {
