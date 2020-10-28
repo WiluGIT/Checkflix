@@ -1,3 +1,4 @@
+import { MatSnackBar } from '@angular/material';
 import { IUserPreferencesViewModel } from './../ClientViewModels/IUserPreferencesViewModel';
 import { UserPreferencesService } from './../../services/user-preferences.service';
 import { CategoryService } from './../../services/category.service';
@@ -20,7 +21,8 @@ export class UserPreferencesComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private vodService: VodService,
     private categoryService: CategoryService,
-    private userPreferencesService: UserPreferencesService) { }
+    private userPreferencesService: UserPreferencesService,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.preferencesForm = this.fb.group({
@@ -50,6 +52,37 @@ export class UserPreferencesComponent implements OnInit {
   }
 
   submitForm() {
-    console.log("essa")
+    const categories = this.preferencesForm.controls.categories.value.map(el =>
+      this.categoryList.find(x => x.categoryName === el)
+    );
+    const vods = this.preferencesForm.controls.vods.value.map(el =>
+      this.vodList.find(x => x.platformName === el)
+    );
+    this.preferencesForm.controls.categories.setValue(categories);
+    this.preferencesForm.controls.vods.setValue(vods);
+
+    this.userPreferences = this.preferencesForm.value;
+
+    this.userPreferencesService.updatePreferences(this.userPreferences).subscribe(res => {
+      if (res['status'] == 1) {
+        this.openSnackBar(res['messages'], 'Zamknij', 'red-snackbar');
+      } else {
+        this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
+      }
+    });
+
+
+    // populate dropdown lists back 
+    const selectedCategories = this.userPreferences.categories.map(cat => cat.categoryName);
+    const selectedVods = this.userPreferences.vods.map(vod => vod.platformName);
+    this.preferencesForm.controls.categories.setValue(selectedCategories);
+    this.preferencesForm.controls.vods.setValue(selectedVods);
+  }
+
+  openSnackBar(message: string, action: string, className: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+      panelClass: [className]
+    });
   }
 }
