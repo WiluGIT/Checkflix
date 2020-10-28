@@ -48,4 +48,8 @@ export class UserPreferencesComponent implements OnInit {
         this.preferencesForm.controls.vods.setValue(selectedVods);
       });
   }
+
+  submitForm() {
+    console.log("essa")
+  }
 }

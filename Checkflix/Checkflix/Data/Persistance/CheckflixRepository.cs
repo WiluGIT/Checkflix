@@ -313,6 +313,14 @@ namespace Checkflix.Data.Persistance
                .FirstOrDefaultAsync();
             return user;
         }
+
+        public void UpdateUser(ApplicationUser user)
+        {
+            _context.Users.Update(user);
+            // _context.ApplicationUserCategories.UpdateRange(user.ApplicationUserCategories);
+            // _context.ApplicationUserVods.UpdateRange(user.ApplicationUserVods);
+
+        }
         #endregion
 
         #region Notifications
@@ -418,8 +426,18 @@ namespace Checkflix.Data.Persistance
                                             VodId = x.VodId,
                                             PlatformName = x.Vod.PlatformName
                                         }).ToListAsync();
-            
-            return new UserPreferencesViewModel {Vods = userVods, Categories = userCategories};
+
+            return new UserPreferencesViewModel { Vods = userVods, Categories = userCategories };
+        }
+
+        public async Task<ApplicationUser> GetUserWithPreferencesCollections(string userId)
+        {
+            var user = await _context.Users
+                                        .Include(x => x.ApplicationUserVods)
+                                        .Include(x => x.ApplicationUserCategories)
+                                        .Where(x => x.Id.Equals(userId)).FirstOrDefaultAsync();
+
+            return user;
         }
         #endregion
         public async Task<bool> SaveAll()

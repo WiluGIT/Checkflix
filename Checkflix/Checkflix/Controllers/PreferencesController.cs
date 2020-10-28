@@ -2,10 +2,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Checkflix.Data.Persistance;
 using Checkflix.Models;
+using Checkflix.Models.Enums;
 using Checkflix.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -49,6 +52,83 @@ namespace Checkflix.Controllers
                 return BadRequest("Couldn't get vods");
             }
 
+        }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<ActionResult<ResponseViewModel>> UpdatePreferences([FromBody] UserPreferencesViewModel userPreferencesViewModel)
+        {
+            try
+            {
+                var validationResponse = new ResponseViewModel
+                {
+                    Status = ResponseStatus.Success,
+                    Messages = new List<string>()
+                };
+                var user = await _repository.GetUserWithPreferencesCollections(_userManager.GetUserId(User));
+                if (user != null)
+                {
+                    var vodList = new Collection<ApplicationUserVod>();
+                    var categoriesList = new Collection<ApplicationUserCategory>();
+
+                    foreach (var v in userPreferencesViewModel.Vods)
+                    {
+                        // var currentVod = await _repository.GetVod(v.VodId);
+                        var userVod = new ApplicationUserVod
+                        {
+                            ApplicationUserId = user.Id,
+                            VodId = v.VodId
+                        };
+                        vodList.Add(userVod);
+                    }
+
+                    foreach (var c in userPreferencesViewModel.Categories)
+                    {
+                        var userCategory = new ApplicationUserCategory
+                        {
+                            CategoryId = c.CategoryId,
+                            ApplicationUserId = user.Id,
+                        };
+                        categoriesList.Add(userCategory);
+                    }
+
+                    user.ApplicationUserVods
+                            .Except(vodList)
+                            .ToList()
+                            .ForEach(x => user.ApplicationUserVods.Remove(x));
+
+                    vodList
+                        .Except(user.ApplicationUserVods)
+                        .ToList()
+                        .ForEach(x => user.ApplicationUserVods.Add(x));
+
+                    user.ApplicationUserCategories
+                        .Except(categoriesList)
+                        .ToList()
+                        .ForEach(x => user.ApplicationUserCategories.Remove(x));
+
+                    categoriesList
+                        .Except(user.ApplicationUserCategories)
+                        .ToList()
+                        .ForEach(x => user.ApplicationUserCategories.Add(x));
+
+
+                    _repository.UpdateUser(user);
+                    if (await _repository.SaveAll())
+                    {
+                        validationResponse.Messages.Add("Preferencje zostały uaktualnione");
+                        return Ok(validationResponse);
+                    }
+                }
+                validationResponse.Status = ResponseStatus.Error;
+                validationResponse.Messages.Add("Preferencje nie zostały uaktualnione");
+                return BadRequest(validationResponse);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get vods {ex}");
+                return BadRequest("Couldn't update preferences");
+            }
         }
     }
 }
