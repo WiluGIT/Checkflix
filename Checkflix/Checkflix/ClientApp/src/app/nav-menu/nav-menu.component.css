@@ -36,3 +36,8 @@ html {
 .iconify:hover {
   color: #690505;
 }
+
+.expand-text {
+  margin-left: 15px;
+  font-size: 20px;
+}

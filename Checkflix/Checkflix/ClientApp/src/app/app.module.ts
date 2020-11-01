@@ -46,6 +46,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 import { NotificationFormComponent } from './notification-form/notification-form.component';
 import { UserPreferencesComponent } from './user-preferences/user-preferences.component';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -105,7 +106,8 @@ import { UserPreferencesComponent } from './user-preferences/user-preferences.co
     MatDialogModule,
     MatTooltipModule,
     MatBadgeModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatMenuModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
