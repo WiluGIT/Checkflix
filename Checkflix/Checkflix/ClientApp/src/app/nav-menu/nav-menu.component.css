@@ -18,17 +18,21 @@ html {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
-.notifications-icon {
+.nav-icon {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   font-size: 24px;
+  margin-right: 5px;
+  margin-left: 5px;
 }
 
-.notifications-icon:hover{
-  color:#542582;
+.nav-icon:hover {
   cursor: pointer;
 }
 
-.link-active {
-  background-color: red;
+.link-active .iconify {
+  color: #690505;
+}
+.iconify:hover {
+  color: #690505;
 }

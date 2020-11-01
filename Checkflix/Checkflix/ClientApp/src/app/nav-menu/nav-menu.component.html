@@ -9,17 +9,29 @@
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]="{ show: isExpanded }">
         <app-login-menu></app-login-menu>
         <ul *ngIf="isAuthenticated" class="navbar-nav flex-grow">
-          <li class="nav-item notifications-icon">
+          <li class="nav-item nav-icon">
             <div matBadge="{{notificationCount}}" matBadgePosition="below" matBadgeSize="small" matTooltip="Notyfikacje" (click)="showNotifications()"><span class="iconify" data-icon="carbon:notification" data-inline="false"></span></div>
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link text-dark" [routerLink]="['/collections']"><span class="iconify" data-icon="bi:collection" data-inline="false"></span></a>
+          <li class="nav-item nav-icon" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-dark" [routerLink]="['/collections']">
+              <div matTooltip="Kolekcje">
+                <span class="iconify" data-icon="bi:collection" data-inline="false"></span>
+              </div>
+            </a>
           </li>
-          <li *ngIf="isAdmin" class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/admin']">Panel administratora</a>
+          <li *ngIf="isAdmin" class="nav-item nav-icon" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/admin']">
+              <div matTooltip="Panel administratora">
+                <span class="iconify" data-icon="ri-user-settings-line" data-inline="false"></span>
+              </div>
+            </a>
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/user-preferences']">Preferencje</a>
+          <li class="nav-item nav-icon" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/user-preferences']">
+              <div matTooltip="Preferencje">
+                <span class="iconify" data-icon="carbon:settings-adjust" data-inline="false"></span>
+              </div>
+            </a>
           </li>        
         </ul>
       </div>
