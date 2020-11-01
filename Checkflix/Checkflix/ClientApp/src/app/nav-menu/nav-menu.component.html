@@ -1,27 +1,44 @@
 <header>
   <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container">
+    <div class="container">   
       <a class="navbar-brand" [routerLink]="['/']">Checkflix</a>
+      <div class="nav-list-container">
+        <ul *ngIf="isAuthenticated" class="navbar-nav flex-grow flex-row">
+          <li class="nav-item nav-icon">
+            <div matBadge="{{notificationCount}}" matBadgePosition="below" matBadgeSize="small" matTooltip="Notyfikacje"
+              (click)="showNotifications()"><span class="iconify" data-icon="carbon:notification"
+                data-inline="false"></span></div>
+          </li>
+          <li class="nav-item nav-icon" [routerLinkActive]="['link-active']"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-dark" [routerLink]="['/collections']">
+              <div matTooltip="Kolekcje">
+                <span class="iconify" data-icon="bi:collection" data-inline="false"></span>
+              </div>
+            </a>
+          </li>
+          <li *ngIf="isAdmin" class="nav-item nav-icon" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/admin']">
+              <div matTooltip="Panel administratora">
+                <span class="iconify" data-icon="ri-user-settings-line" data-inline="false"></span>
+              </div>
+            </a>
+          </li>
+          <li class="nav-item nav-icon" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/user-preferences']">
+              <div matTooltip="Preferencje">
+                <span class="iconify" data-icon="carbon:settings-adjust" data-inline="false"></span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
         aria-label="Toggle navigation" [attr.aria-expanded]="isExpanded" (click)="toggle()">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]="{ show: isExpanded }">
         <app-login-menu></app-login-menu>
-        <ul class="navbar-nav flex-grow">
-          <li class="nav-item notifications-icon">
-            <div matBadge="{{notificationCount}}" matBadgePosition="below" matBadgeSize="small" matTooltip="Notyfikacje" (click)="showNotifications()"><span class="iconify" data-icon="carbon:notification" data-inline="false"></span></div>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link text-dark" [routerLink]="['/collections']">Kolekcje</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/admin']">Panel administratora</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/user-preferences']">Preferencje</a>
-          </li>        
-        </ul>
       </div>
     </div>
   </nav>

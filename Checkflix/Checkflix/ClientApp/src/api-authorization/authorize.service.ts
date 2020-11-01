@@ -49,18 +49,10 @@ export class AuthorizeService {
     return this.getUser().pipe(map(u => !!u));
   }
 
-  public isAdmin(): boolean {
-    if (this.isAuthenticated()) {
-      let role;
-      this.getUser().subscribe(x => role = x.role);
-
-      if (role == "Admin") {
-        return true;
-      }
-
-    }
-    return false;
+  public isAdmin(): Observable<any> {
+    return this.getUser().pipe(map(u => u));
   }
+
 
   public getUser(): Observable<IUser | null> {
     return concat(
