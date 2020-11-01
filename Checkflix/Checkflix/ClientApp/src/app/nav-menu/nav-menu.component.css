@@ -28,3 +28,7 @@ html {
   color:#542582;
   cursor: pointer;
 }
+
+.link-active {
+  background-color: red;
+}

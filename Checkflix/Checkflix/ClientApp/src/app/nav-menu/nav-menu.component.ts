@@ -9,18 +9,28 @@ import { MatDialog, MatDialogConfig } from '@angular/material';
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.css']
 })
-export class NavMenuComponent implements OnInit{
+export class NavMenuComponent implements OnInit {
   isExpanded = false;
   notificationCount: number;
+  isAuthenticated: boolean = false;
+  isAdmin: boolean = false;
   constructor(private dialog: MatDialog,
     private notificationService: NotificationService,
-    private authorizeService: AuthorizeService){}
+    private authorizeService: AuthorizeService) { }
 
   ngOnInit() {
     this.authorizeService.isAuthenticated()
-    .subscribe(authenticated => {
-      if (authenticated) {
-        this.getNotificationCount();
+      .subscribe(authenticated => {
+        if (authenticated) {
+          this.isAuthenticated = true;
+          this.getNotificationCount();
+        }
+      });
+    this.authorizeService.getUser().subscribe(x => {
+      if (x != null) {
+        if (x.role != null && x.role == "Admin") {
+            this.isAdmin = true;
+        }
       }
     });
   }
@@ -33,7 +43,7 @@ export class NavMenuComponent implements OnInit{
     this.isExpanded = !this.isExpanded;
   }
 
-  showNotifications(){
+  showNotifications() {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.autoFocus = false;
@@ -41,18 +51,18 @@ export class NavMenuComponent implements OnInit{
 
     dialogRef.afterClosed().subscribe(result => {
       this.notificationService.markAsSeen()
-      .subscribe(result => {
-        if (result["status"] == 0) {
-          this.getNotificationCount();
-        }
-      });
+        .subscribe(result => {
+          if (result["status"] == 0) {
+            this.getNotificationCount();
+          }
+        });
     });
   }
 
   getNotificationCount() {
     this.notificationService.getUnseenNotificationsCount()
-    .subscribe(count => {
-      this.notificationCount = count;
-    });
+      .subscribe(count => {
+        this.notificationCount = count;
+      });
   }
 }
