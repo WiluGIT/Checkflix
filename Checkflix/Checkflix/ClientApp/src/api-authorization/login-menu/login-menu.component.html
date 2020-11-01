@@ -1,23 +1,35 @@
-
-<ul class="navbar-nav" *ngIf="isAuthenticated | async">
-  <li matTooltip="Zarządzaj" class="nav-item center-text">
-    <a class="nav-link text-dark" [routerLink]='["/authentication/profile"]'>
-      {{ userName | async }}</a>
-  </li>
-  <li class="nav-item nav-icon">
-    <a class="nav-link text-dark" [routerLink]='["/authentication/logout"]' [state]='{ local: true }'
-      title="Logout">
-        <div matTooltip="Wyloguj">
-            <span class="iconify" data-icon="clarity:logout-line" data-inline="false"></span>
+<div *ngIf="isAuthenticated | async" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+    <div class="nav-text">
+        <span>{{ userName | async }}</span>
+        <mat-icon>more_vert</mat-icon>
+    </div>
+</div>
+<mat-menu #menu="matMenu">
+  <ul class="navbar-nav" *ngIf="isAuthenticated | async">
+    <li mat-menu-item class="nav-item center-text nav-icon">
+      <a class="nav-link text-dark" [routerLink]='["/authentication/profile"]'>
+        <div matTooltip="Zarządzaj" class="nav-text">
+            <span class="iconify" data-icon="bytesize:settings" data-inline="false"></span>
+            <span class="text-size">{{ userName | async }}</span>
         </div>
     </a>
-  </li>
-</ul>
+    </li>
+    <li mat-menu-item class="nav-item nav-icon">
+      <a class="nav-link text-dark" [routerLink]='["/authentication/logout"]' [state]='{ local: true }' title="Logout">
+        <div matTooltip="Wyloguj" class="nav-text">
+          <span class="iconify" data-icon="clarity:logout-line" data-inline="false"></span>
+          <span class="text-size">Wyloguj</span>
+        </div>
+      </a>
+    </li>
+  </ul>
+</mat-menu>
+
 <ul class="navbar-nav" *ngIf="!(isAuthenticated | async)">
-  <li class="nav-item">
-    <a class="nav-link text-dark" [routerLink]='["/authentication/register"]'>Register</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link text-dark" [routerLink]='["/authentication/login"]'>Login</a>
-  </li>
-</ul>
+    <li class="nav-item">
+      <a class="nav-link text-dark" [routerLink]='["/authentication/register"]'>Rejestracja</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-dark" [routerLink]='["/authentication/login"]'>Logowanie</a>
+    </li>
+  </ul>

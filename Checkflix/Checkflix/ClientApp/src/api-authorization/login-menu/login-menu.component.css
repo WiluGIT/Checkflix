@@ -6,6 +6,11 @@
   margin-left: 5px;
 }
 
+.nav-text {
+  display: flex;
+  align-items: center;
+}
+
 .nav-icon:hover {
   cursor: pointer;
 }
@@ -19,6 +24,11 @@
 }
 
 .center-text {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+}
+
+.text-size {
+    font-size: 15px;
+    margin-left: 5px;
 }

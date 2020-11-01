@@ -41,3 +41,8 @@ html {
   margin-left: 15px;
   font-size: 20px;
 }
+
+.nav-list-container {
+  display: flex;
+  align-items: center;
+}
