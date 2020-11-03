@@ -29,6 +29,9 @@ html {
 .nav-icon:hover {
   cursor: pointer;
 }
+.link-active{
+  color: #690505;
+}
 
 .link-active .iconify {
   color: #690505;

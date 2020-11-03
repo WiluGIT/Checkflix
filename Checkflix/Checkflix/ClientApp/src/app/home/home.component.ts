@@ -81,7 +81,6 @@ export class HomeComponent implements OnInit {
       else if (this.router.url === this.producionTypes.Series.path) {
         this.postQueryFilters.type = this.producionTypes.Series.value;
       }
-      console.log(this.postQueryFilters.type)
   }
 
   ngOnInit() {
