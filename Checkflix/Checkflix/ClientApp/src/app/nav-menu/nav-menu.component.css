@@ -36,7 +36,7 @@ html {
 .link-active .iconify {
   color: #690505;
 }
-.iconify:hover {
+.iconify:hover, .nav-text:hover {
   color: #690505;
 }
 
