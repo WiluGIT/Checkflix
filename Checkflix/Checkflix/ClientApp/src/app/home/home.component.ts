@@ -12,7 +12,7 @@ import { DOCUMENT } from '@angular/common';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { IApplicationUserProductionViewModel } from '../ClientViewModels/IApplicationUserProductionViewModel';
 import { ApplicationPaths } from 'src/api-authorization/api-authorization.constants';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -34,8 +34,19 @@ export class HomeComponent implements OnInit {
     yearTo: null,
     ratingFrom: null,
     ratingTo: null,
-    categories: null
+    categories: null,
+    type: null
   };
+  producionTypes = {
+    Movie: {
+      path: "/movies",
+      value: 0
+    },
+    Series: {
+      path: "/series",
+      value: 1
+    }
+  }
   categoryList: ICategoryViewModel[];
   activePageDataChunk: Array<IProductionViewModel>;
   isAuthenticated: boolean;
@@ -64,6 +75,13 @@ export class HomeComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     @Inject(DOCUMENT) document) {
+      if (this.router.url === this.producionTypes.Movie.path) {
+        this.postQueryFilters.type = this.producionTypes.Movie.value;
+      }
+      else if (this.router.url === this.producionTypes.Series.path) {
+        this.postQueryFilters.type = this.producionTypes.Series.value;
+      }
+      console.log(this.postQueryFilters.type)
   }
 
   ngOnInit() {
@@ -78,9 +96,6 @@ export class HomeComponent implements OnInit {
         this.activePageDataChunk = this.productionList;
       });
 
-    this.authorizeService.isAuthenticated().subscribe(authenticated => {
-      this.isAuthenticated = authenticated;
-    });
     // Categories
     this.categoryService
       .getCategories()
@@ -88,6 +103,7 @@ export class HomeComponent implements OnInit {
 
     this.authorizeService.isAuthenticated()
       .subscribe(authenticated => {
+        this.isAuthenticated = authenticated;
         if (authenticated) {
           this.userProductionService.getUserProductions()
             .subscribe(responseData => {
@@ -230,7 +246,8 @@ export class HomeComponent implements OnInit {
       yearTo: null,
       ratingFrom: null,
       ratingTo: null,
-      categories: null
+      categories: null,
+      type: this.postQueryFilters.type
     };
   }
 

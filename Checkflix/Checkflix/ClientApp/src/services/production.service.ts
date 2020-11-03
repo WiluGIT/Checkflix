@@ -27,6 +27,8 @@ export class ProductionService {
     let params = new HttpParams();
     params = params.append('pageNumber', filters.pageNumber.toString());
     params = params.append('pageSize', filters.pageSize.toString());
+    if (filters.type != null)
+      params = params.append('type', filters.type.toString());
     if (filters.searchQuery)
       params = params.append('searchQuery', filters.searchQuery.toString());
     if (filters.isHbo == false)

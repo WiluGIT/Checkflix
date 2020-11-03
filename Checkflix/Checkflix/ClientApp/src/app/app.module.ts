@@ -75,6 +75,8 @@ import {MatMenuModule} from '@angular/material/menu';
     ApiAuthorizationModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: 'movies', component: HomeComponent, pathMatch: 'prefix' },
+      { path: 'series', component: HomeComponent, pathMatch: 'prefix' },
       { path: 'admin', component: AdminComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'production-form', component: ProductionFormComponent, canActivate: [AuthorizeAdminGuard] },
       { path: 'notification-form', component: NotificationFormComponent, canActivate: [AuthorizeAdminGuard] },

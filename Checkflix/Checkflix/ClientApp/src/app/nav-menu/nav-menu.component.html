@@ -39,6 +39,18 @@
       </button>
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]="{ show: isExpanded }">
         <app-login-menu></app-login-menu>
+        <ul class="navbar-nav flex-grow flex-row">
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/movies']">
+              <span>Filmy</span>
+            </a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/series']">
+              <span>Seriale</span>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
