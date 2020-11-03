@@ -29,7 +29,7 @@ html {
 .nav-icon:hover {
   cursor: pointer;
 }
-.link-active{
+.link-active .nav-text { 
   color: #690505;
 }
 
@@ -48,4 +48,8 @@ html {
 .nav-list-container {
   display: flex;
   align-items: center;
+}
+
+.nav-text {
+  margin-right: 5px;
 }
