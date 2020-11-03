@@ -1,1 +1,1 @@
-<p>{{ message | async }}</p>
+<p>{{ (message | async) == 'You successfully logged out!' ? "Wylogowano" : message | async }}</p>

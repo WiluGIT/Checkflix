@@ -42,6 +42,9 @@ namespace Checkflix.Data.Persistance
                                 .ToListAsync();
             }
             // Here in if condition implement filter logic for each patameter in PostQueryFilters class
+            if (filters.Type != null) {
+                productions = productions.Where(x => (int)x.Type == filters.Type).ToList();
+            }
             // Search string
             if (!string.IsNullOrEmpty(filters.SearchQuery))
             {

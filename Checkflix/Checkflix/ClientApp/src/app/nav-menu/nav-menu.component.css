@@ -29,11 +29,14 @@ html {
 .nav-icon:hover {
   cursor: pointer;
 }
+.link-active .nav-text { 
+  color: #690505;
+}
 
 .link-active .iconify {
   color: #690505;
 }
-.iconify:hover {
+.iconify:hover, .nav-text:hover {
   color: #690505;
 }
 
@@ -45,4 +48,8 @@ html {
 .nav-list-container {
   display: flex;
   align-items: center;
+}
+
+.nav-text {
+  margin-right: 5px;
 }

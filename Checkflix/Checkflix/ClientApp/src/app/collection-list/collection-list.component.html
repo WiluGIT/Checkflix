@@ -24,10 +24,10 @@
       <div class="rating-column">
         <span>{{production?.imbdRating}}/10</span>
       </div>
-      <div class="actions-column">
-        <div (click)="deleteFromCollection(production?.productionId)"><span class="iconify action-del-btn"
+      <div class="actions-column">      
+        <div *ngIf="userQueryFilters.userId == null" matTooltip="Usuń z kolekcji" (click)="deleteFromCollection(production?.productionId)"><span class="iconify action-del-btn"
             data-icon="bi:trash" data-inline="false"></span></div>
-        <div *ngIf="collectionType == 'Do obejrzenia' && userQueryFilters.userId == null" (click)="markAsSeen(production?.productionId)"><span
+        <div *ngIf="collectionType == 'Do obejrzenia' && userQueryFilters.userId == null" matTooltip="Oznacz jako obejrzane" (click)="markAsSeen(production?.productionId)"><span
             class="iconify action-seen-btn" data-icon="ant-design:check-outlined" data-inline="false"></span></div>
       </div>
     </div>

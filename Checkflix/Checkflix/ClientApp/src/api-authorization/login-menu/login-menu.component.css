@@ -9,6 +9,7 @@
 .nav-text {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .nav-icon:hover {
@@ -16,10 +17,6 @@
 }
 
 .link-active .iconify {
-  color: #690505;
-}
-
-.iconify:hover {
   color: #690505;
 }
 

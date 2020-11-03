@@ -8,5 +8,6 @@ export interface IPostQueryFilters {
     yearTo: number;
     ratingFrom: number;
     ratingTo: number;
+    type: number;
     categories: number[];
   }
