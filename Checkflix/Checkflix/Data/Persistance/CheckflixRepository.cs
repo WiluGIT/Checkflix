@@ -373,7 +373,7 @@ namespace Checkflix.Data.Persistance
             {
                 return await _context.Users
                                     .Select(x => x.Id)
-                                    .ToListAsync(); ;
+                                    .ToListAsync();
             }
             var categoryUsers = new List<string>();
             var vodsUsers = new List<string>();

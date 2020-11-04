@@ -47,6 +47,7 @@ export class HomeComponent implements OnInit {
       value: 1
     }
   }
+  productionTypeText:string = "Filmy i seriale";
   categoryList: ICategoryViewModel[];
   activePageDataChunk: Array<IProductionViewModel>;
   isAuthenticated: boolean;
@@ -77,9 +78,11 @@ export class HomeComponent implements OnInit {
     @Inject(DOCUMENT) document) {
       if (this.router.url === this.producionTypes.Movie.path) {
         this.postQueryFilters.type = this.producionTypes.Movie.value;
+        this.productionTypeText = "Filmy";
       }
       else if (this.router.url === this.producionTypes.Series.path) {
         this.postQueryFilters.type = this.producionTypes.Series.value;
+        this.productionTypeText = "Seriale";
       }
   }
 

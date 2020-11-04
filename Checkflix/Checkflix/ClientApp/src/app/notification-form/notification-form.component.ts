@@ -95,6 +95,8 @@ export class NotificationFormComponent implements OnInit {
       this.notificationForm.controls.vods.setValue(selectedVods);
     }
     else {
+      this.notificationForm.controls.vods.setValue([]);
+      this.notificationForm.controls.categories.setValue([]);
       this.notification = this.notificationForm.value;
     }
     this.notification.date = new Date();

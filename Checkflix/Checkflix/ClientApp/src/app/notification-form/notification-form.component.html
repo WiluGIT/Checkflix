@@ -11,9 +11,6 @@
       </div>
     </div>
     <form [formGroup]="notificationForm" (ngSubmit)="submitForm()">
-      Value: {{notificationForm.value | json}}
-      Valid: {{notificationForm.valid | json}}
-      <hr />
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź treść notyfikacji</mat-label>
         <textarea matInput placeholder="Przykładowa treść" formControlName="content"></textarea>
