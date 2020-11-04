@@ -15,8 +15,6 @@
       </div>
     </div>
     <form [formGroup]="productionForm" (ngSubmit)="submitForm()">
-      Value: {{productionForm.value | json}}
-      <hr />
       <mat-form-field appearance="fill">
         <mat-label>Wprowadź Imbd id</mat-label>
         <input matInput placeholder="np. tt4574334" formControlName="imbdId">

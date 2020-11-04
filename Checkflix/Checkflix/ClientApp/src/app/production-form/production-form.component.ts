@@ -203,7 +203,7 @@ export class ProductionFormComponent implements OnInit {
 
       try {
         // themoviedb endpoint 
-        const movieDburl = `https://api.themoviedb.org/3/find/${imbdId}?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl_PL&external_source=imdb_id`;
+        const movieDburl = `https://api.themoviedb.org/3/find/${imbdId}?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl-PL&external_source=imdb_id`;
         let movieDbData = await this.http.get(movieDburl).toPromise();
 
         // imbd endpoint

@@ -170,9 +170,6 @@ export class AdminComponent implements OnInit {
             this.router.navigate(['/admin']);
           }
         });
-
-
-
   }
 
   async fetchNetflix() {
@@ -190,12 +187,12 @@ export class AdminComponent implements OnInit {
     if (productionCount) {
       // calculate real count
       const realCount = parseInt(productionCount['COUNT'])
-      //const pageCount = Math.ceil(realCount / 100); // PODZIELILEM ZEBY MNIEJ CIAGNAC
-      const pageCount = 3; // PODZIELILEM ZEBY MNIEJ CIAGNAC
+      //const pageCount = Math.ceil(realCount / 100) / 2;
+      const pageCount = 10; 
       console.log(pageCount)
       for (let i = 0; i < pageCount; i++) {
         const currentPage = i + 1;
-        // TODO currentPage in URL IS NOT INCREMENTING
+
         const currentPageUrl = `https://unogs-unogs-v1.p.rapidapi.com/aaapi.cgi?q=get%3Anew99999%3APL&p=${currentPage}&t=ns&st=adv`;
 
         // unongs endpoint
@@ -320,39 +317,6 @@ export class AdminComponent implements OnInit {
         });
     }
   }
-
-  // Update trzea zrobic tak ze robie se enpointa z hardkodowanymi kategoriami i je po prostu zwracam es
-
-  // updateCategories() {
-  //   const categoriesUrl = "https://api.themoviedb.org/3/genre/movie/list?api_key=61a4454e6812a635ebe4b24f2af2c479&language=pl-PL";
-  //   fetch(categoriesUrl)
-  //     .then(response => {
-  //       return response.json()
-  //     })
-  //     .then((data) => {
-  //       this.categoriesList = []
-  //       let categoryElement: ICategoryViewModel;
-  //       data.genres.map(el => {
-  //         categoryElement = {
-  //           categoryId: 0,
-  //           categoryName: el.name,
-  //           genreApiId: el.id
-  //         };
-  //         this.categoriesList.push(categoryElement)
-  //       })
-  //       this.productionService
-  //         .updateCategories(this.categoriesList)
-  //         .subscribe(res => {
-  //           console.log("Added", res)
-  //         },
-  //           (err) => { console.log("Category list is up to date") }
-  //         );
-
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // }
 
   openSnackBar(message: string, action: string, className: string) {
     this.snackBar.open(message, action, {
