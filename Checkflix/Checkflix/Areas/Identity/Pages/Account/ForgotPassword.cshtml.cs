@@ -60,7 +60,7 @@ namespace Checkflix.Areas.Identity.Pages.Account
                 await _emailSender.SendEmailAsync(
                     Input.Email,
                     "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"Zmień hasło klikając w ten link. <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Kliknij mnie!</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

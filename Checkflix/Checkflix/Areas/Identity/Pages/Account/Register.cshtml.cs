@@ -92,7 +92,7 @@ namespace Checkflix.Areas.Identity.Pages.Account
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        $"Potwierdź Email klikając w ten link <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Kliknij mnie!</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
