@@ -16,6 +16,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Checkflix.Data.Persistance;
 using AutoMapper;
 using System.Reflection;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Checkflix
 {
@@ -51,7 +52,8 @@ namespace Checkflix
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
             services.AddTransient<IProfileService, ProfileService>();
-
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
             // Repository
             services.AddScoped<ICheckflixRepository,CheckflixRepository>();
             // Role Claims
