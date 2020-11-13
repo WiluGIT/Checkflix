@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Checkflix.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201026224658_Initial")]
+    [Migration("20201113174406_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -746,13 +746,13 @@ namespace Checkflix.Migrations
                     b.HasOne("Checkflix.Models.ApplicationUser", "Followee")
                         .WithMany("Followers")
                         .HasForeignKey("FolloweeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Checkflix.Models.ApplicationUser", "Follower")
                         .WithMany("Followees")
                         .HasForeignKey("FollowerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

@@ -1,0 +1,34 @@
+.card {
+  width: 300px;
+  margin-top: 30px;
+  margin-bottom: 40px;
+  margin-right: auto;
+  margin-left: auto;
+  position: relative;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
+  min-width: 0;
+  padding: 10px;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 2px solid rgb(94, 49, 144);
+  border-radius: .25rem;
+  box-shadow: 0 8px 2px var(--shadow-2);
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+  overflow: auto;
+}
+
+.form-wrapper {
+  justify-content: center !important;
+}

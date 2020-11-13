@@ -10,6 +10,7 @@
     <title>@ViewData["Title"] - Checkflix</title>
     <link rel="stylesheet" href="~/Identity/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/Identity/css/site.css" />
+    <link rel="stylesheet" href="~/identity.css" />
 </head>
 <body>
     <header>
@@ -40,13 +41,13 @@
     </header>
 
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
     <footer class="footer border-top text-muted">
         <div class="container">
-            &copy; 2020 - Checkflix - <a asp-area="" asp-page="Privacy">Privacy</a>
+            &copy; 2020 - Checkflix <a asp-area="" asp-page="Privacy"></a>
         </div>
     </footer>
     <script src="~/Identity/lib/jquery/dist/jquery.min.js"></script>
