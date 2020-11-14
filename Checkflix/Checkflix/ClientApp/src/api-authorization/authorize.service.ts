@@ -50,7 +50,11 @@ export class AuthorizeService {
   }
 
   public isAdmin(): Observable<any> {
-    return this.getUser().pipe(map(u => u));
+    return this.getUser().pipe(map(u => {
+      if (u.role == "Admin") {
+        return !!u.role
+      }
+    }));
   }
 
 

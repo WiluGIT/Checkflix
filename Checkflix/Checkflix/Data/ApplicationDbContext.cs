@@ -159,11 +159,13 @@ namespace Checkflix.Data
             builder.Entity<Following>()
                 .HasOne(bc => bc.Follower)
                 .WithMany(b => b.Followees)
-                .HasForeignKey(bc => bc.FollowerId);
+                .HasForeignKey(bc => bc.FollowerId)
+                .OnDelete(DeleteBehavior.Restrict);
             builder.Entity<Following>()
                 .HasOne(bc => bc.Followee)
                 .WithMany(b => b.Followers)
-                .HasForeignKey(bc => bc.FolloweeId);
+                .HasForeignKey(bc => bc.FolloweeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);
         }

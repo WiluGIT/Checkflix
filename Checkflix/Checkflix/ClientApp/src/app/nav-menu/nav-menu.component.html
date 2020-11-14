@@ -3,7 +3,7 @@
     <div class="container">   
       <a class="navbar-brand" [routerLink]="['/']">Checkflix</a>
       <div class="nav-list-container">
-        <ul *ngIf="isAuthenticated" class="navbar-nav flex-grow flex-row">
+        <ul *ngIf="isAuthenticated | async" class="navbar-nav flex-grow flex-row">
           <li class="nav-item nav-icon">
             <div matBadge="{{notificationCount}}" matBadgePosition="below" matBadgeSize="small" matTooltip="Notyfikacje"
               (click)="showNotifications()"><span class="iconify" data-icon="carbon:notification"
@@ -17,7 +17,7 @@
               </div>
             </a>
           </li>
-          <li *ngIf="isAdmin" class="nav-item nav-icon" [routerLinkActive]="['link-active']">
+          <li *ngIf="isAdmin | async" class="nav-item nav-icon" [routerLinkActive]="['link-active']">
             <a class="nav-link text-dark" [routerLink]="['/admin']">
               <div matTooltip="Panel administratora">
                 <span class="iconify" data-icon="ri-user-settings-line" data-inline="false"></span>

@@ -16,7 +16,7 @@
         <textarea matInput placeholder="Przykładowa treść" formControlName="content"></textarea>
         <mat-error *ngIf="content.invalid">Treść notyfikacji musi być podana</mat-error>
       </mat-form-field>
-      <mat-checkbox (change)="checkCheckbox($event.checked)" [checked]="toAllChecked" formControlName="toAll" class="checkbox-container">
+      <mat-checkbox (change)="checkCheckbox()" [checked]="toAllChecked" formControlName="toAll" class="checkbox-container">
         Do wszystkich
       </mat-checkbox>
       <div *ngIf="!toAllChecked">
