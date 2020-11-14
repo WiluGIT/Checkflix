@@ -31,4 +31,44 @@
 
 .form-wrapper {
   justify-content: center !important;
+  padding: 50px;
+}
+
+.full-width {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.curved {
+  position: relative;
+  height: auto;
+  background-image: linear-gradient(#e68d40, #29064e);
+}
+.skew-r{
+  position: absolute;
+  top:0;
+  width: 100%;
+  height: 5vw;
+}
+.circle-b{
+  position: absolute;
+  bottom:0;
+  width: 100%;
+  height: 100px;
+}
+.circle-t{
+  position: absolute;
+  top:0;
+  width: 100%;
+  height: 5vw;
+}
+.circle-b-one{
+  position: absolute;
+  bottom:0;
+  width: 100%;
+  height: 5vw;
 }

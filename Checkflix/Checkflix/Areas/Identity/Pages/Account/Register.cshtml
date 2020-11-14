@@ -3,9 +3,16 @@
 @{
     ViewData["Title"] = "Rejestracja";
 }
-
-<div class="row form-wrapper">
-    <div class="card">
+<div class="well full-width">
+    <div class="curved">
+        <svg class="skew-r" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <polygon fill="white" points="0,0 100,0 100,100" />
+        </svg>
+        <svg class="circle-b-one" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" preserveAspectRatio="none">
+            <circle fill="white" cx="100" cy="100" r="100"/>
+        </svg>
+        <div class="row form-wrapper">
+        <div class="card">
         <h1>@ViewData["Title"]</h1>
         <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <hr />
@@ -27,8 +34,11 @@
             </div>
             <button type="submit" class="btn btn-outline-primary">Zarejestruj</button>
         </form>
+        </div>
+        </div>
     </div>
 </div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
