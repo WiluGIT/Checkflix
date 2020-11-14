@@ -3,6 +3,7 @@ import { NotificationService } from './../../services/notification.service';
 import { NotificationsComponent } from './../notifications/notifications.component';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-nav-menu',
@@ -12,27 +13,22 @@ import { MatDialog, MatDialogConfig } from '@angular/material';
 export class NavMenuComponent implements OnInit {
   isExpanded = false;
   notificationCount: number;
-  isAuthenticated: boolean = false;
-  isAdmin: boolean = false;
+  isAuthenticated: Observable<boolean>;
+  isAdmin: Observable<boolean>;
+  // isAdmin: boolean = false;
   constructor(private dialog: MatDialog,
     private notificationService: NotificationService,
     private authorizeService: AuthorizeService) { }
 
   ngOnInit() {
-    this.authorizeService.isAuthenticated()
-      .subscribe(authenticated => {
-        if (authenticated) {
-          this.isAuthenticated = true;
-          this.getNotificationCount();
-        }
-      });
-    this.authorizeService.getUser().subscribe(x => {
-      if (x != null) {
-        if (x.role != null && x.role == "Admin") {
-            this.isAdmin = true;
-        }
+    this.isAuthenticated = this.authorizeService.isAuthenticated();
+    this.isAuthenticated.subscribe(authenticated => {
+      if (authenticated) {
+        this.getNotificationCount();
       }
     });
+
+    this.isAdmin = this.authorizeService.isAdmin();
   }
 
   collapse() {

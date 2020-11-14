@@ -46,7 +46,7 @@
 .curved {
   position: relative;
   height: auto;
-  background-image: linear-gradient(#e68d40, #29064e);
+  background-image: linear-gradient(#9a4d09, #29064e);
 }
 .skew-r{
   position: absolute;
