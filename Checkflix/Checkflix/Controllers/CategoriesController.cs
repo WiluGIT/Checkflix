@@ -6,6 +6,7 @@ using AutoMapper;
 using Checkflix.Data.Persistance;
 using Checkflix.Models;
 using Checkflix.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -30,6 +31,7 @@ namespace Checkflix.Controllers
 
         // GET: api/Categories
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<CategoryViewModel>>> GetCategories()
         {
             try
@@ -50,6 +52,7 @@ namespace Checkflix.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<CategoryViewModel>>> UpdateCategories(IEnumerable<CategoryViewModel> categories)
         {
             var mapCategories = _mapper.Map<IEnumerable<CategoryViewModel>, IEnumerable<Category>>(categories);

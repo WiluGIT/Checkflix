@@ -117,7 +117,7 @@ namespace Checkflix.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseViewModel>> PostNotification([FromBody] NotificationFormViewModel notificationFormViewModel)
         {
             var mapNotification = _mapper.Map<NotificationFormViewModel, Notification>(notificationFormViewModel);

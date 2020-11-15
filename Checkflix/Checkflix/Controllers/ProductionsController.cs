@@ -91,6 +91,7 @@ namespace Checkflix.Controllers
 
         // PUT: api/Productions/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseViewModel>> PutProduction(int id, [FromBody] ProductionViewModel production)
         {
             if (id != production.ProductionId)
@@ -194,6 +195,7 @@ namespace Checkflix.Controllers
 
         // POST: api/Productions
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseViewModel>> PostProduction([FromBody] ProductionViewModel production)
         {
             try
@@ -250,6 +252,7 @@ namespace Checkflix.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseViewModel>> BulkProductionsCreate([FromBody] IEnumerable<ProductionViewModel> productions)
         {
             try
@@ -323,6 +326,7 @@ namespace Checkflix.Controllers
 
         // DELETE: api/Productions/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseViewModel>> DeleteProduction(int id)
         {
             try
