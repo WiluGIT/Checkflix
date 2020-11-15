@@ -32,21 +32,22 @@ namespace Checkflix.Controllers
         {
             _repository = repository;
             _logger = logger;
-            _mapper = mapper; 
+            _mapper = mapper;
 
         }
 
         // GET: api/Productions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductionViewModel>>> GetProductions([FromQuery]PostQueryFilters filters)
+        public async Task<ActionResult<IEnumerable<ProductionViewModel>>> GetProductions([FromQuery] PostQueryFilters filters)
         {
             try
             {
                 var productions = await _repository.GetAllProductions(filters);
-                if(productions == null)
+                if (productions == null)
                     return NotFound();
 
-                var metadata = new {
+                var metadata = new
+                {
                     productions.TotalCount,
                     productions.PageSize,
                     productions.CurrentPage,
@@ -57,7 +58,7 @@ namespace Checkflix.Controllers
                 Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(_mapper.Map<IEnumerable<Production>, IEnumerable<ProductionViewModel>>(productions));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"Failed to get productions {ex}");
                 return BadRequest("Bad request");
@@ -80,7 +81,7 @@ namespace Checkflix.Controllers
 
                 return Ok(_mapper.Map<Production, ProductionViewModel>(production));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"Failed to get product {ex}");
                 return BadRequest("Bad request");
@@ -90,7 +91,7 @@ namespace Checkflix.Controllers
 
         // PUT: api/Productions/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<ResponseViewModel>> PutProduction(int id, [FromBody]ProductionViewModel production)
+        public async Task<ActionResult<ResponseViewModel>> PutProduction(int id, [FromBody] ProductionViewModel production)
         {
             if (id != production.ProductionId)
             {
@@ -176,7 +177,7 @@ namespace Checkflix.Controllers
                     response.Messages.Add("Produkcja nie została uaktualniona");
                     return response;
                 }
-                
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -193,7 +194,7 @@ namespace Checkflix.Controllers
 
         // POST: api/Productions
         [HttpPost]
-        public async Task<ActionResult<ResponseViewModel>> PostProduction([FromBody]ProductionViewModel production)
+        public async Task<ActionResult<ResponseViewModel>> PostProduction([FromBody] ProductionViewModel production)
         {
             try
             {
@@ -240,25 +241,25 @@ namespace Checkflix.Controllers
                     response.Status = ResponseStatus.Error;
                     return response;
                 }
-                    
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest($"Coś poszło nie tak. Error: {ex}");
-            }                                
+            }
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResponseViewModel>> BulkProductionsCreate([FromBody]IEnumerable<ProductionViewModel> productions)
+        public async Task<ActionResult<ResponseViewModel>> BulkProductionsCreate([FromBody] IEnumerable<ProductionViewModel> productions)
         {
-            try 
+            try
             {
                 var response = ValidateBulkCreate(productions);
 
                 if (response.Status == ResponseStatus.Error)
                     return BadRequest(response);
 
-                if(_repository.AnyProductionsExists())
+                if (_repository.AnyProductionsExists())
                 {
                     // delete all existing productions
                     _repository.RemoveAllProductions();
@@ -269,34 +270,38 @@ namespace Checkflix.Controllers
                         return response;
                     }
                 }
-                             
+                // var vodProductionList = new List<VodProduction>();
+                // var categoryProductionList = new List<ProductionCategory>();
                 // add new productions
                 foreach (var p in productions)
                 {
                     var mapPorduction = _mapper.Map<ProductionViewModel, Production>(p);
 
-                    foreach (var v in p.Vods)
-                    {
-                        var currentVod = await _repository.GetVod(v.VodId);
-                        var vodProduction = new VodProduction
-                        {
-                            Production = mapPorduction,
-                            Vod = currentVod,
-                        };
-                        _repository.AddVodProduction(vodProduction); // first loop add production and vod, another only vods
-                    }
-
                     foreach (var c in p.Categories)
                     {
-                        var currentCategory = await _repository.GetCategory(c.CategoryId);
                         var productionCategory = new ProductionCategory
                         {
-                            Category = currentCategory,
+                            CategoryId = c.CategoryId,
                             Production = mapPorduction,
                         };
                         _repository.AddProductionCategory(productionCategory);
+                        //categoryProductionList.Add(productionCategory);
+                    }
+
+                    foreach (var v in p.Vods)
+                    {
+                        var vodProduction = new VodProduction
+                        {
+                            Production = mapPorduction,
+                            VodId = v.VodId
+                        };
+                        _repository.AddVodProduction(vodProduction); // first loop add production and vod, another only vods
+                        //vodProductionList.Add(vodProduction);
                     }
                 }
+
+                // _repository.AddRangeProductionCategory(categoryProductionList);
+                // _repository.AddRangeVodProduction(vodProductionList);
 
                 if (await _repository.SaveAll())
                 {
@@ -310,10 +315,10 @@ namespace Checkflix.Controllers
                     return response;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest($"Coś poszło nie tak. Error: {ex}");
-            }            
+            }
         }
 
         // DELETE: api/Productions/5
@@ -343,10 +348,10 @@ namespace Checkflix.Controllers
                     return response;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest($"Coś poszło nie tak. Error: {ex}");
-            }                      
+            }
 
         }
 

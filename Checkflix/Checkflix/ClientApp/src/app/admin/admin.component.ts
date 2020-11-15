@@ -32,7 +32,6 @@ export class AdminComponent implements OnInit {
   // Api call
   categoryList: ICategoryViewModel[];
   productionFromApi: IProductionViewModel = {
-    productionId: 0,
     poster: "brak",
     title: "brak",
     subtitle: "brak",
@@ -46,9 +45,9 @@ export class AdminComponent implements OnInit {
 
   };
   productionListFromApi: Array<IProductionViewModel>;
-  vodsCount:IVodCountViewModel = {
-    netflixCount:0,
-    hboCount:0
+  vodsCount: IVodCountViewModel = {
+    netflixCount: 0,
+    hboCount: 0
   };
 
   // Filter
@@ -72,12 +71,13 @@ export class AdminComponent implements OnInit {
   color: ThemePalette = 'primary';
   mode: ProgressSpinnerMode = 'determinate';
   value = 0;
-
+  productionsProcessedCounter: number = 0;
+  realCount: number = 0;
 
   constructor(private authService: AuthorizeService,
     private productionService: ProductionService,
-    private vodService:VodService,
-    private categoryService:CategoryService,
+    private vodService: VodService,
+    private categoryService: CategoryService,
     private router: Router,
     private http: HttpClient,
     public snackBar: MatSnackBar,
@@ -101,10 +101,10 @@ export class AdminComponent implements OnInit {
 
     // Vods 
     this.vodService.getVodCount()
-    .subscribe(response =>{
-      this.vodsCount.netflixCount = response.netflixCount;
-      this.vodsCount.hboCount = response.hboCount;
-    });
+      .subscribe(response => {
+        this.vodsCount.netflixCount = response.netflixCount;
+        this.vodsCount.hboCount = response.hboCount;
+      });
 
     this.productionsFilterForm = this.fb.group({
       searchQuery: ''
@@ -183,13 +183,12 @@ export class AdminComponent implements OnInit {
       }
     }).toPromise();
 
-    let productionsProcessedCounter = 0;
     if (productionCount) {
-      // calculate real count
-      const realCount = parseInt(productionCount['COUNT'])
-      //const pageCount = Math.ceil(realCount / 100) / 2;
+      // const realCount = parseInt(productionCount['COUNT']);
+      this.realCount = 1000;
+      this.productionsProcessedCounter = 0;
+      // const pageCount = Math.ceil(realCount / 100);
       const pageCount = 10; 
-      console.log(pageCount)
       for (let i = 0; i < pageCount; i++) {
         const currentPage = i + 1;
 
@@ -204,6 +203,11 @@ export class AdminComponent implements OnInit {
         }).toPromise();
 
         for (let j = 0; j < currentPageData["ITEMS"].length; j++) {
+          // update counter for progress bar
+          this.productionsProcessedCounter += 1;
+          console.log(this.productionsProcessedCounter)
+          this.value = (this.productionsProcessedCounter / this.realCount) * 100;
+
           if (currentPageData["ITEMS"][j].imdbid !== "notfound" && currentPageData["ITEMS"][j].imdbid) {
             const apiData = currentPageData["ITEMS"][j];
 
@@ -220,14 +224,10 @@ export class AdminComponent implements OnInit {
               }
             }).toPromise();
 
-            // update counter for progress bar
-            productionsProcessedCounter += 1;
-            this.value = (productionsProcessedCounter / realCount) * 100;
-
             // gather data from api
-            if(apiData.image)
+            if (apiData.image)
               this.productionFromApi.poster = apiData.image;
-            if(apiData.title)
+            if (apiData.title)
               this.productionFromApi.title = apiData.title;
 
             if (movieDbData["movie_results"].length > 0) {
@@ -238,12 +238,12 @@ export class AdminComponent implements OnInit {
               );
               this.productionFromApi.imbdId = apiData.imdbid;
               this.productionFromApi.categories = categories;
-              if(movieArray.title)
+              if (movieArray.title)
                 this.productionFromApi.subtitle = movieArray.title;
               if (movieArray.overview)
                 this.productionFromApi.synopsis = movieArray.overview;
               this.productionFromApi.type = 0;
-              if(movieArray.release_date)
+              if (movieArray.release_date)
                 this.productionFromApi.releaseDate = new Date(movieArray.release_date);
               this.productionFromApi.vods = [{
                 vodId: 1,
@@ -260,12 +260,12 @@ export class AdminComponent implements OnInit {
               );
               this.productionFromApi.imbdId = apiData.imdbid;
               this.productionFromApi.categories = categories;
-              if(seriesArray.name)
+              if (seriesArray.name)
                 this.productionFromApi.subtitle = seriesArray.name;
               if (seriesArray.overview)
                 this.productionFromApi.synopsis = seriesArray.overview;
               this.productionFromApi.type = 1;
-              if(seriesArray.first_air_date)
+              if (seriesArray.first_air_date)
                 this.productionFromApi.releaseDate = new Date(seriesArray.first_air_date);
               this.productionFromApi.vods = [{
                 vodId: 1,
@@ -275,20 +275,19 @@ export class AdminComponent implements OnInit {
 
             if (imbdData) {
               this.productionFromApi.imbdRating = parseFloat(imbdData["rating"]);
-              if(this.productionFromApi.poster === "brak" && imbdData["poster"])
+              if (this.productionFromApi.poster === "brak" && imbdData["poster"])
                 this.productionFromApi.poster = imbdData["poster"];
             }
 
-            if (this.productionFromApi.imbdId 
-              && this.productionFromApi.imbdRating 
-              && this.productionFromApi.releaseDate 
-              && this.productionFromApi.type 
-              && this.productionFromApi.categories.length > 0){
-                this.productionListFromApi.push(this.productionFromApi)
-              }
+            if (this.productionFromApi.imbdId
+              && this.productionFromApi.imbdRating
+              && this.productionFromApi.releaseDate
+              && this.productionFromApi.type
+              && this.productionFromApi.categories.length > 0) {
+              this.productionListFromApi.push(this.productionFromApi)
+            }
 
             this.productionFromApi = {
-              productionId: 0,
               poster: "brak",
               title: "brak",
               subtitle: "brak",

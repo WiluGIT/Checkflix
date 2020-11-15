@@ -57,5 +57,7 @@ namespace Checkflix.Data.Persistance
         Task<UserPreferencesViewModel> GetUserPreferences(string userId);
         Task<ApplicationUser> GetUserWithPreferencesCollections(string userId);
         void UpdateUser(ApplicationUser user);
+        void AddRangeProductionCategory(List<ProductionCategory> productionCategories);
+        void AddRangeVodProduction(List<VodProduction> vodProductions);
     }
 }

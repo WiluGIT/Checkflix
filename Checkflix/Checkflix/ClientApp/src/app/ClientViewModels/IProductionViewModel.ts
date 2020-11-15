@@ -2,7 +2,7 @@ import { IVodViewModel } from "./IVodViewModel";
 import { ICategoryViewModel } from "./ICategoryViewModel";
 
 export interface IProductionViewModel {
-  productionId: number;
+  productionId?: number;
   title: string;
   subtitle: string;
   poster: string;
