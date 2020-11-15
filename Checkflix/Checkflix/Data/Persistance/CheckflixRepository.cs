@@ -42,7 +42,8 @@ namespace Checkflix.Data.Persistance
                                 .ToListAsync();
             }
             // Here in if condition implement filter logic for each patameter in PostQueryFilters class
-            if (filters.Type != null) {
+            if (filters.Type != null)
+            {
                 productions = productions.Where(x => (int)x.Type == filters.Type).ToList();
             }
             // Search string
@@ -170,6 +171,11 @@ namespace Checkflix.Data.Persistance
             _context.VodProductions.Add(vodProduction);
         }
 
+        public void AddRangeVodProduction(List<VodProduction> vodProductions)
+        {
+            _context.VodProductions.AddRange(vodProductions);
+        }
+
         public async Task<VodProduction> GetVodProduction(int vodId, int productionId)
         {
             return await _context.VodProductions.Where(m => m.VodId.Equals(vodId) && m.ProductionId.Equals(productionId)).FirstOrDefaultAsync();
@@ -190,6 +196,11 @@ namespace Checkflix.Data.Persistance
         public void AddProductionCategory(ProductionCategory productionCategory)
         {
             _context.ProductionCategories.Add(productionCategory);
+        }
+
+        public void AddRangeProductionCategory(List<ProductionCategory> productionCategories)
+        {
+            _context.ProductionCategories.AddRange(productionCategories);
         }
 
         public async Task<ProductionCategory> GetProductionCategory(int categoryId, int productionId)

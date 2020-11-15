@@ -92,11 +92,14 @@
       <div class="text-center">
         <button class="btn btn-outline-primary" (click)="fetchNetflix()">Pobierz dane Netflixa</button>
       </div>
+      <div class="text-center">
+        <span>{{productionsProcessedCounter}} / {{realCount}}</span>
+      </div>
       <div>
         <mat-progress-spinner class="progress-spinner" [color]="color" [mode]="mode" [value]="value">
+
         </mat-progress-spinner>
       </div>
-
     </div>
   </mat-tab>
 </mat-tab-group>

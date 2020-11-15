@@ -1,5 +1,8 @@
 .prod-left{
-    text-align:center;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .prod-right{
     color:#fff;
@@ -39,4 +42,8 @@
 
 .category-spn{
     color: #ff8f00;
+}
+
+.img-container {
+    max-width: 166px;
 }
