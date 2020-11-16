@@ -273,22 +273,20 @@ namespace Checkflix.Controllers
                         return response;
                     }
                 }
-                // var vodProductionList = new List<VodProduction>();
-                // var categoryProductionList = new List<ProductionCategory>();
-                // add new productions
+
                 foreach (var p in productions)
                 {
                     var mapPorduction = _mapper.Map<ProductionViewModel, Production>(p);
 
-                    foreach (var c in p.Categories)
+                    var categoryIds = p.Categories.Select(x => x.CategoryId).Distinct().ToList();
+                    foreach (var categoryId in categoryIds)
                     {
                         var productionCategory = new ProductionCategory
                         {
-                            CategoryId = c.CategoryId,
                             Production = mapPorduction,
+                            CategoryId = categoryId
                         };
                         _repository.AddProductionCategory(productionCategory);
-                        //categoryProductionList.Add(productionCategory);
                     }
 
                     foreach (var v in p.Vods)
@@ -299,12 +297,8 @@ namespace Checkflix.Controllers
                             VodId = v.VodId
                         };
                         _repository.AddVodProduction(vodProduction); // first loop add production and vod, another only vods
-                        //vodProductionList.Add(vodProduction);
                     }
                 }
-
-                // _repository.AddRangeProductionCategory(categoryProductionList);
-                // _repository.AddRangeVodProduction(vodProductionList);
 
                 if (await _repository.SaveAll())
                 {

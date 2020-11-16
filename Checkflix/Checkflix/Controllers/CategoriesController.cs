@@ -31,7 +31,6 @@ namespace Checkflix.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<CategoryViewModel>>> GetCategories()
         {
             try

@@ -184,11 +184,11 @@ export class AdminComponent implements OnInit {
     }).toPromise();
 
     if (productionCount) {
-      // const realCount = parseInt(productionCount['COUNT']);
-      this.realCount = 1000;
+      this.realCount = parseInt(productionCount['COUNT']);
+      // this.realCount = 1000;
       this.productionsProcessedCounter = 0;
-      // const pageCount = Math.ceil(realCount / 100);
-      const pageCount = 10; 
+      const pageCount = Math.ceil(this.realCount / 100);
+      // const pageCount = 10; 
       for (let i = 0; i < pageCount; i++) {
         const currentPage = i + 1;
 

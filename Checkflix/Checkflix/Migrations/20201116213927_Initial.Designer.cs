@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Checkflix.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201113174406_Initial")]
+    [Migration("20201116213927_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -413,15 +413,15 @@ namespace Checkflix.Migrations
 
             modelBuilder.Entity("Checkflix.Models.ProductionCategory", b =>
                 {
-                    b.Property<int>("ProductionId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ProductionId", "CategoryId");
+                    b.Property<int>("ProductionId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("CategoryId");
+                    b.HasKey("CategoryId", "ProductionId");
+
+                    b.HasIndex("ProductionId");
 
                     b.ToTable("ProductionCategories");
                 });

@@ -31,7 +31,6 @@ namespace Checkflix.Controllers
 
         // GET: api/Vods
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<VodViewModel>>> GetVods()
         {
             try
