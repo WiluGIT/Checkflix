@@ -91,6 +91,7 @@ namespace Checkflix.Controllers
 
         // PUT: api/Productions/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseViewModel>> PutProduction(int id, [FromBody] ProductionViewModel production)
         {
             if (id != production.ProductionId)
@@ -194,6 +195,7 @@ namespace Checkflix.Controllers
 
         // POST: api/Productions
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseViewModel>> PostProduction([FromBody] ProductionViewModel production)
         {
             try
@@ -250,6 +252,7 @@ namespace Checkflix.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseViewModel>> BulkProductionsCreate([FromBody] IEnumerable<ProductionViewModel> productions)
         {
             try
@@ -270,22 +273,20 @@ namespace Checkflix.Controllers
                         return response;
                     }
                 }
-                // var vodProductionList = new List<VodProduction>();
-                // var categoryProductionList = new List<ProductionCategory>();
-                // add new productions
+
                 foreach (var p in productions)
                 {
                     var mapPorduction = _mapper.Map<ProductionViewModel, Production>(p);
 
-                    foreach (var c in p.Categories)
+                    var categoryIds = p.Categories.Select(x => x.CategoryId).Distinct().ToList();
+                    foreach (var categoryId in categoryIds)
                     {
                         var productionCategory = new ProductionCategory
                         {
-                            CategoryId = c.CategoryId,
                             Production = mapPorduction,
+                            CategoryId = categoryId
                         };
                         _repository.AddProductionCategory(productionCategory);
-                        //categoryProductionList.Add(productionCategory);
                     }
 
                     foreach (var v in p.Vods)
@@ -296,12 +297,8 @@ namespace Checkflix.Controllers
                             VodId = v.VodId
                         };
                         _repository.AddVodProduction(vodProduction); // first loop add production and vod, another only vods
-                        //vodProductionList.Add(vodProduction);
                     }
                 }
-
-                // _repository.AddRangeProductionCategory(categoryProductionList);
-                // _repository.AddRangeVodProduction(vodProductionList);
 
                 if (await _repository.SaveAll())
                 {
@@ -323,6 +320,7 @@ namespace Checkflix.Controllers
 
         // DELETE: api/Productions/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseViewModel>> DeleteProduction(int id)
         {
             try

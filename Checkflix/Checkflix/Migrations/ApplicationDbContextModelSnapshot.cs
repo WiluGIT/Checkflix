@@ -411,15 +411,15 @@ namespace Checkflix.Migrations
 
             modelBuilder.Entity("Checkflix.Models.ProductionCategory", b =>
                 {
-                    b.Property<int>("ProductionId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ProductionId", "CategoryId");
+                    b.Property<int>("ProductionId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("CategoryId");
+                    b.HasKey("CategoryId", "ProductionId");
+
+                    b.HasIndex("ProductionId");
 
                     b.ToTable("ProductionCategories");
                 });

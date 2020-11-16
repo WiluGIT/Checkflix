@@ -357,7 +357,7 @@ namespace Checkflix.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductionCategories", x => new { x.ProductionId, x.CategoryId });
+                    table.PrimaryKey("PK_ProductionCategories", x => new { x.CategoryId, x.ProductionId });
                     table.ForeignKey(
                         name: "FK_ProductionCategories_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -649,9 +649,9 @@ namespace Checkflix.Migrations
                 columns: new[] { "SubjectId", "ClientId", "Type" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductionCategories_CategoryId",
+                name: "IX_ProductionCategories_ProductionId",
                 table: "ProductionCategories",
-                column: "CategoryId");
+                column: "ProductionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VodProductions_ProductionId",

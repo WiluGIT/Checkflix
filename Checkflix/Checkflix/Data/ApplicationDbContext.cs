@@ -131,15 +131,16 @@ namespace Checkflix.Data
 
             // ProductionCategories
             builder.Entity<ProductionCategory>()
-             .HasKey(bc => new { bc.ProductionId, bc.CategoryId });
-            builder.Entity<ProductionCategory>()
-               .HasOne(bc => bc.Production)
-               .WithMany(b => b.ProductionCategories)
-               .HasForeignKey(bc => bc.ProductionId);
+             .HasKey(bc => new { bc.CategoryId, bc.ProductionId });
             builder.Entity<ProductionCategory>()
                 .HasOne(bc => bc.Category)
                 .WithMany(b => b.ProductionCategories)
                 .HasForeignKey(bc => bc.CategoryId);
+            builder.Entity<ProductionCategory>()
+               .HasOne(bc => bc.Production)
+               .WithMany(b => b.ProductionCategories)
+               .HasForeignKey(bc => bc.ProductionId);
+
 
             // VodProductions
             builder.Entity<VodProduction>()

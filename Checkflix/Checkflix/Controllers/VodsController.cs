@@ -6,6 +6,7 @@ using AutoMapper;
 using Checkflix.Data.Persistance;
 using Checkflix.Models;
 using Checkflix.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -48,6 +49,7 @@ namespace Checkflix.Controllers
 
         }
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<VodCountViewModel>> GetVodCount()
         {
             var countViewModel = await _repository.GetVodCount();
