@@ -1,7 +1,9 @@
 import { IUserViewModel } from './../ClientViewModels/IUserViewModel';
 import { FollowingService } from './../../services/following.service';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ApplicationPaths } from '../../api-authorization/api-authorization.constants';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-user-collection',
@@ -13,7 +15,9 @@ export class UserCollectionComponent implements OnInit {
   user: IUserViewModel;
   following:boolean;
   constructor(private route: ActivatedRoute,
-    private followingService: FollowingService) { 
+    private router: Router,
+    private followingService: FollowingService,
+    public snackBar: MatSnackBar) { 
     route.params.subscribe(p => {
       this.userId = p['id'] || null;
     });
@@ -38,11 +42,33 @@ export class UserCollectionComponent implements OnInit {
       if (response["status"] == 0) {
         targetButton.classList.add("following");
         targetButton.textContent = "Obserwujesz"
+        this.openSnackBar("Zaobserwowano", 'Zamknij', 'green-snackbar');
       }
       else if (response["status"] == 1) {
         targetButton.classList.remove("following");
         targetButton.textContent = "Obserwuj";
+        this.openSnackBar("Usunięto obserwacje", 'Zamknij', 'gray-snackbar');
       }
+    }, (err => {
+      if (err.status == 401) {
+        this.handleAuthorization(false);
+      }
+      else {
+        this.openSnackBar("Spróbuj ponownie", 'Zamknij', 'red-snackbar');
+      }
+    })); 
+  }
+
+  handleAuthorization(isAuthenticated: boolean) {
+    if (!isAuthenticated) {
+      this.router.navigate(ApplicationPaths.LoginPathComponents)
+    };
+  }
+
+  openSnackBar(message: string, action: string, className: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+      panelClass: [className]
     });
   }
 }

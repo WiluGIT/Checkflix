@@ -47,7 +47,7 @@ namespace Checkflix.Data.Persistance
         Task<int> GetUnseenNotificationsCount(string userId);
         Task<IEnumerable<Notification>> GetUnseenNotifications(string userId);
         void UpdateUserNotification(IEnumerable<ApplicationUserNotification> notifications);
-        Task<IEnumerable<ApplicationUser>> GetUserFollowersNotMuted(string userId);
+        //Task<IEnumerable<ApplicationUser>> GetUserFollowersNotMuted(string userId);
         void AddApplicationUserNotification(IEnumerable<ApplicationUserNotification> userNotifications);
         Task<IEnumerable<Notification>> GetNotifications(string userId);
         Task<IEnumerable<string>> GetUsersByNotificationPreferences(NotificationFormViewModel notificationFormViewModel);
@@ -59,5 +59,6 @@ namespace Checkflix.Data.Persistance
         void UpdateUser(ApplicationUser user);
         void AddRangeProductionCategory(List<ProductionCategory> productionCategories);
         void AddRangeVodProduction(List<VodProduction> vodProductions);
+        IEnumerable<string> GetUserFollowersNotMuted(string userId);
     }
 }

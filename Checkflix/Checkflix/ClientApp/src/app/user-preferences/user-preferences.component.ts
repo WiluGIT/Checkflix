@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { IVodViewModel } from '../ClientViewModels/IVodViewModel';
+import { ApplicationPaths } from '../../api-authorization/api-authorization.constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-preferences',
@@ -22,7 +24,8 @@ export class UserPreferencesComponent implements OnInit {
     private vodService: VodService,
     private categoryService: CategoryService,
     private userPreferencesService: UserPreferencesService,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar,
+    private router: Router) { }
 
   ngOnInit() {
     this.preferencesForm = this.fb.group({
@@ -69,7 +72,14 @@ export class UserPreferencesComponent implements OnInit {
       } else {
         this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
       }
-    });
+    }, (err => {
+      if (err.status == 401) {
+        this.handleAuthorization(false);
+      }
+      else {
+        this.openSnackBar("Spróbuj ponownie", 'Zamknij', 'red-snackbar');
+      }
+    }));
 
 
     // populate dropdown lists back 
@@ -84,5 +94,11 @@ export class UserPreferencesComponent implements OnInit {
       duration: 2000,
       panelClass: [className]
     });
+  }
+
+  handleAuthorization(isAuthenticated: boolean) {
+    if (!isAuthenticated) {
+      this.router.navigate(ApplicationPaths.LoginPathComponents)
+    };
   }
 }

@@ -3,6 +3,8 @@ import { FollowingService } from './../../services/following.service';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
+import { ApplicationPaths } from '../../api-authorization/api-authorization.constants';
 
 @Component({
   selector: 'app-followings',
@@ -15,6 +17,7 @@ export class FollowingsComponent implements OnInit {
   constructor(private followingService:FollowingService,
     @Inject(MAT_DIALOG_DATA) public data,
     public dialogRef: MatDialogRef<FollowingsComponent>,
+    private router: Router,
     public snackBar:MatSnackBar) { }
 
   ngOnInit() {
@@ -44,12 +47,21 @@ export class FollowingsComponent implements OnInit {
       if (response["status"] == 0) {
         targetButton.classList.add("following");
         targetButton.textContent = "Obserwujesz"
+        this.openSnackBar("Zaobserwowano", 'Zamknij', 'green-snackbar');
       }
       else if (response["status"] == 1) {
         targetButton.classList.remove("following");
         targetButton.textContent = "Obserwuj";
+        this.openSnackBar("Usunięto obserwacje", 'Zamknij', 'gray-snackbar');
       }
-    });
+    }, (err => {
+      if (err.status == 401) {
+        this.handleAuthorization(false);
+      }
+      else {
+        this.openSnackBar("Spróbuj ponownie", 'Zamknij', 'red-snackbar');
+      }
+    }));
   }
 
   checkIfFollowing(userId) {
@@ -72,7 +84,14 @@ export class FollowingsComponent implements OnInit {
         targetButton.classList.add("mute-btn-y");
         this.openSnackBar(response['messages'], 'Zamknij', 'gray-snackbar');
       }
-    });   
+    }, (err => {
+      if (err.status == 401) {
+        this.handleAuthorization(false);
+      }
+      else {
+        this.openSnackBar("Spróbuj ponownie", 'Zamknij', 'red-snackbar');
+      }
+    }));    
   }
 
 
@@ -81,5 +100,11 @@ export class FollowingsComponent implements OnInit {
       duration: 2000,
       panelClass: [className]
     });
+  }
+
+  handleAuthorization(isAuthenticated: boolean) {
+    if (!isAuthenticated) {
+      this.router.navigate(ApplicationPaths.LoginPathComponents)
+    };
   }
 }

@@ -263,13 +263,21 @@ namespace Checkflix.Data.Persistance
                             .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetUserFollowersNotMuted(string userId)
+        //public async Task<IEnumerable<ApplicationUser>> GetUserFollowersNotMuted(string userId)
+        //{
+        //    return await _context.Followings
+        //                    .Include(x => x.Follower)
+        //                    .Where(x => x.FolloweeId.Equals(userId) && !x.FolloweeIsMuted)
+        //                    .Select(x => x.Follower)
+        //                    .ToListAsync();
+        //}
+
+        public IEnumerable<string> GetUserFollowersNotMuted(string userId)
         {
-            return await _context.Followings
-                            .Include(x => x.Follower)
+            return _context.Followings
                             .Where(x => x.FolloweeId.Equals(userId) && !x.FolloweeIsMuted)
-                            .Select(x => x.Follower)
-                            .ToListAsync();
+                            .Select(x => x.FollowerId)
+                            .ToList();
         }
 
         public async Task<Following> GetFollowing(string followerId, string followeeId)

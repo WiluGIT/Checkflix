@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -238,30 +239,33 @@ namespace Checkflix.Controllers
             }
         }
 
-        private async void SendNotificationToFollowers(string productionName, string userName)
+        private void SendNotificationToFollowers(string productionName, string userName)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var userId = _userManager.GetUserId(User);
 
-            if (user != null)
+            if (userId != null)
             {
-                var userFollowers = await _repository.GetUserFollowersNotMuted(user.Id);
-                var notification = new Notification
+                var userFollowers = _repository.GetUserFollowersNotMuted(userId);
+
+                if (userFollowers.Count() > 0)
                 {
-                    Date = DateTime.Now,
-                    Content = $"Użytkownik {userName} dodał produkcję {productionName} do kolekcji Ulubione"
-                };
-                var userNotificationList = new List<ApplicationUserNotification>();
-                foreach (var follower in userFollowers)
-                {
-                    var userNotification = new ApplicationUserNotification
+                    var notification = new Notification
                     {
-                        ApplicationUser = follower,
-                        Notification = notification
-                    };  
-                    userNotificationList.Add(userNotification);                             
+                        Date = DateTime.Now,
+                        Content = $"Użytkownik {userName} dodał produkcję {productionName} do kolekcji Ulubione"
+                    };
+                    var userNotificationList = new List<ApplicationUserNotification>();
+                    foreach (var followerId in userFollowers)
+                    {
+                        var userNotification = new ApplicationUserNotification
+                        {
+                            ApplicationUserId = followerId,
+                            Notification = notification
+                        };
+                        userNotificationList.Add(userNotification);
+                    }
+                    _repository.AddApplicationUserNotification(userNotificationList);
                 }
-                _repository.AddApplicationUserNotification(userNotificationList);
-                await _repository.SaveAll();
             }
         }
     }

@@ -68,9 +68,6 @@ export class CollectionListComponent implements OnInit {
         if (err.status == 401) {
           this.handleAuthorization(false);
         }
-        else {
-          this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
-        }
       }));
   }
 
@@ -139,7 +136,7 @@ export class CollectionListComponent implements OnInit {
           this.handleAuthorization(false);
         }
         else {
-          this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+          this.openSnackBar("Spróbuj ponownie", 'Zamknij', 'red-snackbar');
         }
       }));
   }
@@ -174,7 +171,7 @@ export class CollectionListComponent implements OnInit {
           this.handleAuthorization(false);
         }
         else {
-          this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+          this.openSnackBar("Spróbuj ponownie", 'Zamknij', 'red-snackbar');
         }
       }));
   }

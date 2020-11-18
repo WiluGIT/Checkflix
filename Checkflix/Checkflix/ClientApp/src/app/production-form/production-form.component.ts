@@ -4,11 +4,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { IProductionViewModel } from '../ClientViewModels/IProductionViewModel';
 import { ProductionService } from '../../services/production.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { IVodViewModel } from '../ClientViewModels/IVodViewModel';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
+import { ApplicationPaths } from '../../api-authorization/api-authorization.constants';
 
 
 @Component({
@@ -42,7 +43,8 @@ export class ProductionFormComponent implements OnInit {
     private categorySevice:CategoryService,
     private route: ActivatedRoute,
     private http: HttpClient,
-    public snackBar: MatSnackBar) {
+    public snackBar: MatSnackBar,
+    private router: Router) {
     route.params.subscribe(p => {
       //+before p converts id to a number
       this.productionId = +p['id'] || null;
@@ -176,7 +178,14 @@ export class ProductionFormComponent implements OnInit {
         } else {
           this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
         }
-      });
+      }, (err => {
+        if (err.status == 401) {
+          this.handleAuthorization(false);
+        }
+        else {
+          this.openSnackBar("Spróbuj ponownie", 'Zamknij', 'red-snackbar');
+        }
+      }));
 
     } else {
       this.productionService.createProduction(this.production).subscribe(res => {
@@ -185,7 +194,14 @@ export class ProductionFormComponent implements OnInit {
         } else {
           this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
         }
-      });
+      }, (err => {
+        if (err.status == 401) {
+          this.handleAuthorization(false);
+        }
+        else {
+          this.openSnackBar("Spróbuj ponownie", 'Zamknij', 'red-snackbar');
+        }
+      }));
     }
 
 
@@ -224,7 +240,7 @@ export class ProductionFormComponent implements OnInit {
           );
 
           this.productionForm.controls.categories.setValue(categories);
-          this.productionForm.controls.title.setValue(movieArray.title);
+          this.productionForm.controls.subtitle.setValue(movieArray.title);
           this.productionForm.controls.synopsis.setValue(movieArray.overview);
           this.productionForm.controls.type.setValue(0);
 
@@ -241,7 +257,7 @@ export class ProductionFormComponent implements OnInit {
 
 
           this.productionForm.controls.categories.setValue(categories);
-          this.productionForm.controls.title.setValue(seriesArray.name);
+          this.productionForm.controls.subtitle.setValue(seriesArray.name);
           this.productionForm.controls.synopsis.setValue(seriesArray.overview);
           this.productionForm.controls.type.setValue(1);
           this.productionForm.controls.releaseDate.setValue(new Date(seriesArray.first_air_date));
@@ -250,7 +266,7 @@ export class ProductionFormComponent implements OnInit {
         if (imbdData) {
           this.productionForm.controls.imbdRating.setValue(imbdData["rating"]);
           this.productionForm.controls.poster.setValue(imbdData["poster"]);
-          this.productionForm.controls.subtitle.setValue(imbdData["title"]);
+          this.productionForm.controls.title.setValue(imbdData["title"]);
         }
 
         this.openSnackBar('Dane zostały pobrane', 'Zamknij', 'green-snackbar');
@@ -275,5 +291,11 @@ export class ProductionFormComponent implements OnInit {
       duration: 2000,
       panelClass: [className]
     });
+  }
+
+  handleAuthorization(isAuthenticated: boolean) {
+    if (!isAuthenticated) {
+      this.router.navigate(ApplicationPaths.LoginPathComponents)
+    };
   }
 }

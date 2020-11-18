@@ -16,6 +16,7 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { ThemePalette } from '@angular/material/core';
 import { IPostQueryFilters } from '../ClientViewModels/IPostQueryFilters';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { ApplicationPaths } from '../../api-authorization/api-authorization.constants';
 
 @Component({
   selector: 'app-admin',
@@ -163,13 +164,14 @@ export class AdminComponent implements OnInit {
           this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
 
         }
-      },
-        err => {
-          if (err.status == 404) {
-            //implement component with not found 404 error
-            this.router.navigate(['/admin']);
-          }
-        });
+      }, (err => {
+        if (err.status == 401) {
+          this.handleAuthorization(false);
+        }
+        else {
+          this.openSnackBar("Spróbuj ponownie", 'Zamknij', 'red-snackbar');
+        }
+      }));
   }
 
   async fetchNetflix() {
@@ -313,7 +315,9 @@ export class AdminComponent implements OnInit {
             this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
             this.value = 0;
           }
-        });
+        }, (err => {
+            this.openSnackBar("Dodawanie produkcji nie powiodło się", 'Zamknij', 'red-snackbar');
+        }));
     }
   }
 
@@ -324,5 +328,9 @@ export class AdminComponent implements OnInit {
     });
   }
 
-
+  handleAuthorization(isAuthenticated: boolean) {
+    if (!isAuthenticated) {
+      this.router.navigate(ApplicationPaths.LoginPathComponents)
+    };
+  }
 }

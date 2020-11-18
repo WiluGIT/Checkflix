@@ -51,7 +51,7 @@ namespace Checkflix.Migrations
                 columns: table => new
                 {
                     CategoryId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     GenreApiId = table.Column<int>(nullable: false),
                     CategoryName = table.Column<string>(nullable: true)
                 },
@@ -82,7 +82,7 @@ namespace Checkflix.Migrations
                 columns: table => new
                 {
                     NotificationId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(nullable: false),
                     Content = table.Column<string>(nullable: true)
                 },
@@ -113,7 +113,7 @@ namespace Checkflix.Migrations
                 columns: table => new
                 {
                     ProductionId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(nullable: true),
                     Subtitle = table.Column<string>(nullable: true),
                     Poster = table.Column<string>(nullable: true),
@@ -133,7 +133,7 @@ namespace Checkflix.Migrations
                 columns: table => new
                 {
                     VodId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     PlatformName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -146,7 +146,7 @@ namespace Checkflix.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -167,7 +167,7 @@ namespace Checkflix.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -423,147 +423,45 @@ namespace Checkflix.Migrations
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 1, "Akcja", 28 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 27, "Wojna & Polityka", 10768 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 26, "Rozmowy", 10767 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 25, "Opera", 10766 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 24, "Sci-Fi & Fantasy", 10765 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 23, "Reality", 10764 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 22, "News", 10763 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 21, "Dzieci", 10762 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 20, "Akcja i Przygoda", 10759 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 19, "Western", 37 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 18, "Fantasy", 14 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 17, "Przygodowy", 12 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 16, "Animacja", 16 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 15, "Komedia", 35 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 13, "Dokumentalny", 99 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 12, "Dramat", 18 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 11, "Familijny", 10751 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 10, "Historyczny", 36 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 9, "Wojenny", 10752 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 8, "Horror", 27 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 7, "Muzyczny", 10402 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 6, "Tajemnica", 9648 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 5, "Romans", 10749 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 4, "Sci-Fi", 878 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 3, "film TV", 10770 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 2, "Thriller", 53 });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName", "GenreApiId" },
-                values: new object[] { 14, "Kryminał", 80 });
+                values: new object[,]
+                {
+                    { 1, "Akcja", 28 },
+                    { 27, "Wojna & Polityka", 10768 },
+                    { 26, "Rozmowy", 10767 },
+                    { 25, "Opera", 10766 },
+                    { 24, "Sci-Fi & Fantasy", 10765 },
+                    { 23, "Reality", 10764 },
+                    { 22, "News", 10763 },
+                    { 21, "Dzieci", 10762 },
+                    { 20, "Akcja i Przygoda", 10759 },
+                    { 19, "Western", 37 },
+                    { 18, "Fantasy", 14 },
+                    { 17, "Przygodowy", 12 },
+                    { 16, "Animacja", 16 },
+                    { 15, "Komedia", 35 },
+                    { 13, "Dokumentalny", 99 },
+                    { 12, "Dramat", 18 },
+                    { 11, "Familijny", 10751 },
+                    { 10, "Historyczny", 36 },
+                    { 9, "Wojenny", 10752 },
+                    { 8, "Horror", 27 },
+                    { 7, "Muzyczny", 10402 },
+                    { 6, "Tajemnica", 9648 },
+                    { 5, "Romans", 10749 },
+                    { 4, "Sci-Fi", 878 },
+                    { 3, "film TV", 10770 },
+                    { 2, "Thriller", 53 },
+                    { 14, "Kryminał", 80 }
+                });
 
             migrationBuilder.InsertData(
                 table: "Vods",
                 columns: new[] { "VodId", "PlatformName" },
-                values: new object[] { 1, "Netflix" });
-
-            migrationBuilder.InsertData(
-                table: "Vods",
-                columns: new[] { "VodId", "PlatformName" },
-                values: new object[] { 2, "HBO GO" });
+                values: new object[,]
+                {
+                    { 1, "Netflix" },
+                    { 2, "HBO GO" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApplicationUserCategories_CategoryId",
@@ -594,7 +492,8 @@ namespace Checkflix.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -620,7 +519,8 @@ namespace Checkflix.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeviceCodes_DeviceCode",

@@ -13,9 +13,11 @@
         </picture>
       </div>
       <div class="title-column">
-        <span [routerLink]="'/production/'+production?.productionId" class="title-spn">{{production?.title}}
-          ({{production?.releaseDate.substr(0,4)}})</span>
-        <span class="subtitle-spn">{{production?.subtitle}}</span>
+        <span [routerLink]="'/production/'+production?.productionId" class="title-spn">
+          {{production?.title.substr(0,30)}}
+          ({{production?.releaseDate.substr(0,4)}})
+        </span>
+        <span class="subtitle-spn">{{production?.subtitle.substr(0,30)}}</span>
       </div>
       <div class="type-column">
         <span *ngIf="production?.type == 1">Serial</span>

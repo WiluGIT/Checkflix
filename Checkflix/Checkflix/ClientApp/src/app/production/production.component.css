@@ -10,9 +10,11 @@
 .prod-title{
     font-weight: 900;
     font-size: 30px;
+    word-break:break-word;
 }
-.prod-subtitle{
-    font-size: 15px;
+.prod-subtitle {
+  font-size: 15px;
+  word-break: break-word;
 }
 .imbd-icon{
     width: 48px;
@@ -46,4 +48,8 @@
 
 .img-container {
     max-width: 166px;
+}
+
+.width100 {
+    width: 100%;
 }

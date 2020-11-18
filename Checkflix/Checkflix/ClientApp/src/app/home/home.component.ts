@@ -297,7 +297,7 @@ export class HomeComponent implements OnInit {
           this.handleAuthorization(false);
         }
         else {
-          this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+          this.openSnackBar("Spróbuj ponownie", 'Zamknij', 'red-snackbar');
         }
       }));
   }
@@ -335,7 +335,7 @@ export class HomeComponent implements OnInit {
           this.handleAuthorization(false);
         }
         else {
-          this.openSnackBar(err.error['messages'], 'Zamknij', 'red-snackbar');
+          this.openSnackBar("Spróbuj ponownie", 'Zamknij', 'red-snackbar');
         }
       }));
   }

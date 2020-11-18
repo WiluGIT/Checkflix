@@ -7,6 +7,8 @@ import { IVodViewModel } from '../ClientViewModels/IVodViewModel';
 import { VodService } from 'src/services/vod.service';
 import { CategoryService } from 'src/services/category.service';
 import { INotificationFromViewModel } from '../ClientViewModels/INotificationFormViewModel';
+import { ApplicationPaths } from '../../api-authorization/api-authorization.constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notification-form',
@@ -23,7 +25,8 @@ export class NotificationFormComponent implements OnInit {
     private vodService: VodService,
     private categorySevice: CategoryService,
     private notificationService: NotificationService,
-    public snackBar: MatSnackBar) { }
+    public snackBar: MatSnackBar,
+    private router: Router) { }
 
   ngOnInit() {
     this.notificationForm = this.fb.group({
@@ -107,7 +110,14 @@ export class NotificationFormComponent implements OnInit {
       } else {
         this.openSnackBar(res['messages'], 'Zamknij', 'green-snackbar');
       }
-    });
+    }, (err => {
+      if (err.status == 401) {
+        this.handleAuthorization(false);
+      }
+      else {
+        this.openSnackBar("Spróbuj ponownie", 'Zamknij', 'red-snackbar');
+      }
+    }));
   }
 
   openSnackBar(message: string, action: string, className: string) {
@@ -115,6 +125,12 @@ export class NotificationFormComponent implements OnInit {
       duration: 2000,
       panelClass: [className]
     });
+  }
+
+  handleAuthorization(isAuthenticated: boolean) {
+    if (!isAuthenticated) {
+      this.router.navigate(ApplicationPaths.LoginPathComponents)
+    };
   }
 }
 
