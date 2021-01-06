@@ -121,7 +121,7 @@ namespace Checkflix.Controllers
         public async Task<ActionResult<ResponseViewModel>> PostNotification([FromBody] NotificationFormViewModel notificationFormViewModel)
         {
             var mapNotification = _mapper.Map<NotificationFormViewModel, Notification>(notificationFormViewModel);
-
+            mapNotification.Date = DateTime.Now;
             var response = ValidateNotificaiton(mapNotification);
             if (response.Status == ResponseStatus.Error)
                 return response;
