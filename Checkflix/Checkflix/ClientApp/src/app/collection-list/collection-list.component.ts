@@ -142,7 +142,6 @@ export class CollectionListComponent implements OnInit {
   }
 
   markAsSeen(productionId) {
-    console.log(productionId)
     const userProduction: IApplicationUserProductionViewModel = {
       productionId: productionId,
       toWatch: false,
