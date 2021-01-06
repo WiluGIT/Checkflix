@@ -19,7 +19,7 @@ namespace Checkflix.Data
             }
 
 
-            if (!roleManager.RoleExistsAsync("Teacher").Result)
+            if (!roleManager.RoleExistsAsync("User").Result)
             {
                 IdentityRole userRole = new IdentityRole();
                 userRole.Name = "User";
