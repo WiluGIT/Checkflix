@@ -44,6 +44,8 @@
 }
 
 .curved {
+  padding-top: 3vw;
+  padding-bottom: 3vw;
   position: relative;
   height: auto;
   background-image: linear-gradient(#9a4d09, #29064e);
