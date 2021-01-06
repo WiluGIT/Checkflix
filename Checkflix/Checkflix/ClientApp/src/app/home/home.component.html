@@ -24,7 +24,7 @@
       </mat-form-field>
       <app-multi-slider #yearSlider (sliderValues)="getYearSliderValues($event)" [sliderTitle]="'Rok produkcji'"
         [minValue]="minValueYear" [maxValue]="maxValueYear"></app-multi-slider>
-      <app-multi-slider #ratingSlider (sliderValues)="getImbdSliderValues($event)" [sliderTitle]="'Oceny IMBd'"
+      <app-multi-slider #ratingSlider (sliderValues)="getImbdSliderValues($event)" [sliderTitle]="'Oceny IMDb'"
         [minValue]="minImbdRating" [maxValue]="maxImbdRating"></app-multi-slider>
       <div class="logo-checkboxes">
         <div (click)="checkBtn($event)" id="hbo-btn" class="icon-btn hbo-btn"><span class="iconify vod-logo"

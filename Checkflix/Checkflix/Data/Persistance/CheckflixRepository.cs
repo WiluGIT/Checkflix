@@ -32,6 +32,7 @@ namespace Checkflix.Data.Persistance
                                 .Contains(x.CategoryId))
                                 .Select(x => x.Production)
                                 .Distinct()
+                                .OrderBy(x => x.Title)
                                 .Include(m => m.VodProductions)
                                 .ToListAsync();
             }
@@ -39,6 +40,7 @@ namespace Checkflix.Data.Persistance
             {
                 productions = await _context.Productions
                                 .Include(x => x.VodProductions)
+                                .OrderBy(x => x.Title)
                                 .ToListAsync();
             }
             // Here in if condition implement filter logic for each patameter in PostQueryFilters class

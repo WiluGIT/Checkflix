@@ -40,14 +40,14 @@ namespace Checkflix
             //        Configuration.GetConnectionString("DefaultConnection")));
 
             // Remote MSSQL
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("RemoteConnection")));
+            // services.AddDbContext<ApplicationDbContext>(options =>
+            //     options.UseSqlServer(
+            //         Configuration.GetConnectionString("RemoteConnection")));
 
             // SQL LITE
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlite(
-            //        Configuration.GetConnectionString("SqliteConnection")));
+            services.AddDbContext<ApplicationDbContext>(options =>
+               options.UseSqlite(
+                   Configuration.GetConnectionString("SqliteConnection")));
 
             services.AddDefaultIdentity<ApplicationUser>(options => {
                 options.SignIn.RequireConfirmedAccount = false;

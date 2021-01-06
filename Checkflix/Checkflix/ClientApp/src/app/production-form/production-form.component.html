@@ -6,7 +6,7 @@
           <a [routerLink]="['/admin']" class="btn btn-secondary btn-sm">Powrót do panelu</a>
         </div>
         <div class="text-right">
-          <button class="btn btn-success btn-sm" (click)="fetchImbd()">Pobierz z imbd</button>
+          <button class="btn btn-success btn-sm" (click)="fetchImbd()">Pobierz z IMDb</button>
         </div>
       </div>
 
@@ -16,10 +16,10 @@
     </div>
     <form [formGroup]="productionForm" (ngSubmit)="submitForm()">
       <mat-form-field appearance="fill">
-        <mat-label>Wprowadź Imbd id</mat-label>
+        <mat-label>Wprowadź IMDb id</mat-label>
         <input matInput placeholder="np. tt4574334" formControlName="imbdId">
         <mat-error *ngIf="imbdFetchClicked">{{getErrorMessage()}}</mat-error>
-        <mat-error *ngIf="imbdId.invalid">Imbd id musi być podane</mat-error>
+        <mat-error *ngIf="imbdId.invalid">IMDb id musi być podane</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
@@ -63,11 +63,11 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill">
-        <mat-label>Wprowadź ocenę Imbd </mat-label>
+        <mat-label>Wprowadź ocenę IMDb </mat-label>
         <input min="0" max="10" type="number" matInput placeholder="np. 6.5" formControlName="imbdRating">
-        <mat-error *ngIf="imbdRating.errors?.min && imbdRating.touched"> Ocena imbd musi być większa niż {{imbdRating.errors.min.actual}}</mat-error>
-        <mat-error *ngIf="imbdRating.errors?.max && imbdRating.touched"> Ocena imbd musi być mniejsza niż {{imbdRating.errors.max.actual}}</mat-error>
-        <mat-error *ngIf="imbdRating.errors?.required">Ocena imbd musi być podana</mat-error>
+        <mat-error *ngIf="imbdRating.errors?.min && imbdRating.touched"> Ocena IMDb musi być większa niż {{imbdRating.errors.min.actual}}</mat-error>
+        <mat-error *ngIf="imbdRating.errors?.max && imbdRating.touched"> Ocena IMDb musi być mniejsza niż {{imbdRating.errors.max.actual}}</mat-error>
+        <mat-error *ngIf="imbdRating.errors?.required">Ocena IMDb musi być podana</mat-error>
       </mat-form-field>
 
       <mat-form-field>
