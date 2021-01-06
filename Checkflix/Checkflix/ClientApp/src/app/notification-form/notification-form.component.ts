@@ -102,7 +102,6 @@ export class NotificationFormComponent implements OnInit {
       this.notificationForm.controls.categories.setValue([]);
       this.notification = this.notificationForm.value;
     }
-    this.notification.date = new Date();
 
     this.notificationService.createNotification(this.notification).subscribe(res => {
       if (res['status'] == 1) {

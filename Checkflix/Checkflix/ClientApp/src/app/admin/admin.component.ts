@@ -11,7 +11,7 @@ import { ProductionService } from '../../services/production.service';
 import { ICategoryViewModel } from '../ClientViewModels/ICategoryViewModel';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material';
+import { MatPaginator, MatSnackBar } from '@angular/material';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { ThemePalette } from '@angular/material/core';
 import { IPostQueryFilters } from '../ClientViewModels/IPostQueryFilters';
@@ -74,7 +74,7 @@ export class AdminComponent implements OnInit {
   value = 0;
   productionsProcessedCounter: number = 0;
   realCount: number = 0;
-
+  @ViewChild('adminPaginator', { static: false }) paginator: MatPaginator;
   constructor(private authService: AuthorizeService,
     private productionService: ProductionService,
     private vodService: VodService,
@@ -133,8 +133,8 @@ export class AdminComponent implements OnInit {
     // Change params to default
     this.postQueryFilters.pageNumber = 1;
     this.postQueryFilters.pageSize = 10;
-
-
+    this.paginator.pageIndex = 0;
+    
     this.productionService.getProductions(this.postQueryFilters)
       .subscribe(response => {
         const headers = JSON.parse(response.headers.get('X-Pagination'));

@@ -8,8 +8,6 @@ namespace Checkflix.ViewModels
     {
         public int NotificationId { get; set; }
         [Required]
-        public DateTime Date { get; set; }
-        [Required]
         public string Content { get; set; }
         public bool ToAll { get; set; }
         public ICollection<VodViewModel> Vods { get; set; }
